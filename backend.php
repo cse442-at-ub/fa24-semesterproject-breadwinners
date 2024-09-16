@@ -25,7 +25,8 @@
     $conn->select_db($db_name);
 
     // debug: create table. Note: VARCHAR can have size limit, TEXT doesn't
-    $sql = "CREATE TABLE IF NOT EXISTS user (
+    $table_name = "user";      //change table name here, make sure no space
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(50) NOT NULL,
         password VARCHAR(50) NOT NULL,
@@ -34,9 +35,9 @@
         shopping_cart TEXT
     )";
     if ($conn->query($sql) === TRUE) {
-        echo "Table 'user' created successfully\n";
+        echo "Table {$table_name} created successfully\n";
     } else {
-        echo "Error creating table: " . $conn->error . "\n";
+        echo "Error creating table {$table_name}: " . $conn->error . "\n";
     }
 
     // debug: insert sample data
