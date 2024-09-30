@@ -6,16 +6,37 @@ import BreadWinnersPicture from '../../assets/BreadWinnersPicture.png';
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState(''); // Message for login feedback
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Handle login logic here
+
+        // Send the login data to the backend PHP
+        try {
+            const response = await fetch('http://localhost/auth.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setMessage('Login Successful!'); // Success message
+            } else {
+                setMessage('Login Failed! Please check your credentials.'); // Failure message
+            }
+        } catch (error) {
+            setMessage('An error occurred. Please try again later.'); // Network or server error
+        }
     };
 
     return (
         <div className="login-page">
             <div className="gradient-background">
-              <img src={BreadWinnersPicture} alt="BreadWinners" className="breadwinners-image" />
+                <img src={BreadWinnersPicture} alt="BreadWinners" className="breadwinners-image" />
             </div>
             <div className="login-container">
                 <h2 className="login-title">Log In</h2>
@@ -47,6 +68,9 @@ function LoginPage() {
 
                     <button type="submit" className="login-button">Log In</button>
                 </form>
+
+                {/* Display the message after form submission */}
+                {message && <p className="login-message">{message}</p>}
 
                 <div className="footer-links">
                     <p>Don't have an account? <a href="#">Sign Up</a></p>
