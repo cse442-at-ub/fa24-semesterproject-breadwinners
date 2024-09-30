@@ -42,7 +42,7 @@
 
     // debug: insert sample data
     $sql = "INSERT INTO user (email, password, first_name, last_name, shopping_cart) VALUES
-    ('afds@asdfasdf.com', '123456', 'Chonhei', 'Chan','Book7, Book8')"; //put simple data here
+    ('asdf@gmail.com', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
     if ($conn->query($sql) === TRUE) {
         echo "Sample data inserted successfully\n";
     } else {
