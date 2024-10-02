@@ -23,6 +23,7 @@ function RegisterPage() {
 
 
             <div className="register-container">
+                <h2 className="breadwinners-title">Breadwinners</h2>
                 <h2 className="register-title">Create an Account</h2>
                 <p className="welcome-text">Enter your personal data to create your account</p>
                 <br/>
