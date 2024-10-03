@@ -70,6 +70,9 @@ function LoginPage() {
     
                                 <button type="submit" className="login-button">Log In</button>
                             </form>
+
+                            {/* Display the message after form submission */}
+                            {message && <p className="login-message">{message}</p>}
     
                             <div className="footer-links">
                                 <p>Don't have an account? <a href="#">Sign Up</a></p>

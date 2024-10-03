@@ -8,14 +8,41 @@ function ForgotPassword({ onGoBack }) {
 
     const handleSendOtp = (e) => {
         e.preventDefault();
-        // Logic to send OTP to the entered email
-        setStep(2); // Move to Step 2: Enter OTP
+        fetch('http://localhost/forgot_pw.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'send_otp', email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                setStep(2); // Move to Step 2: Enter OTP
+            } else {
+                alert(data.message); // Handle error
+            }
+        });
     };
 
     const handleVerifyOtp = (e) => {
         e.preventDefault();
-        // Logic to verify OTP
-        // Redirect to reset password page or handle the next step
+        fetch('http://localhost/forgot_pw.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'verify_otp', email, otp })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to reset password page or handle the next step
+                alert('OTP Verified! Proceed to reset password.');
+            } else {
+                alert(data.message); // Handle error
+            }
+        });
     };
 
     return (
