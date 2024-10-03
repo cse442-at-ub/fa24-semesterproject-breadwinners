@@ -39,6 +39,19 @@
 
 }
 
+.forgot-password-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 60px; /* Adjust padding to prevent cramming */
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    margin: 0 auto; /* Center the container */
+    border-radius: 12px; /* Add a subtle round corner */
+}
+
 /* Title and welcome text */
 .login-title {
     font-size: 28px;
