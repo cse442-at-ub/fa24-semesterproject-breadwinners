@@ -3,10 +3,14 @@
     header("Access-Control-Allow-Headers: Content-Type");
     header("Content-Type: application/json");
 
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     // Database connection
     $servername = "localhost:3306";
     $username = "chonheic"; //ubit
-    $password = ""; //person number
+    $password = "50413052"; //person number
     $db_name = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database
@@ -23,6 +27,7 @@
     $action = isset($data['action']) ? $data['action'] : '';
     $email = isset($data['email']) ? trim($data['email']) : '';
     $otp = isset($data['otp']) ? trim($data['otp']) : '';
+    $password = isset($data['password']) ? trim($data['password']) : '';
 
     // Stage 1: Send OTP
     if ($action === 'send_otp') {
@@ -81,6 +86,27 @@
             $stmt->close();
         } else {
             echo json_encode(['success' => false, 'message' => 'Email and OTP are required']);
+        }
+
+    // Stage 3: Reset Password
+    } elseif ($action === 'reset_password') {
+        if (!empty($email) && !empty($password)) {
+            // Hash the new password before storing it
+            //$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Update the user's password in the database
+            $stmt = $conn->prepare("UPDATE user SET password = ? WHERE email = ?");
+            //$stmt->bind_param("ss", $hashed_password, $email);
+            $stmt->bind_param("ss", $password, $email);
+
+            if ($stmt->execute()) {
+                echo json_encode(['success' => true, 'message' => 'Password reset successful']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to reset password']);
+            }
+            $stmt->close();
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Email and new password are required']);
         }
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
