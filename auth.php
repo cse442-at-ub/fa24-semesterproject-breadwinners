@@ -4,10 +4,10 @@
     header("Content-Type: application/json");
 
     // Database connection
-    $servername = "localhost";
-    $username = "root";  // Your MySQL username
-    $password = "";      // Your MySQL password
-    $dbname = "test_db"; // Your database name
+    $servername = "localhost:3306";
+    $username = "chonheic"; //ubit
+    $password = ""; //person number
+    $dbname = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database
     $conn = new mysqli($servername, $username, $password, $dbname);

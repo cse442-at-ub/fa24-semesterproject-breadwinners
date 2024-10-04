@@ -8,7 +8,7 @@ function ForgotPassword({ onGoBack }) {
 
     const handleSendOtp = (e) => {
         e.preventDefault();
-        fetch('http://localhost/forgot_pw.php', {
+        fetch('https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/chonheic/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ function ForgotPassword({ onGoBack }) {
 
     const handleVerifyOtp = (e) => {
         e.preventDefault();
-        fetch('http://localhost/forgot_pw.php', {
+        fetch('https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/chonheic/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

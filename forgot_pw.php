@@ -4,13 +4,13 @@
     header("Content-Type: application/json");
 
     // Database connection
-    $servername = "localhost";
-    $username = "root";  // Your MySQL username
-    $password = "";      // Your MySQL password
-    $dbname = "test_db"; // Your database name
+    $servername = "localhost:3306";
+    $username = "chonheic"; //ubit
+    $password = ""; //person number
+    $db_name = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password, $db_name);
 
     // Check the database connection
     if ($conn->connect_error) {
@@ -37,15 +37,15 @@
                 // Generate a 6-digit OTP
                 $generated_otp = rand(100000, 999999);
 
-                // Store OTP in the database with an expiry time
-                $stmt = $conn->prepare("UPDATE user SET otp = ?, otp_expiry = NOW() + INTERVAL 10 MINUTE WHERE email = ?");
+                // Store OTP in the database
+                $stmt = $conn->prepare("UPDATE user SET otp = ? WHERE email = ?");
                 $stmt->bind_param("is", $generated_otp, $email);
                 $stmt->execute();
 
                 // Send OTP via email
                 $to = $email;
                 $subject = "Your OTP Code";
-                $message = "Your OTP code is $generated_otp. It is valid for 10 minutes.";
+                $message = "Your OTP code is $generated_otp.";
 
                 if (mail($to, $subject, $message)) {
                     echo json_encode(['success' => true, 'message' => 'OTP sent to email']);
@@ -63,17 +63,17 @@
     // Stage 2: Verify OTP
     } elseif ($action === 'verify_otp') {
         if (!empty($email) && !empty($otp)) {
-            $stmt = $conn->prepare("SELECT otp, otp_expiry FROM user WHERE email = ?");
+            $stmt = $conn->prepare("SELECT otp FROM user WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                if ($row['otp'] == $otp && strtotime($row['otp_expiry']) > time()) {
+                if ($row['otp'] == $otp) {
                     echo json_encode(['success' => true, 'message' => 'OTP verified. Proceed to reset password.']);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Invalid or expired OTP']);
+                    echo json_encode(['success' => false, 'message' => 'Invalid OTP']);
                 }
             } else {
                 echo json_encode(['success' => false, 'message' => 'User not found']);
