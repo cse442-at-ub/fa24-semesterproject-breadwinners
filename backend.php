@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost";
-    $username = "root";
-    $password = "";
+    $username = ""; //ubit
+    $password = ""; //person number
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -14,13 +14,13 @@
     }
 
     // debug: create database if not already
-    $db_name = "test_db";
-    $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
-    if ($conn->query($sql) === TRUE) {
-        echo "Database created successfully\n";
-    } else {
-        echo "Error creating database: " . $conn->error . "\n";
-    }
+    $db_name = "cse442_2024_fall_team_y_db";
+    //$sql = "CREATE DATABASE IF NOT EXISTS $db_name";
+    //if ($conn->query($sql) === TRUE) {
+    //    echo "Database created successfully\n";
+    //} else {
+    //    echo "Error creating database: " . $conn->error . "\n";
+    //}
     // Select the database
     $conn->select_db($db_name);
 
@@ -33,6 +33,7 @@
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
         shopping_cart TEXT   
+        otp INT(6)
     )";
     if ($conn->query($sql) === TRUE) {
         echo "Table {$table_name} created successfully\n";
@@ -41,14 +42,14 @@
     }
 
     // debug: change the table column
-    $sql = "ALTER TABLE $table_name 
-    ADD COLUMN IF NOT EXISTS otp INT(6), 
-    ADD COLUMN IF NOT EXISTS otp_expiry DATETIME";
-    if ($conn->query($sql) === TRUE) {
-        echo "Table {$table_name} altered successfully\n";
-    } else {
-        echo "Error altering table {$table_name}: " . $conn->error . "\n";
-    }
+    //$sql = "ALTER TABLE $table_name 
+    //ADD COLUMN IF NOT EXISTS otp INT(6), 
+    //ADD COLUMN IF NOT EXISTS otp_expiry DATETIME";
+    //if ($conn->query($sql) === TRUE) {
+    //    echo "Table {$table_name} altered successfully\n";
+    //} else {
+    //    echo "Error altering table {$table_name}: " . $conn->error . "\n";
+    //}
 
     // debug: insert sample data
     $sql = "INSERT INTO user (email, password, first_name, last_name, shopping_cart) VALUES
