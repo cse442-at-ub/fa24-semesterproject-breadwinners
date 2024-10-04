@@ -1,7 +1,7 @@
 <?php
-    $servername = "localhost";
-    $username = ""; //ubit
-    $password = ""; //person number
+    $servername = "localhost:3306";
+    $username = "chonheic"; //ubit
+    $password = "50413052"; //person number
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -32,7 +32,7 @@
         password VARCHAR(50) NOT NULL,
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
-        shopping_cart TEXT   
+        shopping_cart TEXT,   
         otp INT(6)
     )";
     if ($conn->query($sql) === TRUE) {
