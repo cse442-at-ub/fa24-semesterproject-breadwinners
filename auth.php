@@ -39,13 +39,13 @@
   else {
       // Update database with new account information
       $row = $result->fetch_assoc();
-      $row['firstName'] = $firstName;
-      $row['lastName'] = $lastName;
-      $row['email'] = $email;
-      $row['password'] = $password;
+      $row['firstName'] = password_hash($firstName, PASSWORD_DEFAULT);
+      $row['lastName'] = password_hash($lastName, PASSWORD_DEFAULT);
+      $row['email'] = password_hash($email, PASSWORD_DEFAULT);
+      $row['password'] = password_hash($password, PASSWORD_DEFAULT);
 
       // Verify that the database was correctly updated
-      if ($row['email'] === $email && $row['firstName'] === $firstName && $row['lastName'] === $lastName && $row['password'] === $password) {
+      if (password_verify($row['email'], $email) && password_verify($row['firstName'], $firstName) && password_verify($row['lastName'], $lastName) && password_verify($row['password'],  $password)) {
           echo json_encode(['success' => true, 'message' => 'Registration succesful, continue to Sign In']);
   }
 
