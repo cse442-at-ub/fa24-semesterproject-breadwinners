@@ -4,7 +4,9 @@ import './LoginPage.css'; // Reuse the same CSS as LoginPage
 function ForgotPassword({ onGoBack }) {
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
-    const [step, setStep] = useState(1); // Step 1: Enter email, Step 2: Enter OTP
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [step, setStep] = useState(1); // Step 1: Enter email, Step 2: Enter OTP, Step 3: Reset password
 
     const handleSendOtp = (e) => {
         e.preventDefault();
@@ -16,7 +18,15 @@ function ForgotPassword({ onGoBack }) {
         e.preventDefault();
         // Logic to verify OTP
         // Redirect to reset password page or handle the next step
+        setStep(3);
     };
+
+    const handleResetPassword = (e) => {
+        e.preventDefault();
+        // Logic to reset password
+        // Redirect to login/homepage page
+    };
+
 
     return (
         <div className="forgot-password-container">
@@ -44,7 +54,7 @@ function ForgotPassword({ onGoBack }) {
                         <a href="#" onClick={onGoBack}>Back to Login</a>
                     </p>
                 </>
-            ) : (
+            ) : step === 2 ? (
                 <>
                     <h2 className="login-title">Enter OTP</h2>
                     <p className="welcome-text">Check your email for the OTP</p>
@@ -67,6 +77,34 @@ function ForgotPassword({ onGoBack }) {
                     <p className="footer-links">
                         <a href="#" onClick={onGoBack}>Back to Login</a>
                     </p>
+                </>
+            ) : (
+                <>
+                    <h2 className="login-title">Reset Password</h2>
+                    <p className="welcome-text">Enter your new password below</p>
+                    <form onSubmit={handleResetPassword} className="login-form">
+                        <div className="input-group">
+                            <label>New Password</label>
+                            <input
+                                type="password"
+                                placeholder="Enter new password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="input-group">
+                            <label>Confirm Password</label>
+                            <input
+                                type="password"
+                                placeholder="Confirm new password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="login-button">Reset Password</button>
+                    </form>
                 </>
             )}
         </div>
