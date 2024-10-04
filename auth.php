@@ -7,10 +7,10 @@
     $servername = "localhost:3306";
     $username = "chonheic"; //ubit
     $password = ""; //person number
-    $dbname = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
+    $db_name = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password, $db_name);
 
     // Check the database connection
     if ($conn->connect_error) {
