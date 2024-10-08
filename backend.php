@@ -1,7 +1,7 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
+    $servername = "localhost:3306";
+    $username = ""; //ubit
+    $password = ""; //person number
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -14,13 +14,13 @@
     }
 
     // debug: create database if not already
-    $db_name = "test_db";
-    $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
-    if ($conn->query($sql) === TRUE) {
-        echo "Database created successfully\n";
-    } else {
-        echo "Error creating database: " . $conn->error . "\n";
-    }
+    $db_name = "chonheic_db";
+    //$sql = "CREATE DATABASE IF NOT EXISTS $db_name";
+    //if ($conn->query($sql) === TRUE) {
+    //    echo "Database created successfully\n";
+    //} else {
+    //    echo "Error creating database: " . $conn->error . "\n";
+    //}
     // Select the database
     $conn->select_db($db_name);
 
@@ -32,7 +32,8 @@
         password VARCHAR(50) NOT NULL,
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
-        shopping_cart TEXT
+        shopping_cart TEXT,   
+        otp INT(6)
     )";
     if ($conn->query($sql) === TRUE) {
         echo "Table {$table_name} created successfully\n";
@@ -40,9 +41,19 @@
         echo "Error creating table {$table_name}: " . $conn->error . "\n";
     }
 
+    // debug: change the table column
+    //$sql = "ALTER TABLE $table_name 
+    //ADD COLUMN IF NOT EXISTS otp INT(6), 
+    //ADD COLUMN IF NOT EXISTS otp_expiry DATETIME";
+    //if ($conn->query($sql) === TRUE) {
+    //    echo "Table {$table_name} altered successfully\n";
+    //} else {
+    //    echo "Error altering table {$table_name}: " . $conn->error . "\n";
+    //}
+
     // debug: insert sample data
     $sql = "INSERT INTO user (email, password, first_name, last_name, shopping_cart) VALUES
-    ('asdf@gmail.com', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
+    ('chonheic@buffalo.edu', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
     if ($conn->query($sql) === TRUE) {
         echo "Sample data inserted successfully\n";
     } else {
