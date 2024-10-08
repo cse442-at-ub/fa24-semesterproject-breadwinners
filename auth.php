@@ -47,6 +47,7 @@
       // Verify that the database was correctly updated
       if (password_verify($row['email'], $email) && password_verify($row['firstName'], $firstName) && password_verify($row['lastName'], $lastName) && password_verify($row['password'],  $password)) {
           echo json_encode(['success' => true, 'message' => 'Registration succesful, continue to Sign In']);
+      }
   }
 
   $stmt->close();
