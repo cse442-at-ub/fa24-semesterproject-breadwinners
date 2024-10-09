@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import BreadWinnersPicture from '../../assets/BreadWinnersPicture.png';
 import ForgotPassword from './ForgotPassword';
+import { Link } from 'react-router-dom';
 
 function LoginPage() {
     const [isForgotPassword, setIsForgotPassword] = useState(false); // New state for forgot password view
@@ -75,7 +76,7 @@ function LoginPage() {
                             {message && <p className="login-message">{message}</p>}
     
                             <div className="footer-links">
-                                <p>Don't have an account? <a href="#">Sign Up</a></p>
+                                <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
                                 <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
                             </div>
                         </>
