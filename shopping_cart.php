@@ -1,0 +1,87 @@
+<?php
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Content-Type: application/json");
+
+    // Enable error reporting for debugging (can be disabled in production)
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    // Database connection
+    $servername = "localhost:3306";
+    $username = "chonheic"; // your ubit
+    $password = "50413052"; // your person number
+    $db_name = "chonheic_db"; // Your actual database name
+
+    // Create connection to the MySQL database
+    $conn = new mysqli($servername, $username, $password, $db_name);
+
+    // Check database connection
+    if ($conn->connect_error) {
+        echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
+        exit();
+    }
+
+    // Get the raw POST data and decode it
+    $data = json_decode(file_get_contents('php://input'), true);
+    $email = isset($data['email']) ? $data['email'] : '';
+
+    if (empty($email)) {
+        echo json_encode(['success' => false, 'message' => 'Email is required']);
+        exit();
+    }
+
+    // Query to fetch the user's shopping cart
+    $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $shopping_cart = $row['shopping_cart'];
+
+        if (empty($shopping_cart)) {
+            // Handle empty cart
+            echo json_encode(['success' => true, 'items' => []]);
+        } else {
+            // Split the shopping_cart string into an array of book titles
+            $cart_items = explode(', ', $shopping_cart);
+
+            // Prepare an array to hold book details
+            $books_in_cart = [];
+
+            // Loop through the cart items and fetch book details from the books table
+            foreach ($cart_items as $book_title) {
+                $book_sql = "SELECT title, author, description, image_url, price FROM books WHERE title = ?";
+                $book_stmt = $conn->prepare($book_sql);
+                $book_stmt->bind_param("s", $book_title);
+                $book_stmt->execute();
+                $book_result = $book_stmt->get_result();
+
+                if ($book_result->num_rows > 0) {
+                    $book_row = $book_result->fetch_assoc();
+                    $books_in_cart[] = [
+                        'title' => $book_row['title'],
+                        'author' => $book_row['author'],
+                        'description' => $book_row['description'],
+                        'image_url' => $book_row['image_url'],
+                        'price' => $book_row['price'],
+                        'quantity' => 1 // Default to 1 for now
+                    ];
+                }
+            }
+
+            // Return the book details as JSON
+            echo json_encode(['success' => true, 'items' => $books_in_cart]);
+        }
+    } else {
+        // Handle case where user doesn't exist
+        echo json_encode(['success' => false, 'message' => 'User not found']);
+    }
+
+    $stmt->close();
+    $conn->close();
+?>

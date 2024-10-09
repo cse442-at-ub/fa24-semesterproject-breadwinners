@@ -52,7 +52,7 @@
 
     // debug: insert sample data
     $sql = "INSERT INTO books (title, author, description, image_url, price) VALUES
-    ('book7', 'me', 'help', './Cart/cover/book7.png','123')"; //put simple data here
+    ('book7', 'me', 'help', './cover/book7.png','123')"; //put simple data here
     if ($conn->query($sql) === TRUE) {
         echo "Sample data inserted successfully\n";
     } else {
