@@ -8,8 +8,8 @@ import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/shopping-cart';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import bookstoreLogo from './assets/Bookshelf-3d-logo.svg' // Replace with your own bookstore image
 import LoginPage from './components/Login/LoginPage';
+import RegisterPage from './components/Register/RegisterPage'
 
 
 function App() {
@@ -26,6 +26,7 @@ function App() {
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </div>
     </Router>
