@@ -1,29 +1,36 @@
-/* Global root properties */
+
+
 
 .image-container {
-    flex: none; 
-    order: 0; 
-    margin-right: 20px; 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #ACCDFF !important;
+    flex: 2;
+    display: flex; 
+    justify-content: center; 
+    align-items: left; 
+    transition: all 0.3s ease; 
+    
 }
 
 .registration-image {
-    width: 600.74px;
-    height: 800.61px; 
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: contain;
+    display: block;
 }
 
 /* Page layout */
 .register-page {
     display: flex;
     align-items: center; 
-    height: 100%; 
-    padding-right: 50px; 
-    width: 100%;
+    height: 50%; 
+    padding-top: 40px; 
+    padding-bottom: 40px;
+    padding-right: 40px;
+    padding-left: 40px;
+    width: 90%;
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #ACCDFF !important;
+
+    transition: all 0.3s ease;
 }
 
 /* Container layout */
@@ -33,7 +40,7 @@
     max-width: 500px; /* Set a max-width to prevent growth */
     width: 100%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
-    background-color: #ACCDFF !important;
+
 }
 .breadwinners-title {
     display: none; 
@@ -132,14 +139,13 @@
 }
 
 /* Media query for smaller screens (mobile) */
-@media (max-width: 1280px) {
+@media (max-width: 750px) {
     .image-container {
         display: none; /* Hide the image container on smaller screens */
     }
 
     .register-page {
         justify-content: center; 
-        padding-right: 0; 
     }
 
     .breadwinners-title {
