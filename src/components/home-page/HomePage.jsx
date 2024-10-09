@@ -10,6 +10,7 @@ import Image7 from '../../assets/7.png';
 import Image8 from '../../assets/8.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
 import search from '../../assets/search-removebg-preview.png';
+import { Link } from 'react-router-dom';
 
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -28,9 +29,12 @@ function HomePage() {
                     </button>
                     {menuOpen && (
                         <div className="menu-items">
-                            <span>Profile</span>
-                            <span>Dashboard</span>
+                            <span>Homepage</span>
+                            <span>Recent Purchase</span>
+                            <span>Shopping cart</span>
+                            <span>Seller Dashboard</span>
                             <span>Settings</span>
+
                         </div>
                     )}
                 </div>
@@ -61,9 +65,11 @@ function HomePage() {
             <nav className="top-navbar">
                 <div className="nav-items">
                     <img src={Image9} alt="User Profile" className="profile-image" />
-                    <span>Profile</span>
-                    <span>Dashboard</span>
-                    <span>Settings</span>
+                    <span><Link to="/">Homepage</Link></span>
+                    <span><Link to="/recent-purchase">Recent Purchase</Link></span>
+                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
+                    <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
+                    <span><Link to="/settings">Settings</Link></span>
                 </div>
                 <button className="logout-button">Log Out</button>
             </nav>

@@ -1,17 +1,30 @@
-import { useState } from 'react'
-import './App.css'
-import HomePage from './components/Home/HomePage';
+import { useState } from 'react';
+import './App.css';
+import HomePage from './components/home-page/HomePage';
+import LandingPage from './components/landing-page/landing-page';
+import RecentPurchase from './components/recent-purchase/recent-purchase';
+import SellerDashboard from './components/seller-dashboard/seller-dashboard';
+import Settings from './components/settings/settings';
+import ShoppingCart from './components/shopping-cart/shopping-cart';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <>
+    <Router>
       <div>
-        <HomePage/>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/landing-page" element={<LandingPage />} />
+          <Route path="/recent-purchase" element={<RecentPurchase />} />
+          <Route path="/shopping-cart" element={<ShoppingCart />} />
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
       </div>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

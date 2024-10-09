@@ -102,6 +102,14 @@ html, body {
     gap: 20px;
     align-items: center;
 }
+.nav-items a {
+    color: white; 
+    text-decoration: none;
+}
+
+.nav-items a:hover {
+    color: #ccc; 
+}
 
 .profile-image {
     border-radius: 50%;
