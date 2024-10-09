@@ -19,8 +19,8 @@ function App() {
     <Router>
       <div>
         <Routes>
-          <Route path="/landing-page" element={<LandingPage />} />
-          <Route path="/CSE442/2024-Fall/cse-442y/" element={<HomePage />} />
+          <Route path="/CSE442/2024-Fall/cse-442y/" element={<LandingPage />} />
+          <Route path="/Homepage" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
