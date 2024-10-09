@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterPage.css';
 import Image from '../../assets/bookstore-register-removebg-preview.png'; 
+import { Link } from 'react-router-dom';
 
 function RegisterPage() {
     const [firstName, setFirstName] = useState('');
@@ -89,7 +90,7 @@ function RegisterPage() {
                     <button type="submit" className="register-button" style={{ marginTop: '40px' }}>Sign Up</button>
                 </form>
                 <div className="footer-links">
-                    <p>Already have an account? <a href="#">Log In</a></p>
+                    <p>Already have an account? <Link to="/login">Log In</Link> </p>
                 </div>
             </div>
             

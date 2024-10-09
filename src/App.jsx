@@ -20,13 +20,13 @@ function App() {
       <div>
         <Routes>
           <Route path="/landing-page" element={<LandingPage />} />
-          <Route path="/CSE442/2024-Fall/cse-442y/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/CSE442/2024-Fall/cse-442y/" element={<RegisterPage />} />
         </Routes>
       </div>
     </Router>
