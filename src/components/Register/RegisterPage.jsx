@@ -90,7 +90,7 @@ function RegisterPage() {
                     <button type="submit" className="register-button" style={{ marginTop: '40px' }}>Sign Up</button>
                 </form>
                 <div className="footer-links">
-                    <p>Already have an account? <Link to="/login">Log In</Link> </p>
+                    <p>Already have an account? <Link to="/CSE442/2024-Fall/cse-442y/login">Log In</Link> </p>
                 </div>
             </div>
             

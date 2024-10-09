@@ -76,7 +76,7 @@ function LoginPage() {
                             {message && <p className="login-message">{message}</p>}
     
                             <div className="footer-links">
-                                <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+                                <p>Don't have an account? <Link to="/CSE442/2024-Fall/cse-442y/register">Sign Up</Link></p>
                                 <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
                             </div>
                         </>
