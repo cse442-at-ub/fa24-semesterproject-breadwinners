@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost:3306";
-    $username = ""; //ubit
-    $password = ""; //person number
+    $username = "chonheic"; //ubit
+    $password = "50413052"; //person number
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -25,15 +25,14 @@
     $conn->select_db($db_name);
 
     // debug: create table. Note: VARCHAR can have size limit, TEXT doesn't
-    $table_name = "user";      //change table name here, make sure no space
+    $table_name = "books";      //change table name here, make sure no space
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        email VARCHAR(50) NOT NULL,
-        password VARCHAR(50) NOT NULL,
-        first_name VARCHAR(50) NOT NULL,
-        last_name VARCHAR(50) NOT NULL,
-        shopping_cart TEXT,   
-        otp INT(6)
+        title VARCHAR(50) NOT NULL,
+        author VARCHAR(50) NOT NULL,
+        description TEXT,
+        image_url TEXT,   
+        price INT(10)
     )";
     if ($conn->query($sql) === TRUE) {
         echo "Table {$table_name} created successfully\n";
@@ -43,8 +42,8 @@
 
     // debug: change the table column
     //$sql = "ALTER TABLE $table_name 
-    //ADD COLUMN IF NOT EXISTS otp INT(6), 
-    //ADD COLUMN IF NOT EXISTS otp_expiry DATETIME";
+    //ADD COLUMN IF NOT EXISTS image_url TEXT, 
+    // ADD COLUMN IF NOT EXISTS otp_expiry DATETIME";
     //if ($conn->query($sql) === TRUE) {
     //    echo "Table {$table_name} altered successfully\n";
     //} else {
@@ -52,8 +51,8 @@
     //}
 
     // debug: insert sample data
-    $sql = "INSERT INTO user (email, password, first_name, last_name, shopping_cart) VALUES
-    ('chonheic@buffalo.edu', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
+    $sql = "INSERT INTO books (title, author, description, image_url, price) VALUES
+    ('book7', 'me', 'help', './Cart/cover/book7.png','123')"; //put simple data here
     if ($conn->query($sql) === TRUE) {
         echo "Sample data inserted successfully\n";
     } else {

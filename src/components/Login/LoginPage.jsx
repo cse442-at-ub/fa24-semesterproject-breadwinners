@@ -14,7 +14,7 @@ function LoginPage() {
 
         // Send the login data to the backend PHP
         try {
-            const response = await fetch('https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442y/auth.php', {
+            const response = await fetch('./auth.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ function ForgotPassword({ onGoBack }) {
 
     const handleSendOtp = (e) => {
         e.preventDefault();
-        fetch('https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442y/forgot_pw.php', {
+        fetch('./forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
