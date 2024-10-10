@@ -32,56 +32,106 @@
         exit();
     }
 
-    // Query to fetch the user's shopping cart
-    $sql = "SELECT shopping_cart FROM user WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $shopping_cart = $row['shopping_cart'];
-
-        if (empty($shopping_cart)) {
-            // Handle empty cart
-            echo json_encode(['success' => true, 'items' => []]);
-        } else {
-            // Split the shopping_cart string into an array of book titles
-            $cart_items = explode(', ', $shopping_cart);
-
-            // Prepare an array to hold book details
-            $books_in_cart = [];
-
-            // Loop through the cart items and fetch book details from the books table
-            foreach ($cart_items as $book_title) {
-                $book_sql = "SELECT title, author, description, image_url, price FROM books WHERE title = ?";
-                $book_stmt = $conn->prepare($book_sql);
-                $book_stmt->bind_param("s", $book_title);
-                $book_stmt->execute();
-                $book_result = $book_stmt->get_result();
-
-                if ($book_result->num_rows > 0) {
-                    $book_row = $book_result->fetch_assoc();
-                    $books_in_cart[] = [
-                        'title' => $book_row['title'],
-                        'author' => $book_row['author'],
-                        'description' => $book_row['description'],
-                        'image_url' => $book_row['image_url'],
-                        'price' => $book_row['price'],
-                        'quantity' => 1 // Default to 1 for now
-                    ];
-                }
-            }
-
-            // Return the book details as JSON
-            echo json_encode(['success' => true, 'items' => $books_in_cart]);
+    $action = isset($data['action']) ? $data['action'] : '';
+    
+    if ($action === 'remove_book') {
+        // Handle removing a book from the cart
+        $title = isset($data['title']) ? $data['title'] : '';
+        if (empty($title)) {
+            echo json_encode(['success' => false, 'message' => 'Book title is required']);
+            exit();
         }
+
+        // Fetch the current shopping cart
+        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $shopping_cart = $row['shopping_cart'];
+            
+            if (!empty($shopping_cart)) {
+                // Remove the book title from the shopping cart
+                $cart_items = explode(', ', $shopping_cart);
+                $updated_cart_items = array_filter($cart_items, function($item) use ($title) {
+                    return $item !== $title;
+                });
+                
+                // Update the user's shopping cart in the database
+                $updated_cart = implode(', ', $updated_cart_items);
+                $update_sql = "UPDATE user SET shopping_cart = ? WHERE email = ?";
+                $update_stmt = $conn->prepare($update_sql);
+                $update_stmt->bind_param("ss", $updated_cart, $email);
+                if ($update_stmt->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Book removed successfully']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to update shopping cart']);
+                }
+                $update_stmt->close();
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Shopping cart is empty']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+        }
+
+        $stmt->close();
     } else {
-        // Handle case where user doesn't exist
-        echo json_encode(['success' => false, 'message' => 'User not found']);
+        // Handle fetching the shopping cart (default action)
+        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $shopping_cart = $row['shopping_cart'];
+
+            if (empty($shopping_cart)) {
+                // Handle empty cart
+                echo json_encode(['success' => true, 'items' => []]);
+            } else {
+                // Split the shopping_cart string into an array of book titles
+                $cart_items = explode(', ', $shopping_cart);
+
+                // Prepare an array to hold book details
+                $books_in_cart = [];
+
+                // Loop through the cart items and fetch book details from the books table
+                foreach ($cart_items as $book_title) {
+                    $book_sql = "SELECT title, author, description, image_url, price FROM books WHERE title = ?";
+                    $book_stmt = $conn->prepare($book_sql);
+                    $book_stmt->bind_param("s", $book_title);
+                    $book_stmt->execute();
+                    $book_result = $book_stmt->get_result();
+
+                    if ($book_result->num_rows > 0) {
+                        $book_row = $book_result->fetch_assoc();
+                        $books_in_cart[] = [
+                            'title' => $book_row['title'],
+                            'author' => $book_row['author'],
+                            'description' => $book_row['description'],
+                            'image_url' => $book_row['image_url'],
+                            'price' => $book_row['price'],
+                            'quantity' => 1 // Default to 1 for now
+                        ];
+                    }
+                }
+
+                // Return the book details as JSON
+                echo json_encode(['success' => true, 'items' => $books_in_cart]);
+            }
+        } else {
+            // Handle case where user doesn't exist
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+        }
+
+        $stmt->close();
     }
 
-    $stmt->close();
     $conn->close();
 ?>
