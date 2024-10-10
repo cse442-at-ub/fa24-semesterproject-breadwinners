@@ -71,7 +71,8 @@ function HomePage() {
                     <span><Link to="/CSE442/2024-Fall/cse-442y/seller-dashboard">Seller Dashboard</Link></span>
                     <span><Link to="/CSE442/2024-Fall/cse-442y/settings">Settings</Link></span>
                 </div>
-                <button className="logout-button">Log Out</button>
+                
+                <Link to="/CSE442/2024-Fall/cse-442y/login"><button className="logout-button">Log Out</button></Link>
             </nav>
 
             {/* Secondary navigation bar for larger screens */}
