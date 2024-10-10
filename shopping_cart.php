@@ -34,7 +34,55 @@
 
     $action = isset($data['action']) ? $data['action'] : '';
     
-    if ($action === 'remove_book') {
+    if ($action === 'update_quantity') {
+        // Handle updating the quantity of a book in the cart
+        $title = isset($data['title']) ? $data['title'] : '';
+        $quantity = isset($data['quantity']) ? (int)$data['quantity'] : 0;
+
+        if (empty($title) || $quantity < 1) {
+            echo json_encode(['success' => false, 'message' => 'Invalid book title or quantity']);
+            exit();
+        }
+
+        // Fetch the current shopping cart
+        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $shopping_cart = $row['shopping_cart'];
+            
+            // Remove existing entries of the book title from the cart
+            $cart_items = empty($shopping_cart) ? [] : explode(', ', $shopping_cart);
+            $updated_cart_items = array_filter($cart_items, function($item) use ($title) {
+                return $item !== $title;
+            });
+
+            // Add the book title `quantity` number of times
+            for ($i = 0; $i < $quantity; $i++) {
+                $updated_cart_items[] = $title;
+            }
+
+            // Update the user's shopping cart in the database
+            $updated_cart = implode(', ', $updated_cart_items);
+            $update_sql = "UPDATE user SET shopping_cart = ? WHERE email = ?";
+            $update_stmt = $conn->prepare($update_sql);
+            $update_stmt->bind_param("ss", $updated_cart, $email);
+            if ($update_stmt->execute()) {
+                echo json_encode(['success' => true, 'message' => 'Quantity updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update shopping cart']);
+            }
+            $update_stmt->close();
+        } else {
+            echo json_encode(['success' => false, 'message' => 'User not found']);
+        }
+
+        $stmt->close();
+    } else if ($action === 'remove_book') {
         // Handle removing a book from the cart
         $title = isset($data['title']) ? $data['title'] : '';
         if (empty($title)) {
@@ -111,14 +159,19 @@
 
                     if ($book_result->num_rows > 0) {
                         $book_row = $book_result->fetch_assoc();
-                        $books_in_cart[] = [
-                            'title' => $book_row['title'],
-                            'author' => $book_row['author'],
-                            'description' => $book_row['description'],
-                            'image_url' => $book_row['image_url'],
-                            'price' => $book_row['price'],
-                            'quantity' => 1 // Default to 1 for now
-                        ];
+                        $existing_book_index = array_search($book_title, array_column($books_in_cart, 'title'));
+                        if ($existing_book_index !== false) {
+                            $books_in_cart[$existing_book_index]['quantity'] += 1;
+                        } else {
+                            $books_in_cart[] = [
+                                'title' => $book_row['title'],
+                                'author' => $book_row['author'],
+                                'description' => $book_row['description'],
+                                'image_url' => $book_row['image_url'],
+                                'price' => $book_row['price'],
+                                'quantity' => 1
+                            ];
+                        }
                     }
                 }
 
