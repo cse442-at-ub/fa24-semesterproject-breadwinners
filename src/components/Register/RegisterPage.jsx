@@ -9,9 +9,34 @@ function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        // Handle registration logic here
+    
+        const requestBody = {
+            firstName,
+            lastName,
+            email,
+            password
+        };
+    
+        try {
+            const response = await fetch('https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442y/auth.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+    
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('Registration successful!');
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
