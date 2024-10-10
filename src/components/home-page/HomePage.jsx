@@ -77,11 +77,11 @@ function HomePage() {
 
             {/* Secondary navigation bar for larger screens */}
             <nav className="secondary-navbar">
-                <span>Books</span>
-                <span>Audiobooks</span>
+                <span>Hardcover</span>
+                <span>Paperback</span>
                 <span>E-books</span>
+                <span>Audiobooks</span>
                 <span>Textbooks</span>
-                <span>Shopping Cart</span>
             </nav>
 
             {/* Book List Section */}
