@@ -1,15 +1,7 @@
 <?php
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
 
 // Database connection
-$servername = "localhost:3306"; // Adjust the port if necessary
+$servername = "localhost:3306"; 
 $username = "hassan4"; // Database username
 $password = "50396311"; // Database password
 $db_name = "hassan4_db"; // Database name
