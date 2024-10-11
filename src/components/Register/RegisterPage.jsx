@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './RegisterPage.css';
 import Image from '../../assets/bookstore-register-removebg-preview.png'; 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -31,6 +32,7 @@ function RegisterPage() {
             const data = await response.json();
             if (data.status === 'success') {
                 alert('Registration successful!');
+                navigate('/login');
             } else {
                 alert(data.message);
             }
