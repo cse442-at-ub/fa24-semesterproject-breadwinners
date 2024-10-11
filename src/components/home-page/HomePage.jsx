@@ -65,14 +65,14 @@ function HomePage() {
             <nav className="top-navbar">
                 <div className="nav-items">
                     <img src={Image9} alt="User Profile" className="profile-image" />
-                    <span><Link to="/CSE442/2024-Fall/cse-442y/Homepage">Homepage</Link></span>
-                    <span><Link to="/CSE442/2024-Fall/cse-442y/recent-purchase">Recent Purchase</Link></span>
-                    <span><Link to="/CSE442/2024-Fall/cse-442y/shopping-cart">Shopping Cart</Link></span>
-                    <span><Link to="/CSE442/2024-Fall/cse-442y/seller-dashboard">Seller Dashboard</Link></span>
-                    <span><Link to="/CSE442/2024-Fall/cse-442y/settings">Settings</Link></span>
+                    <span><Link to="/Homepage">Homepage</Link></span>
+                    <span><Link to="/recent-purchase">Recent Purchase</Link></span>
+                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
+                    <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
+                    <span><Link to="/settings">Settings</Link></span>
                 </div>
                 
-                <Link to="/CSE442/2024-Fall/cse-442y/login"><button className="logout-button">Log Out</button></Link>
+                <Link to="/login"><button className="logout-button">Log Out</button></Link>
             </nav>
 
             {/* Secondary navigation bar for larger screens */}

@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import BreadWinnersPicture from '../../assets/BreadWinnersPicture.png';
 import ForgotPassword from './ForgotPassword';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
     const [isForgotPassword, setIsForgotPassword] = useState(false); // New state for forgot password view
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState(''); // Message for login feedback
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         // Send the login data to the backend PHP
         try {
-            const response = await fetch('https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442y/auth.php', {
+            const response = await fetch('./auth.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,11 +28,12 @@ function LoginPage() {
 
             if (data.success) {
                 setMessage('Login Successful!'); // Success message
+                 navigate('/Homepage');
             } else {
                 setMessage('Login Failed! Please check your credentials.'); // Failure message
             }
         } catch (error) {
-            setMessage('An error occurred. Please try again later.'); // Network or server error
+            setMessage(`An error occurred. Please try again later: ${error}.`); // Network or server error
         }
     };
         return (
@@ -76,7 +78,7 @@ function LoginPage() {
                             {message && <p className="login-message">{message}</p>}
     
                             <div className="footer-links">
-                                <p>Don't have an account? <Link to="/CSE442/2024-Fall/cse-442y/register">Sign Up</Link></p>
+                                <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
                                 <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
                             </div>
                         </>
