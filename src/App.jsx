@@ -7,17 +7,24 @@ import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/shopping-cart';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import RegisterPage from './components/Register/RegisterPage'
 
 
 function App() {
   const [count, setCount] = useState(0);
+  const PathLogger = () => {
+    const location = useLocation(); 
+    console.log("Current Path:", location.pathname); 
+    return null; 
+  };
+
 
   return (
-    <Router>
+    <Router basename = "/CSE442/2024-Fall/hassan4/"> {/* Add basename to handle the base URL */}
       <div>
+      <PathLogger /> {/* This will log the path */}
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/Homepage" element={<HomePage />} />
