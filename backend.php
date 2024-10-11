@@ -32,7 +32,8 @@
         password VARCHAR(50) NOT NULL,
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
-        shopping_cart TEXT,   
+        shopping_cart TEXT, 
+        auth_token TEXT,
         otp INT(6)
     )";
     if ($conn->query($sql) === TRUE) {
@@ -53,7 +54,7 @@
 
     // debug: insert sample data
     $sql = "INSERT INTO user (email, password, first_name, last_name, shopping_cart) VALUES
-    ('chonheic@buffalo.edu', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
+    ('email', '123456789', 'yes', 'no','Book7, Book8')"; //put simple data here
     if ($conn->query($sql) === TRUE) {
         echo "Sample data inserted successfully\n";
     } else {
