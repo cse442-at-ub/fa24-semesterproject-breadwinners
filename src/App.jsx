@@ -1,30 +1,43 @@
-import { useState } from 'react'
-import bookstoreLogo from './assets/Bookshelf-3d-logo.svg' // Replace with your own bookstore image
-import './App.css'
+
+import { useState } from 'react';
+import './App.css';
+import HomePage from './components/home-page/HomePage';
+import LandingPage from './components/landing-page/landing-page';
+import RecentPurchase from './components/recent-purchase/recent-purchase';
+import SellerDashboard from './components/seller-dashboard/seller-dashboard';
+import Settings from './components/settings/settings';
+import ShoppingCart from './components/shopping-cart/shopping-cart';
+import { BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
+import LoginPage from './components/Login/LoginPage';
+import RegisterPage from './components/Register/RegisterPage'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const PathLogger = () => {
+    const location = useLocation(); 
+    console.log("Current Path:", location.pathname); 
+    return null; 
+  };
+
 
   return (
-    <>
+    <Router basename = "/CSE442/2024-Fall/hassan4/"> {/* Add basename to handle the base URL */}
       <div>
-        <img src={bookstoreLogo} className="logo" alt="Bookstore logo" />
+      <PathLogger /> {/* This will log the path */}
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/Homepage" element={<HomePage />} />
+          <Route path="/recent-purchase" element={<RecentPurchase />} />
+          <Route path="/shopping-cart" element={<ShoppingCart />} />
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
       </div>
-      <h1>Welcome to My Bookstore</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          Books Added: {count}
-        </button>
-        <p>
-          Click the button to count the number of books added.
-        </p>
-      </div>
-      
-      <p className="read-the-docs">
-        Manage your bookstore inventory with ease.
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
