@@ -23,7 +23,7 @@ function LandingPage() {
                 <div className="nav-left">
                     
                 </div>
-                <Link to="/CSE442/2024-Fall/cse-442y/login"><button className="logout-button">Log In</button></Link>
+                <Link to="/login"><button className="logout-button">Log In</button></Link>
             </nav>
 
             {/* Title for Breadwinners */}
@@ -50,7 +50,7 @@ function LandingPage() {
             <nav className="top-navbar">
                 <div className="nav-items">
                 </div>
-                <Link to="/CSE442/2024-Fall/cse-442y/login"><button className="logout-button">Log In</button></Link>
+                <Link to="/login"><button className="logout-button">Log In</button></Link>
             </nav>
 
      

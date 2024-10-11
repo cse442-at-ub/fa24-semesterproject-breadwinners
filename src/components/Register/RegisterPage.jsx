@@ -20,7 +20,7 @@ function RegisterPage() {
         };
     
         try {
-            const response = await fetch('https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442y/auth.php', {
+            const response = await fetch('./auth.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ function RegisterPage() {
                     <button type="submit" className="register-button" style={{ marginTop: '40px' }}>Sign Up</button>
                 </form>
                 <div className="footer-links">
-                    <p>Already have an account? <Link to="/CSE442/2024-Fall/cse-442y/login">Log In</Link> </p>
+                    <p>Already have an account? <Link to="/login">Log In</Link> </p>
                 </div>
             </div>
             
