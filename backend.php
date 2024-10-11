@@ -14,7 +14,7 @@
     }
 
     // debug: create database if not already
-    $db_name = "chonheic_db";
+    $db_name = "chonheic_db";   // ubit_db
     //$sql = "CREATE DATABASE IF NOT EXISTS $db_name";
     //if ($conn->query($sql) === TRUE) {
     //    echo "Database created successfully\n";

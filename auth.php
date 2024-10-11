@@ -11,7 +11,7 @@
     $servername = "localhost:3306";
     $username = ""; //ubit
     $password = ""; //person number
-    $db_name = "cse442_2024_fall_team_y_db"; //cattle: cse442_2024_fall_team_y_db
+    $db_name = "cse442_2024_fall_team_y_db"; //cattle: cse442_2024_fall_team_y_db, aptitude: ubit_db
 
     // Create a connection to the MySQL database
     $conn = new mysqli($servername, $username, $password, $db_name);
