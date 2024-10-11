@@ -6,7 +6,7 @@
 $servername = "localhost:3306"; 
 $username = "hassan4"; // Database username
 $password = "50396311"; // Database password
-$db_name = "hassan4_db"; // Database name
+$db_name = "cse442_2024_fall_team_y_db"; // Database name
 
 // Create connection to MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
