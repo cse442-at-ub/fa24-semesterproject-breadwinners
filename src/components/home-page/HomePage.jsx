@@ -10,13 +10,35 @@ import Image7 from '../../assets/7.png';
 import Image8 from '../../assets/8.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
 import search from '../../assets/search-removebg-preview.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
+    };
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('./logout_backend.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                navigate('/login');
+            } else {
+                console.error('Logout failed:', data.message);
+            }
+        } catch (error) {
+            console.error('An error occurred while logging out:', error);
+        }
     };
 
     return (
@@ -38,7 +60,7 @@ function HomePage() {
                         </div>
                     )}
                 </div>
-                <button className="logout-button">Log Out</button>
+                <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
             {/* Title for Breadwinners */}
@@ -72,7 +94,7 @@ function HomePage() {
                     <span><Link to="/settings">Settings</Link></span>
                 </div>
                 
-                <Link to="/login"><button className="logout-button">Log Out</button></Link>
+                <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
             {/* Secondary navigation bar for larger screens */}

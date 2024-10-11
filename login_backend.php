@@ -1,6 +1,7 @@
 <?php
 
 
+
 // Database connection
 $servername = "localhost:3306"; 
 $username = "hassan4"; // Database username
@@ -33,7 +34,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-// Check if email exists
+// Check if email exists and prevent any sql and html injection
+// here is a test :     <a href="javascript:alert('XSS')">Click Me</a>
+// another test:        '; DROP TABLE users; --
+
+
 $sql = "SELECT * FROM user WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
@@ -51,6 +56,9 @@ $user = $result->fetch_assoc();
 // Verify password
 if (password_verify($password_input, $user['password'])) {
     echo json_encode(['success' => true, 'message' => 'Login successful']);
+    session_start(); // the user is logged in session based 
+    $_SESSION['email'] = $email; 
+
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid password']);
 }
