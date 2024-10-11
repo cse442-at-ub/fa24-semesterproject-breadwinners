@@ -13,27 +13,25 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        // Send the login data to the backend PHP
         try {
-            const response = await fetch('./auth.php', {
+            const response = await fetch('./login_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-
+    
             const data = await response.json();
-
+    
             if (data.success) {
-                setMessage('Login Successful!'); // Success message
-                 navigate('/Homepage');
+                setMessage('Login Successful!');
+                navigate('/Homepage');
             } else {
-                setMessage('Login Failed! Please check your credentials.'); // Failure message
+                setMessage(data.message || 'Login Failed! Please check your credentials.');
             }
         } catch (error) {
-            setMessage(`An error occurred. Please try again later: ${error}.`); // Network or server error
+            setMessage(`An error occurred: ${error.message}`);
         }
     };
         return (
