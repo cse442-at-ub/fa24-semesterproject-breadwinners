@@ -20,8 +20,10 @@ function RegisterPage() {
             password
         };
     
+        console.log("Request Body:", JSON.stringify(requestBody)); // Log the request body
+    
         try {
-            const response = await fetch('./auth.php', {
+            const response = await fetch('./register_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,8 +31,16 @@ function RegisterPage() {
                 body: JSON.stringify(requestBody),
             });
     
-            const data = await response.json();
-            if (data.status === 'success') {
+            const text = await response.text(); 
+            console.log("Raw Response:", text); // checking to see how raw data looks 
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const data = JSON.parse(text); // Now parse the text as JSON
+    
+            if (data.success) {
                 alert('Registration successful!');
                 navigate('/login');
             } else {
@@ -38,17 +48,16 @@ function RegisterPage() {
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('An error occurred while processing your request.');
         }
     };
 
     return (
         <div className="register-page">
-              {/* Image Container */}
-              <div className="image-container">
-                        <img src={Image} alt="Description" className="registration-image" />
-                </div>
-
-
+            {/* Image Container */}
+            <div className="image-container">
+                <img src={Image} alt="Description" className="registration-image" />
+            </div>
 
             <div className="register-container">
                 <h2 className="breadwinners-title">Breadwinners</h2>
@@ -84,9 +93,6 @@ function RegisterPage() {
                             />
                         </div>
                     </div>
-                    
-
-                
 
                     {/* Email Input */}
                     <div className="input-group" style={{ marginTop: '20px' }}>
@@ -101,7 +107,7 @@ function RegisterPage() {
                     </div>
 
                     {/* Password Input */}
-                    <div className="input-group" style={{ marginTop: '20px' }} >
+                    <div className="input-group" style={{ marginTop: '20px' }}>
                         <label>Password</label>
                         <input
                             type="password"
@@ -120,7 +126,6 @@ function RegisterPage() {
                     <p>Already have an account? <Link to="/login">Log In</Link> </p>
                 </div>
             </div>
-            
         </div>
     );
 }
