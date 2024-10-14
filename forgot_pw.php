@@ -9,8 +9,8 @@
 
     // Database connection
     $servername = "localhost:3306";
-    $username = ""; //ubit
-    $password = ""; //person number
+    $username = "chonheic"; //ubit
+    $password = "50413052"; //person number
     $db_name = "cse442_2024_fall_team_y_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database

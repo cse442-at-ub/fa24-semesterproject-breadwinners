@@ -12,7 +12,7 @@
     $servername = "localhost:3306";
     $username = "chonheic"; // your ubit
     $password = "50413052"; // your person number
-    $db_name = "chonheic_db"; // Your actual database name
+    $db_name = "cse442_2024_fall_team_y_db"; // Your actual database name
 
     // Create connection to the MySQL database
     $conn = new mysqli($servername, $username, $password, $db_name);
