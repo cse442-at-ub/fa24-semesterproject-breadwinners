@@ -6,7 +6,7 @@ import LandingPage from './components/landing-page/landing-page';
 import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
-import ShoppingCart from './components/shopping-cart/shopping-cart';
+import ShoppingCart from './components/shopping-cart/CartPage';
 import { BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import RegisterPage from './components/Register/RegisterPage'
@@ -22,7 +22,7 @@ function App() {
 
 
   return (
-    <Router basename = "/CSE442/2024-Fall/hassan4/"> {/* Add basename to handle the base URL */}
+    <Router basename = "/CSE442/2024-Fall/cse-442y/chonhei_test/"> {/* Add basename to handle the base URL */}
       <div>
       <PathLogger /> {/* This will log the path */}
         <Routes>
