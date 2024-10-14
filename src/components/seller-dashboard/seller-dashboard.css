@@ -1,0 +1,59 @@
+/* src/components/seller-dashboard/seller-dashboard.css */
+
+.seller-dashboard-container {
+  padding: 50px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 24px;
+}
+
+.add-book-btn {
+  background-color: #2abbd1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-book-btn:hover {
+  background-color: #187280;
+}
+
+.data-grid {
+  width: 100%;
+  height: 500px;
+}
+
+.ag-header-cell {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.ag-theme-alpine .ag-row {
+  border-bottom: 1px solid #ddd;
+}
+
+.ag-cell img {
+  border-radius: 5px;
+  position: center;
+}
+
+/* styles.css */
+@media (max-width: 768px) {
+  .MuiDataGrid-cell--image,
+  .MuiDataGrid-cell--price {
+    display: none; /* Hide image and price columns on small screens */
+  }
+}
