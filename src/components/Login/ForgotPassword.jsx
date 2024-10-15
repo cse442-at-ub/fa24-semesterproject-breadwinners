@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './LoginPage.css'; // Reuse the same CSS as LoginPage
+import { Link} from 'react-router-dom';
 
 function ForgotPassword({ onGoBack }) {
     const [email, setEmail] = useState('');
@@ -97,7 +98,7 @@ function ForgotPassword({ onGoBack }) {
                         <button type="submit" className="login-button">Send OTP</button>
                     </form>
                     <p className="footer-links">
-                        Don't have an account? <a href="#">Sign Up</a>
+                        Don't have an account? <Link to="/register">Sign Up</Link>
                     </p>
                     <p className="footer-links">
                         <a href="#" onClick={onGoBack}>Back to Login</a>
