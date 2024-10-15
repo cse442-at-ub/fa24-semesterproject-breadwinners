@@ -1,7 +1,4 @@
 <?php
-
-
-
 // Database connection
 $servername = "localhost:3306"; 
 $username = "hassan4"; // Database username
@@ -34,11 +31,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-// Check if email exists and prevent any sql and html injection
-// here is a test :     <a href="javascript:alert('XSS')">Click Me</a>
-// another test:        '; DROP TABLE users; --
-
-
+// Check if email exists
 $sql = "SELECT * FROM user WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
@@ -52,12 +45,36 @@ if ($result->num_rows === 0) {
 
 // Fetch user data
 $user = $result->fetch_assoc();
+$stored_hashed_password = $user['password'];
+$salt = $user['salt'];
 
-// Verify password
-if (password_verify($password_input, $user['password'])) {
-    echo json_encode(['success' => true, 'message' => 'Login successful']);
-    session_start(); // the user is logged in session based 
-    $_SESSION['email'] = $email; 
+// Combine salt and input password, and verify
+$hashed_input_password = $salt . $password_input;
+
+if (password_verify($hashed_input_password, $stored_hashed_password)) {
+    // Generate a random auth token
+    $auth_token = bin2hex(random_bytes(16));
+
+    // Set the auth token as a cookie that expires in 1 hour
+    setcookie('auth_token', $auth_token, time() + 3600, "/", "", false, true); // HttpOnly for better security
+
+    // Update the auth_token in the user's record in the database
+    $update_sql = "UPDATE user SET auth_token = ? WHERE email = ?";
+    $update_stmt = $conn->prepare($update_sql);
+    $update_stmt->bind_param("ss", $auth_token, $email);
+    $update_stmt->execute();
+    $update_stmt->close();
+
+    // Send response
+    echo json_encode([
+        'success' => true,
+        'message' => 'Login successful'
+    ]);
+
+    // Optionally, save the auth token to the session for future validation
+    session_start();
+    $_SESSION['email'] = $email;
+    $_SESSION['auth_token'] = $auth_token;
 
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid password']);

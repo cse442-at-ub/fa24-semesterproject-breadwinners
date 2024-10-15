@@ -1,6 +1,15 @@
 <?php
-session_start(); 
+session_start();
+
+// Unset all session variables
 session_unset(); 
-session_destroy(); 
+
+// Destroy the session
+session_destroy();
+
+// Clear the auth_token cookie
+setcookie('auth_token', '', time() - 3600, "/");
+
+// Send response to the client
 echo json_encode(['success' => true, 'message' => 'Logged out successfully']);
 ?>
