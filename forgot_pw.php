@@ -91,13 +91,15 @@
     // Stage 3: Reset Password
     } elseif ($action === 'reset_password') {
         if (!empty($email) && !empty($password)) {
-            // Hash the new password before storing it
-            //$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // Generate a new salt
+            $salt = bin2hex(random_bytes(8));
 
-            // Update the user's password in the database
-            $stmt = $conn->prepare("UPDATE user SET password = ? WHERE email = ?");
-            //$stmt->bind_param("ss", $hashed_password, $email);
-            $stmt->bind_param("ss", $password, $email);
+            // Hash the new password with the salt
+            $hashed_password = password_hash($salt . $password, PASSWORD_DEFAULT);
+
+            // Update the user's password and salt in the database
+            $stmt = $conn->prepare("UPDATE user SET password = ?, salt = ? WHERE email = ?");
+            $stmt->bind_param("sss", $hashed_password, $salt, $email);
 
             if ($stmt->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Password reset successful']);
