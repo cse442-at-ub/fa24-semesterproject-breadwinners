@@ -4,7 +4,7 @@ import './CartPage.css';
 function CartPage() {
     const [cartItems, setCartItems] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
-    const [email, setEmail] = useState('chonheic@buffalo.edu'); // Hardcoded for now, can be set dynamically
+    const [email, setEmail] = useState(''); // Hardcoded for now, can be set dynamically
 
     // Function to calculate the total cost
     const calculateTotalCost = (items) => {
@@ -111,7 +111,7 @@ function CartPage() {
             <h1 className="breadwinners-header">BREADWINNERS</h1>
             {/* Line Break After the Header */}
             <hr className="header-line-break" />
-            <h2 className="shopping-cart-title">Shopping Cart: from {email}</h2>
+
             <p>{cartItems.length} item{cartItems.length !== 1 && 's'} in your cart.</p>
             <div className="shopping-cart-items">
                 {cartItems.map((item, index) => (
