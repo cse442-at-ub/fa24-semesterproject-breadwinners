@@ -23,15 +23,29 @@
         exit();
     }
 
-    // Get the raw POST data and decode it
-    $data = json_decode(file_get_contents('php://input'), true);
-    $email = isset($data['email']) ? $data['email'] : '';
+    // Function to validate auth token and extract email
+    function getEmailFromAuthToken($token) {
+        // For demonstration purposes, we'll assume the token is just the email in plain text.
+        // In a real implementation, you would validate the token properly (e.g., using JWT).
+        return $token; // Replace with actual token validation logic
+    }
 
-    if (empty($email)) {
-        echo json_encode(['success' => false, 'message' => 'Email is required']);
+    // Get auth token from cookies
+    if (!isset($_COOKIE['auth_token'])) {
+        echo json_encode(['success' => false, 'message' => 'Auth token is required']);
         exit();
     }
 
+    $auth_token = $_COOKIE['auth_token'];
+    $email = getEmailFromAuthToken($auth_token);
+
+    if (empty($email)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid auth token']);
+        exit();
+    }
+
+    // Get the raw POST data and decode it
+    $data = json_decode(file_get_contents('php://input'), true);
     $action = isset($data['action']) ? $data['action'] : '';
     
     if ($action === 'update_quantity') {
@@ -45,7 +59,7 @@
         }
 
         // Fetch the current shopping cart
-        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $sql = "SELECT shopping_cart FROM user WHERE auth_token = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -68,7 +82,7 @@
 
             // Update the user's shopping cart in the database
             $updated_cart = implode(', ', $updated_cart_items);
-            $update_sql = "UPDATE user SET shopping_cart = ? WHERE email = ?";
+            $update_sql = "UPDATE user SET shopping_cart = ? WHERE auth_token = ?";
             $update_stmt = $conn->prepare($update_sql);
             $update_stmt->bind_param("ss", $updated_cart, $email);
             if ($update_stmt->execute()) {
@@ -91,7 +105,7 @@
         }
 
         // Fetch the current shopping cart
-        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $sql = "SELECT shopping_cart FROM user WHERE auth_token = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -110,7 +124,7 @@
                 
                 // Update the user's shopping cart in the database
                 $updated_cart = implode(', ', $updated_cart_items);
-                $update_sql = "UPDATE user SET shopping_cart = ? WHERE email = ?";
+                $update_sql = "UPDATE user SET shopping_cart = ? WHERE auth_token = ?";
                 $update_stmt = $conn->prepare($update_sql);
                 $update_stmt->bind_param("ss", $updated_cart, $email);
                 if ($update_stmt->execute()) {
@@ -129,7 +143,7 @@
         $stmt->close();
     } else {
         // Handle fetching the shopping cart (default action)
-        $sql = "SELECT shopping_cart FROM user WHERE email = ?";
+        $sql = "SELECT shopping_cart FROM user WHERE auth_token = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
