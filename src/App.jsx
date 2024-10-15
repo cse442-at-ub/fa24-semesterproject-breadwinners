@@ -22,7 +22,7 @@ function App() {
 
 
   return (
-    <Router basename = "/CSE442/2024-Fall/cse-442y/chonhei_test/"> {/* Add basename to handle the base URL */}
+    <Router basename = "/CSE442/2024-Fall/cse-442y/"> {/* Add basename to handle the base URL */}
       <div>
       <PathLogger /> {/* This will log the path */}
         <Routes>
