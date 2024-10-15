@@ -51,13 +51,14 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-// Hash the password
-$hashed_password = password_hash($password_input, PASSWORD_BCRYPT);
+// Generate a random salt and hash the password
+$salt = bin2hex(random_bytes(16)); // Generate a 16-byte salt
+$hashed_password = password_hash($salt . $password_input, PASSWORD_BCRYPT);
 
 // Insert new user into the database
-$sql = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO user (first_name, last_name, email, password, salt) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $firstName, $lastName, $email, $hashed_password);
+$stmt->bind_param("sssss", $firstName, $lastName, $email, $hashed_password, $salt);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Registration successful']);
