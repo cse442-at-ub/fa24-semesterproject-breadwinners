@@ -1,6 +1,6 @@
 <?php
     $servername = "localhost:3306";
-    $username = ""; //ubit
+    $username = "chonheic"; //ubit
     $password = ""; //person number
 
     // Create connection

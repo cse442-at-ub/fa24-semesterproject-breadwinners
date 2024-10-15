@@ -3,15 +3,15 @@
     header("Access-Control-Allow-Headers: Content-Type");
     header("Content-Type: application/json");
 
-    //ini_set('display_errors', 1);
-    //ini_set('display_startup_errors', 1);
-    //error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
     // Database connection
     $servername = "localhost:3306";
-    $username = ""; //ubit
-    $password = ""; //person number
-    $db_name = "cse442_2024_fall_team_y_db"; //cattle: cse442_2024_fall_team_y_db
+    $username = "chonheic"; //ubit
+    $password = "50413052"; //person number
+    $db_name = "chonheic_db"; //cattle: cse442_2024_fall_team_y_db
 
     // Create a connection to the MySQL database
     $conn = new mysqli($servername, $username, $password, $db_name);
