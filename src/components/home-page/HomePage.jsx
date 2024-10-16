@@ -87,7 +87,7 @@ function HomePage() {
             <nav className="top-navbar">
                 <div className="nav-items">
                     <img src={Image9} alt="User Profile" className="profile-image" />
-                    <span><Link to="/Homepage">Homepage</Link></span>
+                    <span><Link to="/">Homepage</Link></span>
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
                     <span><Link to="/shopping-cart">Shopping Cart</Link></span>
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>

@@ -24,8 +24,8 @@ function App() {
     <Router basename = {getBaseName()}> {/* Add basename to handle the base URL */}
       <div>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/Homepage" element={<HomePage />} />
+          <Route path="/landing-page" element={<LandingPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
