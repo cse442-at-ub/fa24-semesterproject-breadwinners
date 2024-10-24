@@ -16,7 +16,7 @@ export default function HomePage() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('./fetch_books.php'); // Replace with your actual backend endpoint
+                const response = await fetch('./backend/fetch_books.php'); // Replace with your actual backend endpoint
                 const data = await response.json();
                 if (data.success) {
                     setRowData(data.books); // Assuming the backend sends the books array in data.books
@@ -36,7 +36,7 @@ export default function HomePage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('./logout_backend.php', {
+            const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             });

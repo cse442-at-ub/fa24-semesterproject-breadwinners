@@ -23,7 +23,7 @@ function RegisterPage() {
         console.log("Request Body:", JSON.stringify(requestBody)); // Log the request body
     
         try {
-            const response = await fetch('./register_backend.php', {
+            const response = await fetch('./backend/register_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ function ForgotPassword({ onGoBack }) {
 
     const handleSendOtp = (e) => {
         e.preventDefault();
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,7 +30,7 @@ function ForgotPassword({ onGoBack }) {
 
     const handleVerifyOtp = (e) => {
         e.preventDefault();
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ function ForgotPassword({ onGoBack }) {
             return;
         }
     
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

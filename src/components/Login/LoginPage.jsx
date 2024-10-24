@@ -14,7 +14,7 @@ function LoginPage() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('./login_backend.php', {
+            const response = await fetch('./backend/login_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ function LoginPage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('./logout_backend.php', {
+            const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -15,7 +15,7 @@ function CartPage() {
     // Fetch cart data from backend PHP when the component mounts
     const fetchCartItems = async () => {
         try {
-            const response = await fetch('./shopping_cart.php', {
+            const response = await fetch('./backend/shopping_cart.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function CartPage() {
     // Function to update the quantity in the database by duplicating book titles
     const updateQuantityInDB = async (title, newQuantity) => {
         try {
-            const response = await fetch('./shopping_cart.php', {
+            const response = await fetch('./backend/shopping_cart.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function CartPage() {
     // Function to remove a book from the database
     const removeBookFromCart = async (title) => {
         try {
-            const response = await fetch('./shopping_cart.php', {
+            const response = await fetch('./backend/shopping_cart.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
