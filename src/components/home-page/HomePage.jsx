@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import './HomePage.css';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -7,37 +7,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import search from '../../assets/search-removebg-preview.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
 
-// Mock Data for Books on the Homepage
-const initialBooks = [
-    {
-        id: 1,
-        image: 'https://via.placeholder.com/100x150',
-        name: 'Book One',
-        author: 'Author A',
-        genre: 'Fiction',
-        price: 10.99,
-        rating: 4.5,
-        stock: 100,
-        sellerImage: 'https://via.placeholder.com/50',
-    },
-    {
-        id: 2,
-        image: 'https://via.placeholder.com/100x150',
-        name: 'Book Two',
-        author: 'Author B',
-        genre: 'Mystery',
-        price: 12.99,
-        rating: 4.0,
-        stock: 50,
-        sellerImage: 'https://via.placeholder.com/50',
-    },
-    // Add more mock book data here...
-];
-
 export default function HomePage() {
-    const [rowData] = useState(initialBooks);
+    const [rowData, setRowData] = useState([]); // Fetch data from the backend
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+
+    // Fetch books data from the backend
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const response = await fetch('./fetch_books.php'); // Replace with your actual backend endpoint
+                const data = await response.json();
+                if (data.success) {
+                    setRowData(data.books); // Assuming the backend sends the books array in data.books
+                } else {
+                    console.error('Failed to fetch books:', data.message);
+                }
+            } catch (error) {
+                console.error('An error occurred while fetching books:', error);
+            }
+        };
+        fetchBooks();
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -64,19 +55,19 @@ export default function HomePage() {
     const columns = [
         {
             headerName: 'Image',
-            field: 'image',
+            field: 'image_url', // Assuming 'image_url' holds the image path or URL
             cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />,
             minWidth: 120,
             filter: false,
         },
-        { headerName: 'Book Title', field: 'name', flex: 1, minWidth: 200 },
+        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200 }, // Assuming 'title' holds the book title
         { headerName: 'Author', field: 'author', flex: 1, minWidth: 150 },
         { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150 },
         {
             headerName: 'Seller',
-            field: 'sellerImage',
-            cellRenderer: (params) => (
-                <img src={params.value} alt="Seller" width="50" style={{ borderRadius: '50%' }} />
+            field: 'sellerImage', // Hardcoded placeholder for seller image
+            cellRenderer: () => (
+                <img src="https://via.placeholder.com/50" alt="Seller" width="50" style={{ borderRadius: '50%' }} />
             ),
             minWidth: 100,
         },
