@@ -1,45 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './HomePage.css';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
+import search from '../../assets/search-removebg-preview.png';
+import Image9 from '../../assets/BreadWinnersPicture.png';
 
-function HomePage() {
+// Mock Data for Books on the Homepage
+const initialBooks = [
+    {
+        id: 1,
+        image: 'https://via.placeholder.com/100x150',
+        name: 'Book One',
+        author: 'Author A',
+        genre: 'Fiction',
+        price: 10.99,
+        rating: 4.5,
+        stock: 100,
+        sellerImage: 'https://via.placeholder.com/50',
+    },
+    {
+        id: 2,
+        image: 'https://via.placeholder.com/100x150',
+        name: 'Book Two',
+        author: 'Author B',
+        genre: 'Mystery',
+        price: 12.99,
+        rating: 4.0,
+        stock: 50,
+        sellerImage: 'https://via.placeholder.com/50',
+    },
+    // Add more mock book data here...
+];
+
+export default function HomePage() {
+    const [rowData] = useState(initialBooks);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [books, setBooks] = useState([]);
-
-    useEffect(() => {
-        // Fetch books data from the backend
-        const fetchBooks = async () => {
-            try {
-                const response = await fetch('./fetch_books.php');
-                const data = await response.json();
-                if (data.success) {
-                    setBooks(data.books);
-                } else {
-                    console.error('Failed to fetch books:', data.message);
-                }
-            } catch (error) {
-                console.error('An error occurred while fetching books:', error);
-            }
-        };
-        fetchBooks();
-    }, []);
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
-    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             const response = await fetch('./logout_backend.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
             });
-
             const data = await response.json();
-
             if (data.success) {
                 navigate('/login');
             } else {
@@ -50,19 +60,57 @@ function HomePage() {
         }
     };
 
+    // Column definitions for the book grid
+    const columns = [
+        {
+            headerName: 'Image',
+            field: 'image',
+            cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />,
+            minWidth: 120,
+            filter: false,
+        },
+        { headerName: 'Book Title', field: 'name', flex: 1, minWidth: 200 },
+        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150 },
+        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150 },
+        {
+            headerName: 'Seller',
+            field: 'sellerImage',
+            cellRenderer: (params) => (
+                <img src={params.value} alt="Seller" width="50" style={{ borderRadius: '50%' }} />
+            ),
+            minWidth: 100,
+        },
+        {
+            headerName: 'Rating',
+            field: 'rating',
+            cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>,
+            minWidth: 120,
+        },
+        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100 },
+        { headerName: 'Price ($)', field: 'price', minWidth: 120 },
+        {
+            headerName: 'Actions',
+            field: 'id', // Use book ID for navigation
+            cellRenderer: (params) => (
+                <button onClick={() => navigate(`/book/${params.value}`)} className="view-book-button">
+                    View Book
+                </button>
+            ),
+            minWidth: 150,
+        },
+    ];
+
     return (
         <div className="homepage">
-            {/* Navbar for mobile view */}
+            {/* Mobile Navbar */}
             <nav className="navbar">
                 <div className="nav-left">
-                    <button className="menu-button" onClick={toggleMenu}>
-                        Menu
-                    </button>
+                    <button className="menu-button" onClick={toggleMenu}>Menu</button>
                     {menuOpen && (
                         <div className="menu-items">
                             <span>Homepage</span>
                             <span>Recent Purchase</span>
-                            <span>Shopping cart</span>
+                            <span>Shopping Cart</span>
                             <span>Seller Dashboard</span>
                             <span>Settings</span>
                         </div>
@@ -71,25 +119,10 @@ function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Title for Breadwinners */}
-            <h2 className="title">Breadwinners</h2>
-
-            {/* Title for Best Sellers */}
-            <h3 className="best-sellers-title">Explore Our Best Sellers</h3>
-            {/* Blue Divider Line */}
-            <hr className="divider-line" />
-            {/* Search bar section */}
-            <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search for books..."
-                />
-            </div>
-
-            {/* Top navigation bar for larger screens */}
+            {/* Desktop Top Navbar */}
             <nav className="top-navbar">
                 <div className="nav-items">
+                    <img src={Image9} alt="User Profile" className="profile-image" />
                     <span><Link to="/Homepage">Homepage</Link></span>
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
                     <span><Link to="/shopping-cart">Shopping Cart</Link></span>
@@ -99,7 +132,7 @@ function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Secondary navigation bar for larger screens */}
+            {/* Secondary Navbar */}
             <nav className="secondary-navbar">
                 <span>Hardcover</span>
                 <span>Paperback</span>
@@ -108,19 +141,23 @@ function HomePage() {
                 <span>Textbooks</span>
             </nav>
 
-            {/* Book List Section */}
-            <div className="book-container">
-                {books.map((book, index) => (
-                    <div className="book" key={index}>
-                        <img src={book.image_url} alt={`Book ${index + 1}`} />
-                        <h3>{book.title}</h3>
-                        <p className="author">{book.author}</p>
-                        <p className="price">${book.price}</p>
-                    </div>
-                ))}
+            {/* Title and Search Bar */}
+            <h2 className="title">Breadwinners - Best Books Available</h2>
+            <div className="search-bar">
+                <img src={search} alt="Search Icon" className="search-icon" />
+                <input type="text" className="search-input" placeholder="Search for books..." />
+            </div>
+
+            {/* Book Grid Section */}
+            <div style={{ height: 500, width: '100%' }} className="ag-theme-alpine book-grid">
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={columns}
+                    pagination={false}
+                    domLayout="autoHeight"
+                    getRowHeight={() => 155}
+                />
             </div>
         </div>
     );
 }
-
-export default HomePage;
