@@ -26,7 +26,7 @@ if ($conn->connect_error) {
 $response = array();
 
 try {
-    $query = "SELECT title, author, image_url, price, genre, rating, stock FROM books";
+    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);
