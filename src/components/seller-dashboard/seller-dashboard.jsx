@@ -1,65 +1,43 @@
-// NewSeller.jsx 
-import React, { useState } from "react";
+// Updated NewSeller.jsx to integrate seller-specific book fetching using auth_token from cookies
+
+import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./seller-dashboard.css";
 
-const initialRows = [
-  {
-    id: 1,
-    image: "https://via.placeholder.com/50",
-    name: "Book One",
-    author: "Author A",
-    genre: "Fiction",
-    price: 10.99,
-    stock: 100,
-  },
-  {
-    id: 2,
-    image: "https://via.placeholder.com/50",
-    name: "Book Two",
-    author: "Author B",
-    genre: "Mystery",
-    price: 12.99,
-    stock: 50,
-  },
-  {
-    id: 3,
-    image: "https://via.placeholder.com/50",
-    name: "Book Three",
-    author: "Author C",
-    genre: "Sci-Fi",
-    price: 15.99,
-    stock: 30,
-  },
-  {
-    id: 4,
-    image: "https://via.placeholder.com/50",
-    name: "Book Four",
-    author: "Author D",
-    genre: "Fantasy",
-    price: 9.99,
-    stock: 80,
-  },
-  {
-    id: 5,
-    image: "https://via.placeholder.com/50",
-    name: "Book Five",
-    author: "Author E",
-    genre: "Non-Fiction",
-    price: 20.99,
-    stock: 10,
-  },
-];
-
 export default function SellerDashboard() {
-  const [rowData, setRowData] = useState(initialRows);
+  const [rowData, setRowData] = useState([]);
+
+  useEffect(() => {
+    // Fetch books from the backend for the logged-in seller
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch("./backend/seller_fetch_books.php", {
+          method: 'GET',
+          credentials: 'include', // Include cookies in the request
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.success) {
+          setRowData(data.books);
+        } else {
+          console.error("Failed to fetch books: ", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching books: ", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   const columns = [
     {
       headerName: "Image",
-      field: "image",
+      field: "image_url",
       cellRenderer: (params) => (
         <img src={params.value} alt={"Book"} width="50" />
       ),
@@ -68,7 +46,7 @@ export default function SellerDashboard() {
     },
     {
       headerName: "Book Name",
-      field: "name",
+      field: "title",
       filter: "agTextColumnFilter",
       floatingFilter: true,
       flex: 1, // Allows the column to flex
