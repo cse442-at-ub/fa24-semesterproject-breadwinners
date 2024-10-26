@@ -50,10 +50,78 @@
   position: center;
 }
 
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.modal-content input,
+.modal-content select {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.modal-content button {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-content button:first-child {
+  background-color: #4caf50; /* Green */
+  color: white;
+}
+
+.modal-content button:last-child {
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-left: 10px;
+}
+
+.modal-content button:hover {
+  opacity: 0.9;
+}
+
 /* styles.css */
 @media (max-width: 768px) {
   .MuiDataGrid-cell--image,
   .MuiDataGrid-cell--price {
     display: none; /* Hide image and price columns on small screens */
+  }
+
+  .seller-dashboard-container {
+    padding: 20px;
   }
 }

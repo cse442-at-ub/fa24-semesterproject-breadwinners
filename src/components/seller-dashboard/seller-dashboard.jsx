@@ -1,4 +1,4 @@
-// Updated NewSeller.jsx to integrate seller-specific book fetching using auth_token from cookies
+// Updated NewSeller.jsx to add a modal window for adding books with genre dropdown
 
 import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
@@ -8,6 +8,15 @@ import "./seller-dashboard.css";
 
 export default function SellerDashboard() {
   const [rowData, setRowData] = useState([]);
+  const [showAddBookModal, setShowAddBookModal] = useState(false);
+  const [newBook, setNewBook] = useState({
+    title: "",
+    author: "",
+    genre: "Fiction",
+    price: "",
+    stock: "",
+    image_url: "",
+  });
 
   useEffect(() => {
     // Fetch books from the backend for the logged-in seller
@@ -33,6 +42,34 @@ export default function SellerDashboard() {
 
     fetchBooks();
   }, []);
+
+  const handleAddBook = () => {
+    setShowAddBookModal(true);
+  };
+
+  const handleSaveBook = async () => {
+    try {
+      const response = await fetch("./backend/add_book.php", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newBook)
+      });
+      const data = await response.json();
+      if (data.success) {
+        // Update the grid with the new book details
+        setRowData([...rowData, newBook]);
+        setShowAddBookModal(false);
+        setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "", image_url: "" });
+      } else {
+        console.error("Failed to add book: ", data.message);
+      }
+    } catch (error) {
+      console.error("Error adding book: ", error);
+    }
+};
+
 
   const columns = [
     {
@@ -90,7 +127,7 @@ export default function SellerDashboard() {
     <div className="seller-dashboard-container">
       <div className="header">
         <h2>Seller Dashboard</h2>
-        <button className="add-book-btn">Add Book</button>
+        <button className="add-book-btn" onClick={handleAddBook}>Add Book</button>
       </div>
       <div
         style={{ height: 400, width: "100%", overflowX: "auto" }} // Allow horizontal scrolling
@@ -110,6 +147,53 @@ export default function SellerDashboard() {
           getRowHeight={() => 60}
         />
       </div>
+
+      {showAddBookModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Add New Book</h3>
+            <input
+              type="text"
+              placeholder="Title"
+              value={newBook.title}
+              onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Author"
+              value={newBook.author}
+              onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+            />
+            <select
+              value={newBook.genre}
+              onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
+            >
+              <option value="Fiction">Fiction</option>
+              <option value="Non-Fiction">Non-Fiction</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Price"
+              value={newBook.price}
+              onChange={(e) => setNewBook({ ...newBook, price: e.target.value })}
+            />
+            <input
+              type="number"
+              placeholder="Stock"
+              value={newBook.stock}
+              onChange={(e) => setNewBook({ ...newBook, stock: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Image URL"
+              value={newBook.image_url}
+              onChange={(e) => setNewBook({ ...newBook, image_url: e.target.value })}
+            />
+            <button onClick={handleSaveBook}>Save Book</button>
+            <button onClick={() => setShowAddBookModal(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
