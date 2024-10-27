@@ -1,4 +1,3 @@
-// src/components/add-book/AddBook.jsx
 import React, { useState } from "react";
 import "./add_book.css";
 
@@ -9,6 +8,7 @@ export default function AddBook() {
     genre: "Fiction",
     price: "",
     stock: "",
+    description: "" // Add description field
   });
 
   const [coverFile, setCoverFile] = useState(null);
@@ -22,9 +22,10 @@ export default function AddBook() {
       formData.append("genre", newBook.genre);
       formData.append("price", newBook.price);
       formData.append("stock", newBook.stock);
-      
+      formData.append("description", newBook.description); // Add description to FormData
+
       if (coverFile) {
-        formData.append("cover", coverFile);  // Add the image file to the form data
+        formData.append("cover", coverFile);
       }
 
       const response = await fetch("./backend/add_book.php", {
@@ -35,8 +36,8 @@ export default function AddBook() {
       const data = await response.json();
       if (data.success) {
         setMessage("Book added successfully!");
-        setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "" });
-        setCoverFile(null);  // Reset the cover file input
+        setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "", description: "" });
+        setCoverFile(null);
       } else {
         setMessage(`Failed to add book: ${data.message}`);
       }
@@ -67,6 +68,11 @@ export default function AddBook() {
         <option value="Fiction">Fiction</option>
         <option value="Non-Fiction">Non-Fiction</option>
       </select>
+      <textarea
+        placeholder="Description"
+        value={newBook.description}
+        onChange={(e) => setNewBook({ ...newBook, description: e.target.value })}
+      />
       <input
         type="text"
         inputMode="numeric"
@@ -89,13 +95,17 @@ export default function AddBook() {
           }
         }}
       />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setCoverFile(e.target.files[0])}  // Set the selected image file
-      />
+      <label>
+        Cover:
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setCoverFile(e.target.files[0])}
+        />
+      </label>
       <button onClick={handleSaveBook}>Save Book</button>
       {message && <p className="message">{message}</p>}
     </div>
   );
+  
 }
