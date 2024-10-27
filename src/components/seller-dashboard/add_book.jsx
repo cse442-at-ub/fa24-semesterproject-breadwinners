@@ -58,16 +58,28 @@ export default function AddBook() {
         <option value="Non-Fiction">Non-Fiction</option>
       </select>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"  // Display a numeric keypad on mobile devices
         placeholder="Price"
         value={newBook.price}
-        onChange={(e) => setNewBook({ ...newBook, price: e.target.value })}
+        onChange={(e) => {
+          // Ensure only positive numbers are entered
+          if (!isNaN(e.target.value) && Number(e.target.value) >= 0) {
+            setNewBook({ ...newBook, price: e.target.value });
+          }
+        }}
       />
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"  // Display a numeric keypad on mobile devices
         placeholder="Stock"
         value={newBook.stock}
-        onChange={(e) => setNewBook({ ...newBook, stock: e.target.value })}
+        onChange={(e) => {
+          // Ensure only positive numbers are entered
+          if (!isNaN(e.target.value) && Number(e.target.value) >= 0) {
+            setNewBook({ ...newBook, stock: e.target.value });
+          }
+        }}
       />
       <input
         type="text"
