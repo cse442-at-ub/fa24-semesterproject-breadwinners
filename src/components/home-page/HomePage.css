@@ -36,7 +36,7 @@ html, body {
 
     .top-navbar,
     .secondary-navbar {
-        display: none; 
+        display: block; 
     }
 }
 
@@ -142,17 +142,23 @@ html, body {
     border-radius: 15px;
 }
 
-.book h3 {
+.book h2 {
     margin-top: 10px; /* Adds some space above the title */
     margin-bottom: 5px; /* Adds a small gap below the title */
     font-size: 18px; /* Adjusted for readability */
     font-weight: bold;
 }
 
-.book-title {
+.book h3 {
     margin-top: 10px; /* Adds some space above the title */
     margin-bottom: 5px; /* Adds a small gap below the title */
     font-size: 18px; /* Adjusted for readability */
+}
+
+.book-title {
+    margin-top: 10px; /* Adds some space above the title */
+    margin-bottom: 5px; /* Adds a small gap below the title */
+    font-size: 24px; /* Adjusted for readability */
     font-weight: bold;
 }
 
@@ -160,29 +166,27 @@ html, body {
     margin-top: 0; /* Ensure no extra space is pushing the author above the title */
     margin-bottom: 15px;
     font-size: 14px; /* Adjust for readability */
+    font-weight: normal;
+}
+
+.price {
+    font-size: 14px;
+    font-weight: normal; /* Ensure text is not bold */
 }
 
 
 
 @media (max-width: 768px) {
-    .secondary-navbar {
-        display: none; 
-    }
-
-    .top-navbar {
-        display: none; 
-    }
-
     .book {
         width: calc(50% - 20px); /* Two books per row on smaller screens */
+    }
+    .author {
+        font-size: 12px; /* Smaller font for better fit */
+        display: block; /* Ensure the author is displayed */
     }
 }
 
 @media (min-width: 769px) {
-    .author {
-        display: block; 
-    }
-
     .book {
         width: calc(25% - 20px); /* Four books per row on larger screens */
     }

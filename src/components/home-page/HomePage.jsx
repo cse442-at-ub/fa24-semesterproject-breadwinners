@@ -115,9 +115,9 @@ function HomePage() {
                 {books.map((book, index) => (
                     <div className="book" key={index}>
                         <img src={book.image_url} alt={`Book ${index + 1}`} />
-                        <h3 className="book-title">{book.title}</h3>
-                        <p className="author">{book.author}</p>
-                        <p className="price">${book.price}</p>
+                        <h2 className="book-title">{book.title}</h2>
+                        <h3 className="author">{book.author}</h3>
+                        <h3 className="price">${book.price}</h3>
                     </div>
                 ))}
             </div>
