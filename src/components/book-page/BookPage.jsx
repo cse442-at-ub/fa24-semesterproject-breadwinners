@@ -1,17 +1,20 @@
-// BookPage.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import './BookPage.css';
 
 export default function BookPage() {
     const { id } = useParams(); // Get the book ID from the URL
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // For navigation
 
     useEffect(() => {
         const fetchBookById = async () => {
             try {
-                const response = await fetch(`../backend/FetchBookById.php?id=${id}`); // Go up one directory and access backend
+                const response = await fetch(`../backend/FetchBookById.php?id=${id}`);
                 const data = await response.json();
                 if (data.success) {
                     setBook(data.book);
@@ -33,18 +36,39 @@ export default function BookPage() {
         return <div>Loading...</div>;
     }
 
-    // Update the image URL to use a relative path
-    const imageUrl = `../${book.image_url}`; // Adjust as needed
+    // Adjust image URL
+    const imageUrl = `../${book.image_url}`;
 
     return (
         <div className="book-page">
-            <img src={imageUrl} alt={book.title} className="book-image" />
-            <h2>{book.title}</h2>
-            <p><strong>Author:</strong> {book.author}</p>
-            <p><strong>Genre:</strong> {book.genre}</p>
-            <p><strong>Rating:</strong> {'⭐'.repeat(Math.floor(book.rating))} ({book.rating})</p>
-            <p><strong>Price:</strong> ${book.price}</p>
-            <p><strong>Stock:</strong> {book.stock}</p>
+            <header className="header-bar">
+                <h1 className="logo">BREADWINNERS</h1>
+            </header>
+            <div className="book-details-container">
+                <div className="book-details">
+                    <div className="image-bookmark">
+                        <img src={imageUrl} alt={book.title} className="book-cover" />
+                        <IconButton color="primary" aria-label="bookmark this book" className="bookmark-icon">
+                            <BookmarkIcon />
+                        </IconButton>
+                    </div>
+                    <div className="info-section">
+                        <h2 className="title-author">{`${book.title} by ${book.author}`}</h2>
+                        <div className="rating">
+                            <span className="rating-label">Rating:</span>
+                            <span className="stars">{'⭐'.repeat(Math.floor(book.rating))}</span>
+                        </div>
+                        <div className="genre">
+                            <span>Genre:</span> {book.genre}
+                        </div>
+                        <p className="description-label">Description:</p>
+                        <p className="description">{book.description}</p>
+                    </div>
+                </div>
+                <IconButton color="primary" aria-label="add to shopping cart" className="cart-icon">
+                    <ShoppingCartIcon />
+                </IconButton>
+            </div>
         </div>
     );
 }
