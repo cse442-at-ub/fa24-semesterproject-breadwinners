@@ -12,6 +12,8 @@ export default function AddBook() {
     image_url: "",
   });
 
+  const [message, setMessage] = useState("");
+
   const handleSaveBook = async () => {
     try {
       const response = await fetch("./backend/add_book.php", {
@@ -23,13 +25,13 @@ export default function AddBook() {
       });
       const data = await response.json();
       if (data.success) {
-        alert("Book added successfully!");
+        setMessage("Book added successfully!");
         setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "", image_url: "" });
       } else {
-        console.error("Failed to add book: ", data.message);
+        setMessage(`Failed to add book: ${data.message}`);
       }
     } catch (error) {
-      console.error("Error adding book: ", error);
+      setMessage(`Error adding book: ${error.message}`);
     }
   };
 
@@ -74,6 +76,7 @@ export default function AddBook() {
         onChange={(e) => setNewBook({ ...newBook, image_url: e.target.value })}
       />
       <button onClick={handleSaveBook}>Save Book</button>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 }
