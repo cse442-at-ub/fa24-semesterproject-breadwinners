@@ -122,38 +122,24 @@ html, body {
     text-align: center; 
 }
 
-@media (max-width: 768px) {
-    .secondary-navbar {
-        display: none; 
-    }
-
-    .top-navbar {
-        display: none; 
-    }
-    .book {
-        width: calc(50% - 20px); 
-    }
-}
-
 .book-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Set exactly 5 books per row */
-    gap: 20px; /* Adds equal space between books */
-    padding: 20px;
-    justify-items: center; /* Centers the items within each grid column */
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping for multiple rows */
+    justify-content: space-around; /* Space out items evenly without edge alignment */
+    padding: 0 40px; /* Adds padding to the left and right to prevent edge alignment */
+    gap: 20px; /* Adds space between books */
 }
 
 .book {
-    width: 100%; /* Full width of each grid column */
-    max-width: 200px; /* Limits the maximum size of each book item */
-    text-align: center;
+    width: calc(25% - 20px); /* Ensures four books per row on larger screens */
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .book img {
-    width: 160px; 
-    height: 250px; 
-    border-radius: 20px;
+    width: 150px;
+    height: 220px;
+    border-radius: 15px;
 }
 
 .author {
@@ -162,19 +148,27 @@ html, body {
     display: block; /* Ensure it's displayed properly */
 }
 
+@media (max-width: 768px) {
+    .secondary-navbar {
+        display: none; 
+    }
+
+    .top-navbar {
+        display: none; 
+    }
+
+    .book {
+        width: calc(50% - 20px); /* Two books per row on smaller screens */
+    }
+}
+
 @media (min-width: 769px) {
     .author {
         display: block; 
     }
 
     .book {
-        width: calc(20% - 20px); /* 5 books per row */
-    }
-}
-
-@media (max-width: 768px) {
-    .book-container {
-        grid-template-columns: repeat(2, 1fr); /* Display two books per row on smaller screens */
+        width: calc(25% - 20px); /* Four books per row on larger screens */
     }
 }
 
