@@ -1,3 +1,4 @@
+
 html, body {
     margin: 0;
     padding: 0;
@@ -5,7 +6,8 @@ html, body {
     height: 100%;
 }
 
-.homepage {
+
+.dataGridPage {
     display: flex;
     flex-direction: column;
     width: 100%;  
@@ -13,6 +15,7 @@ html, body {
     box-sizing: border-box;
     padding-top: 120px; 
 }
+
 
 .navbar {
     display: none; /* Hidden by default */
@@ -29,6 +32,7 @@ html, body {
     box-sizing: border-box;
 }
 
+
 @media (max-width: 768px) {
     .navbar {
         display: flex; 
@@ -39,6 +43,7 @@ html, body {
         display: none; 
     }
 }
+
 
 .top-navbar {
     display: flex;
@@ -53,8 +58,8 @@ html, body {
     left: 0; 
     z-index: 1000; 
     box-sizing: border-box;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
+
 
 .secondary-navbar {
     display: flex;
@@ -70,6 +75,7 @@ html, body {
     z-index: 999; 
 }
 
+
 .logout-button {
     background-color: rgb(0, 21, 255);
     color: white;
@@ -78,15 +84,18 @@ html, body {
     cursor: pointer;
 }
 
+
 .menu-button {
     background-color: transparent; 
     border: none;
     cursor: pointer;
 }
 
+
 .menu-items {
     display: none; 
 }
+
 
 .nav-items {
     display: flex;
@@ -108,6 +117,9 @@ html, body {
     height: 50px;
 }
 
+
+
+
 .title {
     font-size: 32px;
     font-weight: bold;
@@ -115,12 +127,17 @@ html, body {
     text-align: center;
 }
 
+
 .best-sellers-title {
     font-size: 24px;
     font-weight: bold;
     margin: 5px 0; 
     text-align: center; 
 }
+
+
+
+
 
 @media (max-width: 768px) {
     .secondary-navbar {
@@ -133,22 +150,24 @@ html, body {
     .book {
         width: calc(50% - 20px); 
     }
+    
 }
+
 
 .book-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Set exactly 5 books per row */
-    gap: 20px; /* Adds equal space between books */
-    padding: 20px;
-    justify-items: center; /* Centers the items within each grid column */
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    padding: 20px; 
 }
 
+
 .book {
-    width: 100%; /* Full width of each grid column */
-    max-width: 200px; /* Limits the maximum size of each book item */
-    text-align: center;
-    margin-bottom: 20px;
+    width: calc(25% - 20px); 
+    margin-bottom: 20px; 
+    text-align: center; 
 }
+
 
 .book img {
     width: 160px; 
@@ -157,10 +176,10 @@ html, body {
 }
 
 .author {
-    margin-top: 5px; /* Positive margin to properly space it below the title */
-    font-size: 14px; /* Adjusted font size for better readability */
-    display: block; /* Ensure it's displayed properly */
+    margin-top: -8%;
+    display: none;
 }
+
 
 @media (min-width: 769px) {
     .author {
@@ -168,15 +187,17 @@ html, body {
     }
 
     .book {
-        width: calc(20% - 20px); /* 5 books per row */
+        width: calc(25% - 20px);
     }
 }
 
+
 @media (max-width: 768px) {
-    .book-container {
-        grid-template-columns: repeat(2, 1fr); /* Display two books per row on smaller screens */
+    .book {
+        width: calc(50% - 20px);
     }
 }
+
 
 .search-bar {
     display: flex;
@@ -191,11 +212,13 @@ html, body {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
+
 .search-icon {
     width: 24px; 
     height: 24px;
     margin-right: 10px;
 }
+
 
 .search-input {
     border: none; 
@@ -205,9 +228,11 @@ html, body {
     width: 100%; 
 }
 
+
 .search-input:focus {
     border-bottom: 2px solid #000066; 
 }
+
 
 hr.divider-line {
     width: 80%; 
