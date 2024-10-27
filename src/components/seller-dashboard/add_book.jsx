@@ -9,24 +9,34 @@ export default function AddBook() {
     genre: "Fiction",
     price: "",
     stock: "",
-    image_url: "",
   });
 
+  const [coverFile, setCoverFile] = useState(null);
   const [message, setMessage] = useState("");
 
   const handleSaveBook = async () => {
     try {
+      const formData = new FormData();
+      formData.append("title", newBook.title);
+      formData.append("author", newBook.author);
+      formData.append("genre", newBook.genre);
+      formData.append("price", newBook.price);
+      formData.append("stock", newBook.stock);
+      
+      if (coverFile) {
+        formData.append("cover", coverFile);  // Add the image file to the form data
+      }
+
       const response = await fetch("./backend/add_book.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newBook),
+        body: formData,
       });
+
       const data = await response.json();
       if (data.success) {
         setMessage("Book added successfully!");
-        setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "", image_url: "" });
+        setNewBook({ title: "", author: "", genre: "Fiction", price: "", stock: "" });
+        setCoverFile(null);  // Reset the cover file input
       } else {
         setMessage(`Failed to add book: ${data.message}`);
       }
@@ -59,11 +69,10 @@ export default function AddBook() {
       </select>
       <input
         type="text"
-        inputMode="numeric"  // Display a numeric keypad on mobile devices
+        inputMode="numeric"
         placeholder="Price"
         value={newBook.price}
         onChange={(e) => {
-          // Ensure only positive numbers are entered
           if (!isNaN(e.target.value) && Number(e.target.value) >= 0) {
             setNewBook({ ...newBook, price: e.target.value });
           }
@@ -71,21 +80,19 @@ export default function AddBook() {
       />
       <input
         type="text"
-        inputMode="numeric"  // Display a numeric keypad on mobile devices
+        inputMode="numeric"
         placeholder="Stock"
         value={newBook.stock}
         onChange={(e) => {
-          // Ensure only positive numbers are entered
           if (!isNaN(e.target.value) && Number(e.target.value) >= 0) {
             setNewBook({ ...newBook, stock: e.target.value });
           }
         }}
       />
       <input
-        type="text"
-        placeholder="Image URL"
-        value={newBook.image_url}
-        onChange={(e) => setNewBook({ ...newBook, image_url: e.target.value })}
+        type="file"
+        accept="image/*"
+        onChange={(e) => setCoverFile(e.target.files[0])}  // Set the selected image file
       />
       <button onClick={handleSaveBook}>Save Book</button>
       {message && <p className="message">{message}</p>}

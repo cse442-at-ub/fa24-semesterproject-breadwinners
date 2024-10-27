@@ -51,11 +51,35 @@ try {
 
     // Only handle request if Save Book button is clicked (manual request submission)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Get the JSON input from the request body
-        $input = json_decode(file_get_contents("php://input"), true);
+        // Handle file upload
+        if (isset($_FILES['cover'])) {
+            $uploadDir = __DIR__ . '/../cover/';           # change path here
+            $cover = $_FILES['cover'];
+            $coverFileName = basename($cover['name']);
+            $targetFilePath = $uploadDir . $coverFileName;
+
+            // Ensure the upload directory exists
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Move the uploaded file to the desired directory
+            if (!move_uploaded_file($cover['tmp_name'], $targetFilePath)) {
+                throw new Exception("Failed to upload cover image.");
+            }
+        } else {
+            throw new Exception("Missing cover image.");
+        }
+
+        // Get the other book details from the request
+        $title = $_POST['title'] ?? null;
+        $author = $_POST['author'] ?? null;
+        $genre = $_POST['genre'] ?? null;
+        $price = $_POST['price'] ?? null;
+        $stock = $_POST['stock'] ?? null;
 
         // Validate required fields
-        if (!isset($input['title'], $input['author'], $input['genre'], $input['price'], $input['stock'], $input['image_url'])) {
+        if (!$title || !$author || !$genre || !$price || !$stock) {
             throw new Exception("Missing required book details");
         }
 
@@ -66,14 +90,16 @@ try {
             throw new Exception("Failed to prepare statement: " . $conn->error);
         }
 
+        $image_url = './cover/' . $coverFileName;
+
         $stmt->bind_param(
             "ssssiss", 
-            $input['title'],
-            $input['author'],
-            $input['genre'],
-            $input['price'],
-            $input['stock'],
-            $input['image_url'],
+            $title,
+            $author,
+            $genre,
+            $price,
+            $stock,
+            $image_url,
             $seller_email
         );
 

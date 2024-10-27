@@ -15,17 +15,22 @@
 
 .add-book-container input,
 .add-book-container select {
-  width: 90%;  /* Reduced width to ensure it doesn't exceed container */
+  width: 90%;  /* Consistent width for all inputs */
   margin: 10px 0;
-  padding: 8px;  /* Same padding for consistency */
+  padding: 8px;  /* Padding for better UX */
   font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-sizing: border-box;  /* Ensure width and padding are counted together */
+  box-sizing: border-box;
+}
+
+.add-book-container input[type="file"] {
+  padding: 5px;
+  font-size: 16px;
 }
 
 .add-book-container button {
-  width: 90%;  /* Match the reduced width */
+  width: 90%;  /* Match input width */
   padding: 10px;
   font-size: 16px;
   background-color: #4caf50;
