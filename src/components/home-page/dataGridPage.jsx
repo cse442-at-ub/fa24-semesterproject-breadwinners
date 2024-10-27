@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
-import './dataGridPage.css';
+import './DataGridPage.css';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import search from '../../assets/search-removebg-preview.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
 
-export default function dataGridPage() {
+export default function DataGridPage() {
     const [rowData, setRowData] = useState([]); // Fetch data from the backend
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();

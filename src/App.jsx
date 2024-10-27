@@ -11,7 +11,7 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import RegisterPage from './components/Register/RegisterPage';
 import AddBook from './components/seller-dashboard/add_book';
-import dataGridPage from './components/home-page/dataGridPage';
+import DataGridPage from './components/home-page/dataGridPage';
 
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/add-book" element={<AddBook />} />
-          <Route path="/dataGridPage" element={<dataGridPage />} />
+          <Route path="/dataGridPage" element={<DataGridPage />} />
         </Routes>
       </div>
     </Router>

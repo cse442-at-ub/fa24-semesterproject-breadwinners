@@ -142,11 +142,27 @@ html, body {
     border-radius: 15px;
 }
 
-.author {
-    margin-top: 5px; /* Positive margin to properly space it below the title */
-    font-size: 14px; /* Adjusted font size for better readability */
-    display: block; /* Ensure it's displayed properly */
+.book h3 {
+    margin-top: 10px; /* Adds some space above the title */
+    margin-bottom: 5px; /* Adds a small gap below the title */
+    font-size: 18px; /* Adjusted for readability */
+    font-weight: bold;
 }
+
+.book-title {
+    margin-top: 10px; /* Adds some space above the title */
+    margin-bottom: 5px; /* Adds a small gap below the title */
+    font-size: 18px; /* Adjusted for readability */
+    font-weight: bold;
+}
+
+.author {
+    margin-top: 0; /* Ensure no extra space is pushing the author above the title */
+    margin-bottom: 15px;
+    font-size: 14px; /* Adjust for readability */
+}
+
+
 
 @media (max-width: 768px) {
     .secondary-navbar {
