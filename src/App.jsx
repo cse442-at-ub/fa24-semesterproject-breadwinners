@@ -9,7 +9,8 @@ import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
-import RegisterPage from './components/Register/RegisterPage'
+import RegisterPage from './components/Register/RegisterPage';
+import AddBook from './components/seller-dashboard/add_book';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/add-book" element={<AddBook />} />
         </Routes>
       </div>
     </Router>
