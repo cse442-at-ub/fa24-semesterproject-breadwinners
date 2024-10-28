@@ -10,6 +10,7 @@ import ShoppingCart from './components/shopping-cart/CartPage';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import RegisterPage from './components/Register/RegisterPage'
+import CheckoutPage from './components/checkout-page/checkoutPage';
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
     <Router basename = {getBaseName()}> {/* Add basename to handle the base URL */}
       <div>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<CheckoutPage />} />
           <Route path="/Homepage" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
