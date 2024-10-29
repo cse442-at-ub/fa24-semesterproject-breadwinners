@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Enable error reporting for debugging (can be disabled in production)
 ini_set('display_errors', 1);
@@ -26,11 +26,36 @@ if ($conn->connect_error) {
 $response = array();
 
 try {
-    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books";
+    // Check for auth token in the request headers
+    if (!isset($_COOKIE['auth_token'])) {
+        throw new Exception("Missing authorization token");
+    }
+
+    $auth_token = $_COOKIE['auth_token'];
+
+    // Verify auth token and fetch seller email
+    $query = "SELECT email FROM user WHERE auth_token = ?";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);
     }
+    $stmt->bind_param("s", $auth_token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        throw new Exception("Invalid authorization token");
+    }
+    $user = $result->fetch_assoc();
+    $seller_email = $user['email'];
+    $stmt->close();
+
+    // Fetch books for the specific seller
+    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books WHERE seller_email = ?";
+    $stmt = $conn->prepare($query);
+    if (!$stmt) {
+        throw new Exception("Failed to prepare statement: " . $conn->error);
+    }
+    $stmt->bind_param("s", $seller_email);
     $stmt->execute();
 
     $result = $stmt->get_result();
