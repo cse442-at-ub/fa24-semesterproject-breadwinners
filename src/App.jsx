@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import './App.css';
 import HomePage from './components/home-page/HomePage';
@@ -7,11 +6,12 @@ import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import RegisterPage from './components/Register/RegisterPage';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
+import BookPage from './components/book-page/BookPage'; // Import BookPage component
 
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <Router basename = {getBaseName()}> {/* Add basename to handle the base URL */}
+    <Router basename={getBaseName()}> {/* Add basename to handle the base URL */}
       <div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -34,6 +34,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/book/:id" element={<BookPage />} /> {/* New Route for BookPage */}
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
         </Routes>
