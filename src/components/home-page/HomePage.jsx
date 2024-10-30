@@ -3,33 +3,20 @@ import React, { useState, useEffect } from 'react';
 import './HomePage.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-<<<<<<< HEAD
 export default function HomePage() {
     const [rowData, setRowData] = useState([]); 
     const [menuOpen, setMenuOpen] = useState(false);
     const [sortByBestSeller, setSortByBestSeller] = useState(false);
     const navigate = useNavigate();
-=======
-function HomePage() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [books, setBooks] = useState([]);
->>>>>>> dev
 
     useEffect(() => {
         // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
-<<<<<<< HEAD
                 const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`);
                 const data = await response.json();
                 if (data.success) {
                     setRowData(data.books);
-=======
-                const response = await fetch('./backend/fetch_books.php');
-                const data = await response.json();
-                if (data.success) {
-                    setBooks(data.books);
->>>>>>> dev
                 } else {
                     console.error('Failed to fetch books:', data.message);
                 }
@@ -43,7 +30,6 @@ function HomePage() {
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
-    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
@@ -66,7 +52,6 @@ function HomePage() {
         }
     };
 
-<<<<<<< HEAD
     // Handle Best Seller sort
     const handleBestSellerSort = () => {
         setSortByBestSeller((prev) => !prev); 
@@ -86,8 +71,6 @@ function HomePage() {
         { headerName: 'Actions', field: 'id', cellRenderer: (params) => <button onClick={() => navigate(`/book/${params.value}`)} className="view-book-button">View Book</button>, minWidth: 150 },
     ];
 
-=======
->>>>>>> dev
     return (
         <div className="homepage">
             {/* Navbar for mobile view */}
@@ -160,10 +143,4 @@ function HomePage() {
             </div>
         </div>
     );
-<<<<<<< HEAD
 }
-=======
-}
-
-export default HomePage;
->>>>>>> dev
