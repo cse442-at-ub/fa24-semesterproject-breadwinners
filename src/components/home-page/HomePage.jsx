@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './HomePage.css';
 import { Link, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify'; // Import DOMPurify for sanitization
 
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -63,7 +64,7 @@ function HomePage() {
                         <div className="menu-items">
                             <span>Homepage</span>
                             <span>Recent Purchase</span>
-                            <span>Shopping cart</span>
+                            <span>Shopping Cart</span>
                             <span>Seller Dashboard</span>
                             <span>Settings</span>
                         </div>
@@ -115,8 +116,10 @@ function HomePage() {
                 {books.map((book, index) => (
                     <div className="book" key={index}>
                         <img src={book.image_url} alt={`Book ${index + 1}`} />
-                        <h2 className="book-title">{book.title}</h2>
-                        <h3 className="author">{book.author}</h3>
+                        <h2 className="book-title" 
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.title) }} 
+                        />
+                        <h3 className="author">{DOMPurify.sanitize(book.author)}</h3>
                         <h3 className="price">${book.price}</h3>
                     </div>
                 ))}
