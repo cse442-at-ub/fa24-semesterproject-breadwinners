@@ -1,7 +1,11 @@
-// HomePage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import './HomePage.css';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
+import search from '../../assets/search-removebg-preview.png';
+import Image9 from '../../assets/BreadWinnersPicture.png';
 
 export default function HomePage() {
     const [rowData, setRowData] = useState([]); 
@@ -9,8 +13,8 @@ export default function HomePage() {
     const [sortByBestSeller, setSortByBestSeller] = useState(false);
     const navigate = useNavigate();
 
+    // Fetch books data from the backend
     useEffect(() => {
-        // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
                 const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`);
@@ -33,15 +37,11 @@ export default function HomePage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('./logout_backend.php', {
+            const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
             });
-
             const data = await response.json();
-
             if (data.success) {
                 navigate('/login');
             } else {
@@ -73,17 +73,15 @@ export default function HomePage() {
 
     return (
         <div className="homepage">
-            {/* Navbar for mobile view */}
+            {/* Mobile Navbar */}
             <nav className="navbar">
                 <div className="nav-left">
-                    <button className="menu-button" onClick={toggleMenu}>
-                        Menu
-                    </button>
+                    <button className="menu-button" onClick={toggleMenu}>Menu</button>
                     {menuOpen && (
                         <div className="menu-items">
                             <span>Homepage</span>
                             <span>Recent Purchase</span>
-                            <span>Shopping cart</span>
+                            <span>Shopping Cart</span>
                             <span>Seller Dashboard</span>
                             <span>Settings</span>
                         </div>
@@ -92,36 +90,20 @@ export default function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Title for Breadwinners */}
-            <h2 className="title">Breadwinners</h2>
-
-            {/* Title for Best Sellers */}
-            <h3 className="best-sellers-title">Explore Our Best Sellers</h3>
-            {/* Blue Divider Line */}
-            <hr className="divider-line" />
-            {/* Search bar section */}
-            <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search for books..."
-                />
-            </div>
-
-            {/* Top navigation bar for larger screens */}
+            {/* Desktop Top Navbar */}
             <nav className="top-navbar">
                 <div className="nav-items">
+                    <img src={Image9} alt="User Profile" className="profile-image" />
                     <span><Link to="/Homepage">Homepage</Link></span>
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
                     <span><Link to="/shopping-cart">Shopping Cart</Link></span>
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
                     <span><Link to="/settings">Settings</Link></span>
-                    <span><Link to="/dataGridPage">Sorting Page</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Secondary navigation bar for larger screens */}
+            {/* Secondary Navbar */}
             <nav className="secondary-navbar">
                 <span onClick={handleBestSellerSort} className="best-seller-link">Best Seller</span> 
                 <span>Hardcover</span>
@@ -130,16 +112,22 @@ export default function HomePage() {
                 <span>Textbooks</span>
             </nav>
 
-            {/* Book List Section */}
-            <div className="book-container">
-                {books.map((book, index) => (
-                    <div className="book" key={index}>
-                        <img src={book.image_url} alt={`Book ${index + 1}`} />
-                        <h2 className="book-title">{book.title}</h2>
-                        <h3 className="author">{book.author}</h3>
-                        <h3 className="price">${book.price}</h3>
-                    </div>
-                ))}
+            {/* Title and Search Bar */}
+            <h2 className="title">Breadwinners - Best Books Available</h2>
+            <div className="search-bar">
+                <img src={search} alt="Search Icon" className="search-icon" />
+                <input type="text" className="search-input" placeholder="Search for books..." />
+            </div>
+
+            {/* Book Grid Section */}
+            <div style={{ height: 500, width: '100%' }} className="ag-theme-alpine book-grid">
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={columns}
+                    pagination={false}
+                    domLayout="autoHeight"
+                    getRowHeight={() => 155}
+                />
             </div>
         </div>
     );
