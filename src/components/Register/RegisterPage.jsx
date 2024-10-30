@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './RegisterPage.css';
 import Image from '../../assets/bookstore-register-removebg-preview.png'; 
 import { Link, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 
 function RegisterPage() {
     const [firstName, setFirstName] = useState('');
@@ -10,18 +11,46 @@ function RegisterPage() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    // Sanitize input using DOMPurify
+    const sanitizeInput = (input) => DOMPurify.sanitize(input);
+
+    // Input validation functions
+    const isValidName = (name) => /^[a-zA-Z\s]+$/.test(name);
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidPassword = (password) => password.length >= 8;
+
     const handleRegister = async (e) => {
         e.preventDefault();
-    
+        
+        // Sanitize inputs
+        const sanitizedFirstName = sanitizeInput(firstName);
+        const sanitizedLastName = sanitizeInput(lastName);
+        const sanitizedEmail = sanitizeInput(email);
+        const sanitizedPassword = sanitizeInput(password);
+
+        // Validate inputs before proceeding
+        if (!isValidName(sanitizedFirstName) || !isValidName(sanitizedLastName)) {
+            alert('Names can only contain letters and spaces.');
+            return;
+        }
+        if (!isValidEmail(sanitizedEmail)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        if (!isValidPassword(sanitizedPassword)) {
+            alert('Password must be at least 8 characters.');
+            return;
+        }
+
         const requestBody = {
-            firstName,
-            lastName,
-            email,
-            password
+            firstName: sanitizedFirstName,
+            lastName: sanitizedLastName,
+            email: sanitizedEmail,
+            password: sanitizedPassword
         };
-    
+        
         console.log("Request Body:", JSON.stringify(requestBody)); // Log the request body
-    
+        
         try {
             const response = await fetch('./backend/register_backend.php', {
                 method: 'POST',

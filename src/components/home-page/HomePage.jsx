@@ -33,7 +33,7 @@ function HomePage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('./logout_backend.php', {
+            const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
