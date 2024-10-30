@@ -10,15 +10,9 @@ error_reporting(E_ALL);
 
 // Database connection
 $servername = "localhost:3306";
-<<<<<<< HEAD
 $username = "hassan4"; // Your database username
 $password = "50396311"; // Your password
 $db_name = "hassan4_db"; // Your actual database name
-=======
-$username = "chonheic"; // your ubit
-$password = "50413052"; // your person number
-$db_name = "chonheic_db"; // Your actual database name
->>>>>>> dev
 
 // Create connection to the MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
@@ -32,7 +26,6 @@ if ($conn->connect_error) {
 $response = array();
 
 try {
-<<<<<<< HEAD
     // Check if best seller sorting is requested
     $sortByBestSeller = isset($_GET['sortByBestSeller']) && $_GET['sortByBestSeller'] === 'true';
 
@@ -45,9 +38,6 @@ try {
         $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books";
     }
 
-=======
-    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books";
->>>>>>> dev
     $stmt = $conn->prepare($query);
     
     if (!$stmt) {
