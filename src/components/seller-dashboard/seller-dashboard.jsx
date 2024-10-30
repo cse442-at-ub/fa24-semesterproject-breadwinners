@@ -1,78 +1,59 @@
-// NewSeller.jsx 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./seller-dashboard.css";
 
-const initialRows = [
-  {
-    id: 1,
-    image: "https://via.placeholder.com/50",
-    name: "Book One",
-    author: "Author A",
-    genre: "Fiction",
-    price: 10.99,
-    stock: 100,
-  },
-  {
-    id: 2,
-    image: "https://via.placeholder.com/50",
-    name: "Book Two",
-    author: "Author B",
-    genre: "Mystery",
-    price: 12.99,
-    stock: 50,
-  },
-  {
-    id: 3,
-    image: "https://via.placeholder.com/50",
-    name: "Book Three",
-    author: "Author C",
-    genre: "Sci-Fi",
-    price: 15.99,
-    stock: 30,
-  },
-  {
-    id: 4,
-    image: "https://via.placeholder.com/50",
-    name: "Book Four",
-    author: "Author D",
-    genre: "Fantasy",
-    price: 9.99,
-    stock: 80,
-  },
-  {
-    id: 5,
-    image: "https://via.placeholder.com/50",
-    name: "Book Five",
-    author: "Author E",
-    genre: "Non-Fiction",
-    price: 20.99,
-    stock: 10,
-  },
-];
-
 export default function SellerDashboard() {
-  const [rowData, setRowData] = useState(initialRows);
+  const [rowData, setRowData] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch("./backend/seller_fetch_books.php", {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.success) {
+          setRowData(data.books);
+        } else {
+          console.error("Failed to fetch books: ", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching books: ", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  const handleAddBook = () => {
+    navigate("/add-book"); // Navigate to the AddBook page
+  };
 
   const columns = [
     {
       headerName: "Image",
-      field: "image",
+      field: "image_url",
       cellRenderer: (params) => (
         <img src={params.value} alt={"Book"} width="50" />
       ),
-      minWidth: 100, // Minimum width to keep the image visible
+      minWidth: 100,
       filter: false,
     },
     {
       headerName: "Book Name",
-      field: "name",
+      field: "title",
       filter: "agTextColumnFilter",
       floatingFilter: true,
-      flex: 1, // Allows the column to flex
-      minWidth: 150, // Set a minimum width
+      flex: 1,
+      minWidth: 150,
     },
     {
       headerName: "Author",
@@ -112,10 +93,10 @@ export default function SellerDashboard() {
     <div className="seller-dashboard-container">
       <div className="header">
         <h2>Seller Dashboard</h2>
-        <button className="add-book-btn">Add Book</button>
+        <button className="add-book-btn" onClick={handleAddBook}>Add Book</button>
       </div>
       <div
-        style={{ height: 400, width: "100%", overflowX: "auto" }} // Allow horizontal scrolling
+        style={{ height: 400, width: "100%", overflowX: "auto" }}
         className="ag-theme-alpine data-grid"
       >
         <AgGridReact
@@ -124,8 +105,8 @@ export default function SellerDashboard() {
           defaultColDef={{
             sortable: true,
             filter: true,
-            flex: 1, // Default flex for all columns
-            minWidth: 100, // Ensure a default minimum width
+            flex: 1,
+            minWidth: 100,
           }}
           pagination={true}
           paginationPageSize={5}

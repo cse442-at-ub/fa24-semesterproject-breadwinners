@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Enable error reporting for debugging (can be disabled in production)
 ini_set('display_errors', 1);
@@ -10,15 +10,9 @@ error_reporting(E_ALL);
 
 // Database connection
 $servername = "localhost:3306";
-<<<<<<< HEAD
-$username = "hassan4"; // Your database username
-$password = "50396311"; // Your password
-$db_name = "hassan4_db"; // Your actual database name
-=======
 $username = "chonheic"; // your ubit
 $password = "50413052"; // your person number
 $db_name = "chonheic_db"; // Your actual database name
->>>>>>> dev
 
 // Create connection to the MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
@@ -32,40 +26,46 @@ if ($conn->connect_error) {
 $response = array();
 
 try {
-<<<<<<< HEAD
-    // Check if best seller sorting is requested
-    $sortByBestSeller = isset($_GET['sortByBestSeller']) && $_GET['sortByBestSeller'] === 'true';
-
-    // Query to fetch book data
-    if ($sortByBestSeller) {
-        // Fetch books sorted by total books sold and rating
-        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books ORDER BY total_books_sold DESC, rating DESC";
-    } else {
-        // Default fetch without sorting
-        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books";
+    // Check for auth token in the request headers
+    if (!isset($_COOKIE['auth_token'])) {
+        throw new Exception("Missing authorization token");
     }
 
-=======
-    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books";
->>>>>>> dev
+    $auth_token = $_COOKIE['auth_token'];
+
+    // Verify auth token and fetch seller email
+    $query = "SELECT email FROM user WHERE auth_token = ?";
     $stmt = $conn->prepare($query);
-    
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);
     }
-    
+    $stmt->bind_param("s", $auth_token);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+    if ($result->num_rows === 0) {
+        throw new Exception("Invalid authorization token");
+    }
+    $user = $result->fetch_assoc();
+    $seller_email = $user['email'];
+    $stmt->close();
+
+    // Fetch books for the specific seller
+    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books WHERE seller_email = ?";
+    $stmt = $conn->prepare($query);
+    if (!$stmt) {
+        throw new Exception("Failed to prepare statement: " . $conn->error);
+    }
+    $stmt->bind_param("s", $seller_email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
     $books = [];
     while ($row = $result->fetch_assoc()) {
         $books[] = $row;
     }
 
-    // Structure response
     $response['success'] = true;
     $response['books'] = $books;
-
     $stmt->close();
 } catch (Exception $e) {
     $response['success'] = false;
@@ -74,6 +74,5 @@ try {
 
 $conn->close();
 
-// Send the response as JSON
 echo json_encode($response);
 ?>
