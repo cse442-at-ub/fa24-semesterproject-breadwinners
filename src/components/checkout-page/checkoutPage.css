@@ -1,0 +1,131 @@
+.checkout-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 500px;
+    margin: 40px auto 0;
+    gap: 15px;
+    background-color: #292B5C; /* Blue container */
+    color: white;
+    border-radius: 10px;
+  }
+  
+  .card-details, .summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .card-details h2 {
+    margin-bottom: 10px;
+  }
+  
+  input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 90%;
+    background-color: #6268C6;
+    color: white;
+  }
+  
+  input::placeholder {
+    color: #C4C4C4;
+  }
+  
+  /* Adjust spacing and layout for expiration date and CVV */
+  .exp-cvv {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .exp-cvv div {
+    flex: 1;
+  }
+  
+  .card-type-images {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .card-type-images img {
+    width: 50px;
+    height: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .card-type-images img:hover {
+    transform: scale(1.1);
+  }
+  
+  .see-all-button {
+    background: none;
+    color: white;
+    border: 1px solid white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .see-all-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Summary Section */
+  .summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+  }
+  
+  .total {
+    font-weight: bold;
+  }
+  
+  /* Purchase Button */
+  .purchase-button {
+    background-color: #4DE1C1;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .purchase-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 600px) {
+    .checkout-container {
+      padding: 10px;
+      min-height: 100vh;
+      margin: 0px auto 0;
+    }
+  
+    /* Make the content take up available space to push button down */
+    .card-details, .summary {
+      flex-grow: 1;
+    }
+  
+    .purchase-button {
+      font-size: 1rem;
+      padding: 10px;
+      margin-top: auto; /* Align button towards the bottom */
+    }
+  }

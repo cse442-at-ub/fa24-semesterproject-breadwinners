@@ -3,18 +3,33 @@ import React, { useState, useEffect } from 'react';
 import './HomePage.css';
 import { Link, useNavigate } from 'react-router-dom';
 
+<<<<<<< HEAD
+export default function HomePage() {
+    const [rowData, setRowData] = useState([]); 
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [sortByBestSeller, setSortByBestSeller] = useState(false);
+    const navigate = useNavigate();
+=======
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [books, setBooks] = useState([]);
+>>>>>>> dev
 
     useEffect(() => {
         // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
+<<<<<<< HEAD
+                const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`);
+                const data = await response.json();
+                if (data.success) {
+                    setRowData(data.books);
+=======
                 const response = await fetch('./backend/fetch_books.php');
                 const data = await response.json();
                 if (data.success) {
                     setBooks(data.books);
+>>>>>>> dev
                 } else {
                     console.error('Failed to fetch books:', data.message);
                 }
@@ -23,7 +38,7 @@ function HomePage() {
             }
         };
         fetchBooks();
-    }, []);
+    }, [sortByBestSeller]);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -51,6 +66,28 @@ function HomePage() {
         }
     };
 
+<<<<<<< HEAD
+    // Handle Best Seller sort
+    const handleBestSellerSort = () => {
+        setSortByBestSeller((prev) => !prev); 
+    };
+
+    // Column definitions for the book grid
+    const columns = [
+        { headerName: 'Image', field: 'image_url', cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />, minWidth: 120, filter: false },
+        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200 },
+        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150 },
+        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150 },
+        { headerName: 'Seller', field: 'sellerImage', cellRenderer: () => <img src="https://via.placeholder.com/50" alt="Seller" width="50" style={{ borderRadius: '50%' }} />, minWidth: 100 },
+        { headerName: 'Rating', field: 'rating', cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>, minWidth: 120 },
+        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100 },
+        { headerName: 'Price ($)', field: 'price', minWidth: 120 },
+        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150 },
+        { headerName: 'Actions', field: 'id', cellRenderer: (params) => <button onClick={() => navigate(`/book/${params.value}`)} className="view-book-button">View Book</button>, minWidth: 150 },
+    ];
+
+=======
+>>>>>>> dev
     return (
         <div className="homepage">
             {/* Navbar for mobile view */}
@@ -103,8 +140,8 @@ function HomePage() {
 
             {/* Secondary navigation bar for larger screens */}
             <nav className="secondary-navbar">
+                <span onClick={handleBestSellerSort} className="best-seller-link">Best Seller</span> 
                 <span>Hardcover</span>
-                <span>Paperback</span>
                 <span>E-books</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
@@ -123,6 +160,10 @@ function HomePage() {
             </div>
         </div>
     );
+<<<<<<< HEAD
+}
+=======
 }
 
 export default HomePage;
+>>>>>>> dev

@@ -7,11 +7,13 @@ import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
 import LoginPage from './components/Login/LoginPage';
+import CheckoutPage from './components/checkout-page/checkoutPage';
 import RegisterPage from './components/Register/RegisterPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
 import BookPage from './components/book-page/BookPage'; // Import BookPage component
+
 
 
 function App() {
@@ -26,7 +28,7 @@ function App() {
     <Router basename={getBaseName()}> {/* Add basename to handle the base URL */}
       <div>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<CheckoutPage />} />
           <Route path="/Homepage" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
