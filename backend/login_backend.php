@@ -1,7 +1,7 @@
 <?php
 // Set headers for JSON response and security
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: https://your-domain.com"); // Specify allowed origin for CORS
+header("Access-Control-Allow-Origin: *"); // Specify allowed origin for CORS
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
@@ -87,7 +87,7 @@ if (password_verify($hashed_input_password, $stored_hashed_password)) {
     setcookie('auth_token', $auth_token, [
         'expires' => time() + 3600,
         'path' => '/',
-        'domain' => 'your-domain.com', // Specify your domain
+        'domain' => '', // Specify your domain
         'secure' => true, // Set to true if using HTTPS
         'httponly' => true, // HttpOnly for better security
         'samesite' => 'Strict' // Prevent CSRF
