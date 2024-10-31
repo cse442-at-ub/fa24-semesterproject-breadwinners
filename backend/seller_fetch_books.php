@@ -21,6 +21,11 @@ try {
 
     $auth_token = $_COOKIE['auth_token'];
 
+    // // Validate the auth token format If we want to add later we can
+    // if (!preg_match('/^[a-zA-Z0-9_-]{32}$/', $auth_token)) {
+    //     throw new Exception("Invalid authorization token format");
+    // }
+
     // Verify auth token and fetch seller email
     $query = "SELECT email FROM user WHERE auth_token = ?";
     $stmt = $conn->prepare($query);

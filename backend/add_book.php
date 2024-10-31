@@ -1,8 +1,13 @@
 <?php
+// Enable JSON response and CORS
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: https://your-domain.com"); // Specify allowed origin
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("X-Content-Type-Options: nosniff");
+header("X-Frame-Options: DENY");
+header("Content-Security-Policy: default-src 'self';");
 
+// Enable error reporting for debugging (turn off in production)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -10,13 +15,24 @@ error_reporting(E_ALL);
 include 'db_connection.php';
 $response = array();
 
+// Sanitize input function
+function sanitize_input($data)
+{
+    $data = trim($data);
+    $data = strip_tags($data); // Remove HTML tags
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8'); // Encode special chars
+    return $data;
+}
+
 try {
+    // Check HttpOnly cookie for auth_token
     if (!isset($_COOKIE['auth_token'])) {
         throw new Exception("Missing authorization token");
     }
 
-    $auth_token = $_COOKIE['auth_token'];
+    $auth_token = sanitize_input($_COOKIE['auth_token']); // Sanitize token (precaution)
 
+    // Verify auth token
     $query = "SELECT email FROM user WHERE auth_token = ?";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
@@ -36,7 +52,7 @@ try {
         if (isset($_FILES['cover'])) {
             $uploadDir = __DIR__ . '/../cover/';
             $cover = $_FILES['cover'];
-            $coverFileName = basename($cover['name']);
+            $coverFileName = basename(sanitize_input($cover['name'])); // Sanitize filename
             $targetFilePath = $uploadDir . $coverFileName;
 
             if (!is_dir($uploadDir)) {
@@ -50,17 +66,19 @@ try {
             throw new Exception("Missing cover image.");
         }
 
-        $title = $_POST['title'] ?? null;
-        $author = $_POST['author'] ?? null;
-        $genre = $_POST['genre'] ?? null;
-        $price = $_POST['price'] ?? null;
-        $stock = $_POST['stock'] ?? null;
-        $description = $_POST['description'] ?? null; // Retrieve description
+        // Sanitize and validate book details
+        $title = sanitize_input($_POST['title'] ?? null);
+        $author = sanitize_input($_POST['author'] ?? null);
+        $genre = sanitize_input($_POST['genre'] ?? null);
+        $price = filter_var($_POST['price'] ?? null, FILTER_VALIDATE_FLOAT);
+        $stock = filter_var($_POST['stock'] ?? null, FILTER_VALIDATE_INT);
+        $description = sanitize_input($_POST['description'] ?? null);
 
         if (!$title || !$author || !$genre || !$price || !$stock || !$description) {
-            throw new Exception("Missing required book details");
+            throw new Exception("Missing or invalid required book details");
         }
 
+        // Prepare and execute insertion
         $query = "INSERT INTO books (title, author, genre, price, stock, image_url, seller_email, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if (!$stmt) {
@@ -78,7 +96,7 @@ try {
             $stock,
             $image_url,
             $seller_email,
-            $description // Bind description parameter
+            $description
         );
 
         if ($stmt->execute()) {

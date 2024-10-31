@@ -1,39 +1,45 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify'; // Import DOMPurify
 import './LoginPage.css';
 import BreadWinnersPicture from '../../assets/BreadWinnersPicture.png';
 import ForgotPassword from './ForgotPassword';
 import { Link, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
-    const [isForgotPassword, setIsForgotPassword] = useState(false); // New state for forgot password view
+    const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState(''); // Message for login feedback
+    const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
+            // Sanitize the email and password before sending to backend
+            const sanitizedEmail = DOMPurify.sanitize(email);
+            const sanitizedPassword = DOMPurify.sanitize(password);
+
             const response = await fetch('./backend/login_backend.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email: sanitizedEmail, password: sanitizedPassword }),
             });
     
             const data = await response.json();
     
             if (data.success) {
-                setMessage('Login Successful!');
+                setMessage(DOMPurify.sanitize('Login Successful!'));
                 localStorage.setItem('email', email);
                 // Navigate to the Homepage after login
+
                 navigate('/Homepage');
             } else {
-                setMessage(data.message || 'Login Failed! Please check your credentials.');
+                setMessage(DOMPurify.sanitize(data.message || 'Login Failed! Please check your credentials.'));
             }
         } catch (error) {
-            setMessage(`An error occurred: ${error.message}`);
+            setMessage(DOMPurify.sanitize(`An error occurred: ${error.message}`));
         }
     };
 
@@ -49,14 +55,13 @@ function LoginPage() {
             const data = await response.json();
 
             if (data.success) {
-                // Navigate back to the login page after successful logout
-                setMessage('Logged out successfully');
+                setMessage(DOMPurify.sanitize('Logged out successfully'));
                 navigate('/');
             } else {
-                setMessage(data.message || 'Logout Failed!');
+                setMessage(DOMPurify.sanitize(data.message || 'Logout Failed!'));
             }
         } catch (error) {
-            setMessage(`An error occurred: ${error.message}`);
+            setMessage(DOMPurify.sanitize(`An error occurred: ${error.message}`));
         }
     };
 
@@ -78,7 +83,7 @@ function LoginPage() {
                                     type="email"
                                     placeholder="eg. johnfrans@gmail.com"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => setEmail(DOMPurify.sanitize(e.target.value))}
                                     required
                                 />
                             </div>
@@ -89,7 +94,7 @@ function LoginPage() {
                                     type="password"
                                     placeholder="Enter your password"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => setPassword(DOMPurify.sanitize(e.target.value))}
                                     required
                                 />
                                 <p className="password-hint">Must be at least 8 characters.</p>
@@ -98,7 +103,6 @@ function LoginPage() {
                             <button type="submit" className="login-button">Log In</button>
                         </form>
 
-                        {/* Display the message after form submission */}
                         {message && <p className="login-message">{message}</p>}
 
                         <div className="footer-links">

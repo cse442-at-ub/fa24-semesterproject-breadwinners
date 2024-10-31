@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import DOMPurify from "dompurify";
 import "./add_book.css";
 
 export default function AddBook() {
@@ -16,13 +17,18 @@ export default function AddBook() {
 
   const handleSaveBook = async () => {
     try {
+      // Sanitize inputs
+      const sanitizedTitle = DOMPurify.sanitize(newBook.title);
+      const sanitizedAuthor = DOMPurify.sanitize(newBook.author);
+      const sanitizedDescription = DOMPurify.sanitize(newBook.description);
+
       const formData = new FormData();
-      formData.append("title", newBook.title);
-      formData.append("author", newBook.author);
+      formData.append("title", sanitizedTitle);
+      formData.append("author", sanitizedAuthor);
       formData.append("genre", newBook.genre);
       formData.append("price", newBook.price);
       formData.append("stock", newBook.stock);
-      formData.append("description", newBook.description); // Add description to FormData
+      formData.append("description", sanitizedDescription);
 
       if (coverFile) {
         formData.append("cover", coverFile);
@@ -107,5 +113,4 @@ export default function AddBook() {
       {message && <p className="message">{message}</p>}
     </div>
   );
-  
 }

@@ -20,6 +20,16 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
+if (!preg_match("/^[a-zA-Z\s]+$/", $firstName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid first name']);
+    exit();
+}
+
+if (!preg_match("/^[a-zA-Z\s]+$/", $lastName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid last name']);
+    exit();
+}
+
 if (strlen($password_input) < 8) {
     echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters']);
     exit();
