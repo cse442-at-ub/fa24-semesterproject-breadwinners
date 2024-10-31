@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './CartPage.css';
+import { useNavigate } from 'react-router-dom';
 
 function CartPage() {
+    const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
 
@@ -19,7 +21,6 @@ function CartPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // No body needed since the email is fetched from PHP
             });
 
             const data = await response.json(); // Expecting JSON response
@@ -27,8 +28,12 @@ function CartPage() {
             console.log('Response data:', data); // Debugging line
 
             if (data.success) {
-                setCartItems(data.items);
-                calculateTotalCost(data.items);
+                const formattedItems = data.items.map(item => ({
+                    ...item,
+                    price: parseFloat(item.price) // Convert price to a number
+                }));
+                setCartItems(formattedItems);
+                calculateTotalCost(formattedItems);
             } else {
                 console.error('Failed to fetch cart items:', data.message);
             }
@@ -41,17 +46,82 @@ function CartPage() {
         fetchCartItems(); // Call fetchCartItems directly
     }, []);
 
-    const handleQuantityChange = (index, newQuantity) => {
+    const handleQuantityChange = async (index, newQuantity) => {
         const updatedItems = [...cartItems];
         updatedItems[index].quantity = newQuantity;
         setCartItems(updatedItems);
         calculateTotalCost(updatedItems);
+
+        // Call to update quantity in backend
+        await updateQuantityInBackend(updatedItems[index].book_title, newQuantity);
     };
 
-    const handleRemoveItem = (index) => {
+    const handleRemoveItem = async (index) => {
+        const itemToRemove = cartItems[index];
+
         const updatedItems = cartItems.filter((_, i) => i !== index);
         setCartItems(updatedItems);
         calculateTotalCost(updatedItems);
+
+        // Call to remove item from backend
+        await removeItemFromBackend(itemToRemove.book_title);
+    };
+
+    const updateQuantityInBackend = async (bookTitle, newQuantity) => {
+        try {
+            await fetch('./backend/shopping_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action: 'update', bookTitle, quantity: newQuantity }),
+            });
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
+    };
+
+    const removeItemFromBackend = async (bookTitle) => {
+        try {
+            await fetch('./backend/shopping_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action: 'remove', bookTitle }),
+            });
+        } catch (error) {
+            console.error('Error removing item:', error);
+        }
+    };
+
+    const handleCheckout = async () => {
+        // Handle checkout logic here (e.g., clear cart, process payment, etc.)
+        console.log('Checkout clicked. Total cost:', totalCost);
+        
+        // Send checkout details to the backend
+        try {
+            const response = await fetch('./backend/shopping_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action: 'checkout', totalPrice: totalCost }),
+            });
+    
+            const data = await response.json();
+            if (data.success) {
+                console.log('Checkout successful:', data.message);
+                // Optionally, clear the cart or navigate to a different page
+                setCartItems([]); // Clear the cart items
+                setTotalCost(0); // Reset total cost
+                navigate('/checkout-page');
+            } else {
+                console.error('Checkout failed:', data.message);
+            }
+        } catch (error) {
+            console.error('Error during checkout:', error);
+        }
     };
 
     return (
@@ -75,7 +145,7 @@ function CartPage() {
                                     onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
                                 />
                             </div>
-                            <p className="cart-item-price">${parseFloat(item.price).toFixed(2)}</p> {/* Convert to float */}
+                            <p className="cart-item-price">${item.price.toFixed(2)}</p>
                         </div>
                         <button onClick={() => handleRemoveItem(index)} className="remove-button">
                             🗑️
@@ -85,7 +155,7 @@ function CartPage() {
             </div>
             <div className="shopping-cart-total">
                 <p>Total Cost: ${totalCost.toFixed(2)}</p>
-                <button className="checkout-button">Checkout</button>
+                <button onClick={handleCheckout} className="checkout-button">Checkout</button>
             </div>
         </div>
     );
