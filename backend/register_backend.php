@@ -1,18 +1,30 @@
 <?php
 
+// Set content type
+header('Content-Type: application/json');
+
 // Database connection
-$servername = "localhost:3306"; 
-$username = "chonheic"; // Database username
-$password = "50413052"; // Database password
-$db_name = "chonheic_db"; // Database name
+$servername = "localhost:3306";
+$username = "sahmed35"; // Database username
+$password = "50398839"; // Database password
+$db_name = "sahmed35_db"; // Database name
 
 // Create connection to MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
 
 // Check connection
 if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
+    echo json_encode(['success' => false, 'error' => 'Database connection failed']);
     exit();
+}
+
+// Function to sanitize input
+function sanitize_input($data)
+{
+    $data = trim($data);
+    $data = strip_tags($data);
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return $data;
 }
 
 // Get the raw POST data and decode it
@@ -22,17 +34,17 @@ if ($data === null) {
     exit();
 }
 
-// Trim and validate input data
-$firstName = trim($data['firstName']);
-$lastName = trim($data['lastName']);
-$email = trim($data['email']);
-$password_input = trim($data['password']);
+// Sanitize and validate input data
+$firstName = sanitize_input($data['firstName'] ?? '');
+$lastName = sanitize_input($data['lastName'] ?? '');
+$email = sanitize_input($data['email'] ?? '');
+$password_input = $data['password'] ?? '';
 
-// Input validation
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Invalid email format']);
     exit();
 }
+
 
 if (strlen($password_input) < 8) {
     echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters']);
@@ -42,6 +54,10 @@ if (strlen($password_input) < 8) {
 // Check if email already exists
 $sql = "SELECT * FROM user WHERE email = ?";
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    echo json_encode(['success' => false, 'message' => 'Error preparing SQL statement']);
+    exit();
+}
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -58,12 +74,16 @@ $hashed_password = password_hash($salt . $password_input, PASSWORD_BCRYPT);
 // Insert new user into the database
 $sql = "INSERT INTO user (first_name, last_name, email, password, salt) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    echo json_encode(['success' => false, 'message' => 'Failed to prepare statement']);
+    exit();
+}
 $stmt->bind_param("sssss", $firstName, $lastName, $email, $hashed_password, $salt);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Registration successful']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Registration failed: ' . $stmt->error]);
+    echo json_encode(['success' => false, 'message' => 'Registration failed']);
 }
 
 $stmt->close();
