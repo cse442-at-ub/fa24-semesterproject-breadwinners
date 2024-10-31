@@ -68,9 +68,35 @@ export default function HomePage() {
         { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100 },
         { headerName: 'Price ($)', field: 'price', minWidth: 120 },
         { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150 },
-        { headerName: 'Actions', field: 'id', cellRenderer: (params) => <button onClick={() => navigate(`/book/${params.value}`)} className="view-book-button">View Book</button>, minWidth: 150 },
+        { headerName: 'Actions', field: 'id', cellRenderer: (params) => <button onClick={() => handleAddToCart(params.value, params.data.title)} className="buy-book-button">Buy Book</button>, minWidth: 150 },
     ];
 
+    const handleAddToCart = async (bookId, bookTitle) => {
+        try {
+            // Sending a default quantity of 1 when adding the book
+            const response = await fetch('./backend/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ bookId, bookTitle, quantity: 1 }), // Include quantity
+            });
+    
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const data = await response.json();
+                if (data.success) {
+                    console.log('Book added to cart successfully');
+                } else {
+                    console.error('Failed to add book to cart:', data.message);
+                }
+            } else {
+                console.error('Received non-JSON response:', await response.text());
+            }
+        } catch (error) {
+            console.error('Error adding book to cart:', error);
+        }
+    };
     return (
         <div className="homepage">
             {/* Mobile Navbar */}

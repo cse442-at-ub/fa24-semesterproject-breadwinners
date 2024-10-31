@@ -38,6 +38,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
+          <Route path="/checkout-page" element={<CheckoutPage />} />
         </Routes>
       </div>
     </Router>

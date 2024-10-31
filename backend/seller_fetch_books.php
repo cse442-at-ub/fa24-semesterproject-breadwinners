@@ -10,9 +10,9 @@ error_reporting(E_ALL);
 
 // Database connection
 $servername = "localhost:3306";
-$username = "chonheic"; // your ubit
-$password = "50413052"; // your person number
-$db_name = "chonheic_db"; // Your actual database name
+$username = "hassan4"; // your ubit
+$password = "50396311"; // your person number
+$db_name = "hassan4_db"; // Your actual database name
 
 // Create connection to the MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);

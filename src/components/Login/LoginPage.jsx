@@ -26,6 +26,7 @@ function LoginPage() {
     
             if (data.success) {
                 setMessage('Login Successful!');
+                localStorage.setItem('email', email);
                 // Navigate to the Homepage after login
                 navigate('/Homepage');
             } else {
