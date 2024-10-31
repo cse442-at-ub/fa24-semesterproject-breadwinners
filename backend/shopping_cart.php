@@ -21,15 +21,20 @@ if ($action === null) {
     $query = "SELECT c.book_title, c.quantity, b.price, b.image_url, b.author 
               FROM cart c 
               JOIN books b ON c.book_title = b.title 
-              WHERE c.email = :email";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':email', $email);
+              WHERE c.email = ?";
+              
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
+    $result = $stmt->get_result();
 
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+    $items = [];
+    while ($row = $result->fetch_assoc()) {
+        $items[] = $row;
+    }
+
     echo json_encode(['success' => true, 'items' => $items]);
+    $stmt->close();
     exit;
 }
 
@@ -38,17 +43,16 @@ if ($action === 'update') {
     $bookTitle = $input['bookTitle'];
     $quantity = $input['quantity'];
 
-    $query = "UPDATE cart SET quantity = :quantity WHERE email = :email AND book_title = :bookTitle";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':quantity', $quantity);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':bookTitle', $bookTitle);
+    $query = "UPDATE cart SET quantity = ? WHERE email = ? AND book_title = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("iss", $quantity, $email, $bookTitle);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Quantity updated']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to update quantity']);
     }
+    $stmt->close();
     exit;
 }
 
@@ -56,47 +60,47 @@ if ($action === 'update') {
 if ($action === 'remove') {
     $bookTitle = $input['bookTitle'];
 
-    $query = "DELETE FROM cart WHERE email = :email AND book_title = :bookTitle";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':bookTitle', $bookTitle);
+    $query = "DELETE FROM cart WHERE email = ? AND book_title = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $email, $bookTitle);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Item removed']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to remove item']);
     }
+    $stmt->close();
     exit;
 }
 
-// Add this section to handle checkout action
+// Handle checkout action
 if ($action === 'checkout') {
     $totalPrice = $input['totalPrice']; // Get total price from the request
 
     // Check if an order summary already exists for the user
-    $query = "SELECT * FROM order_summary WHERE email = :email";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':email', $email);
+    $query = "SELECT * FROM order_summary WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
+    $stmt->store_result();
 
-    // If an order exists, update it, otherwise insert a new record
-    if ($stmt->rowCount() > 0) {
-        $updateQuery = "UPDATE order_summary SET total_price = :totalPrice WHERE email = :email";
-        $updateStmt = $pdo->prepare($updateQuery);
-        $updateStmt->bindParam(':totalPrice', $totalPrice);
-        $updateStmt->bindParam(':email', $email);
+    // If an order exists, update it; otherwise, insert a new record
+    if ($stmt->num_rows > 0) {
+        $updateQuery = "UPDATE order_summary SET total_price = ? WHERE email = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param("ds", $totalPrice, $email);
 
         if ($updateStmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Checkout successful, order updated']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update order summary']);
         }
+        $updateStmt->close();
     } else {
         // Insert a new order summary if no previous order exists
-        $query = "INSERT INTO order_summary (email, total_price) VALUES (:email, :totalPrice)";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':totalPrice', $totalPrice);
+        $query = "INSERT INTO order_summary (email, total_price) VALUES (?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sd", $email, $totalPrice);
 
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Checkout successful']);
@@ -104,8 +108,9 @@ if ($action === 'checkout') {
             echo json_encode(['success' => false, 'message' => 'Failed to complete checkout']);
         }
     }
+    $stmt->close();
     exit;
 }
 
-// You can add more actions here (like checkout, etc.)
+$conn->close();
 ?>
