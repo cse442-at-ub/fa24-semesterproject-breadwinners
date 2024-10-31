@@ -109,7 +109,7 @@ export default function SellerDashboard() {
             minWidth: 100,
           }}
           pagination={true}
-          paginationPageSize={5}
+          paginationPageSize={10}
           getRowHeight={() => 60}
         />
       </div>
