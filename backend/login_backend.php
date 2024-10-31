@@ -1,30 +1,8 @@
 <?php
-// Set headers for JSON response and security
-header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: *"); // Specify allowed origin for CORS
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("X-Content-Type-Options: nosniff");
-header("X-Frame-Options: DENY");
-header("Content-Security-Policy: default-src 'self'; script-src 'none';");
 
-// Enable error reporting for debugging (turn off in production)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Database connection
+include 'db_connection.php';
 
-$servername = "localhost:3306";
-$username = "sahmed35";
-$password = "50398839";
-$db_name = "sahmed35_db";
-
-// Create connection to MySQL database
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed']);
-    exit();
-}
 
 // Sanitize input function
 function sanitize_input($data)
@@ -33,6 +11,7 @@ function sanitize_input($data)
     $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8'); // Convert special characters to HTML entities
     return $data;
 }
+
 
 // Get the raw POST data and decode it
 $data = json_decode(file_get_contents('php://input'), true);

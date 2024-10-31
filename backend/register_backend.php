@@ -1,20 +1,6 @@
 <?php
 
-// Database connection
-$servername = "localhost:3306";
-$username = "sahmed35"; // Database username
-$password = "50398839"; // Database password
-$db_name = "sahmed35_db"; // Database name
-
-// Create connection to MySQL database
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
-    exit();
-}
-
+include 'db_connection.php';
 // Get the raw POST data and decode it
 $data = json_decode(file_get_contents('php://input'), true);
 if ($data === null) {

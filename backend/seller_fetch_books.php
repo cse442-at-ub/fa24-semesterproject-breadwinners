@@ -9,19 +9,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Database connection
-$servername = "localhost:3306";
-$username = "chonheic"; // your ubit
-$password = "50413052"; // your person number
-$db_name = "chonheic_db"; // Your actual database name
-
-// Create connection to the MySQL database
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-// Check database connection
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
-    exit();
-}
+include 'db_connection.php';
 
 $response = array();
 

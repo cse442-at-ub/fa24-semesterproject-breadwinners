@@ -31,6 +31,9 @@ function LoginPage() {
     
             if (data.success) {
                 setMessage(DOMPurify.sanitize('Login Successful!'));
+                localStorage.setItem('email', email);
+                // Navigate to the Homepage after login
+
                 navigate('/Homepage');
             } else {
                 setMessage(DOMPurify.sanitize(data.message || 'Login Failed! Please check your credentials.'));
