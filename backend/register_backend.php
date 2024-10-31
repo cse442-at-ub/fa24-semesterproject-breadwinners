@@ -1,10 +1,10 @@
 <?php
 
 // Database connection
-$servername = "localhost:3306"; 
-$username = "chonheic"; // Database username
-$password = "50413052"; // Database password
-$db_name = "chonheic_db"; // Database name
+$servername = "localhost:3306";
+$username = "sahmed35"; // Database username
+$password = "50398839"; // Database password
+$db_name = "sahmed35_db"; // Database name
 
 // Create connection to MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
@@ -31,6 +31,16 @@ $password_input = trim($data['password']);
 // Input validation
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+    exit();
+}
+
+if (!preg_match("/^[a-zA-Z\s]+$/", $firstName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid first name']);
+    exit();
+}
+
+if (!preg_match("/^[a-zA-Z\s]+$/", $lastName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid last name']);
     exit();
 }
 

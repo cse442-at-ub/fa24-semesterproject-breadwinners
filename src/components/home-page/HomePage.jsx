@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify'; // Import DOMPurify for sanitization
 import search from '../../assets/search-removebg-preview.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
 
@@ -112,22 +113,16 @@ export default function HomePage() {
                 <span>Textbooks</span>
             </nav>
 
-            {/* Title and Search Bar */}
-            <h2 className="title">Breadwinners - Best Books Available</h2>
-            <div className="search-bar">
-                <img src={search} alt="Search Icon" className="search-icon" />
-                <input type="text" className="search-input" placeholder="Search for books..." />
-            </div>
-
-            {/* Book Grid Section */}
-            <div style={{ height: 500, width: '100%' }} className="ag-theme-alpine book-grid">
-                <AgGridReact
-                    rowData={rowData}
-                    columnDefs={columns}
-                    pagination={false}
-                    domLayout="autoHeight"
-                    getRowHeight={() => 155}
-                />
+            {/* Book List Section */}
+            <div className="book-container">
+                {books.map((book, index) => (
+                    <div className="book" key={index}>
+                        <img src={book.image_url} alt={`Book ${index + 1}`} />
+                        <h2 className="book-title">{DOMPurify.sanitize(book.title)}</h2>
+                        <h3 className="author">{DOMPurify.sanitize(book.author)}</h3>
+                        <h3 className="price">${book.price}</h3>
+                    </div>
+                ))}
             </div>
         </div>
     );
