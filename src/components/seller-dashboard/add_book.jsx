@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DOMPurify from 'dompurify'; // Import DOMPurify
+import DOMPurify from "dompurify";
 import "./add_book.css";
 
 export default function AddBook() {
@@ -15,19 +15,20 @@ export default function AddBook() {
   const [coverFile, setCoverFile] = useState(null);
   const [message, setMessage] = useState("");
 
-  const sanitizeInput = (input) => {
-    return DOMPurify.sanitize(input);
-  };
-
   const handleSaveBook = async () => {
     try {
+      // Sanitize inputs
+      const sanitizedTitle = DOMPurify.sanitize(newBook.title);
+      const sanitizedAuthor = DOMPurify.sanitize(newBook.author);
+      const sanitizedDescription = DOMPurify.sanitize(newBook.description);
+
       const formData = new FormData();
-      formData.append("title", sanitizeInput(newBook.title));
-      formData.append("author", sanitizeInput(newBook.author));
-      formData.append("genre", sanitizeInput(newBook.genre));
-      formData.append("price", sanitizeInput(newBook.price));
-      formData.append("stock", sanitizeInput(newBook.stock));
-      formData.append("description", sanitizeInput(newBook.description)); // Add sanitized description to FormData
+      formData.append("title", sanitizedTitle);
+      formData.append("author", sanitizedAuthor);
+      formData.append("genre", newBook.genre);
+      formData.append("price", newBook.price);
+      formData.append("stock", newBook.stock);
+      formData.append("description", sanitizedDescription);
 
       if (coverFile) {
         formData.append("cover", coverFile);
@@ -58,17 +59,17 @@ export default function AddBook() {
         type="text"
         placeholder="Title"
         value={newBook.title}
-        onChange={(e) => setNewBook({ ...newBook, title: sanitizeInput(e.target.value) })}
+        onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
       />
       <input
         type="text"
         placeholder="Author"
         value={newBook.author}
-        onChange={(e) => setNewBook({ ...newBook, author: sanitizeInput(e.target.value) })}
+        onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
       />
       <select
         value={newBook.genre}
-        onChange={(e) => setNewBook({ ...newBook, genre: sanitizeInput(e.target.value) })}
+        onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
       >
         <option value="Fiction">Fiction</option>
         <option value="Non-Fiction">Non-Fiction</option>
@@ -76,7 +77,7 @@ export default function AddBook() {
       <textarea
         placeholder="Description"
         value={newBook.description}
-        onChange={(e) => setNewBook({ ...newBook, description: sanitizeInput(e.target.value) })}
+        onChange={(e) => setNewBook({ ...newBook, description: e.target.value })}
       />
       <input
         type="text"
