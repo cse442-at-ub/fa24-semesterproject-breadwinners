@@ -66,6 +66,7 @@ function HomePage() {
                             <span>Shopping cart</span>
                             <span>Seller Dashboard</span>
                             <span>Settings</span>
+                            <span>Wishlist</span>
                         </div>
                     )}
                 </div>
@@ -97,6 +98,7 @@ function HomePage() {
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
                     <span><Link to="/settings">Settings</Link></span>
                     <span><Link to="/dataGridPage">Sorting Page</Link></span>
+                    <span><Link to="/wishlist">Wishlist</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
