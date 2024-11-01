@@ -10,9 +10,9 @@ error_reporting(E_ALL);
 
 // Database connection
 $servername = "localhost:3306";
-$username = "chonheic"; // your ubit
-$password = "50413052"; // your person number
-$db_name = "chonheic_db"; // Your actual database name
+$username = "sahmed35"; // your ubit
+$password = "50398839"; // your person number
+$db_name = "sahmed35_db"; // Your actual database name
 
 // Create connection to the MySQL database
 $conn = new mysqli($servername, $username, $password, $db_name);
@@ -20,6 +20,14 @@ $conn = new mysqli($servername, $username, $password, $db_name);
 // Check database connection
 if ($conn->connect_error) {
     echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
+    exit();
+}
+
+// CSRF Token Verification
+session_start();
+$csrf_token = $_COOKIE['csrf_token'] ?? '';
+if (!isset($_SESSION['csrf_token']) || $csrf_token !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
     exit();
 }
 

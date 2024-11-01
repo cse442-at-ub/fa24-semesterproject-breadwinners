@@ -12,7 +12,10 @@ function HomePage() {
         // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
-                const response = await fetch('./backend/fetch_books.php');
+                const response = await fetch('./backend/fetch_books.php', {
+                    method: 'GET',
+                    credentials: 'include', // Include credentials (cookies)
+                });
                 const data = await response.json();
                 if (data.success) {
                     setBooks(data.books);
@@ -38,6 +41,7 @@ function HomePage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Include credentials (cookies)
             });
 
             const data = await response.json();
