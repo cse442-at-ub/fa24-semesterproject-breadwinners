@@ -8,9 +8,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $servername = "localhost:3306";
-$username = "sahmed35";
-$password = "50398839";
-$db_name = "sahmed35_db";
+$username = "chonheic";
+$password = "50413052";
+$db_name = "chonheic_db";
 
 $conn = new mysqli($servername, $username, $password, $db_name);
 
