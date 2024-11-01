@@ -1,7 +1,7 @@
 <?php
 // Enable JSON response and CORS
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: https://your-domain.com"); // Specify allowed origin
+header("Access-Control-Allow-Origin: *"); // Specify allowed origin
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
@@ -11,6 +11,20 @@ header("Content-Security-Policy: default-src 'self';");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Start the session
+session_start();
+
+// CSRF Token Verification
+$csrf_token = $_COOKIE['csrf_token'] ?? '';
+error_log('Session CSRF Token: ' . (isset($_SESSION['csrf_token']) ? $_SESSION['csrf_token'] : 'Not set'));
+error_log('Cookie CSRF Token: ' . $csrf_token);
+
+if (!isset($_SESSION['csrf_token']) || $csrf_token !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
+    exit();
+}
+
 
 $servername = "localhost:3306";
 $username = "sahmed35";
