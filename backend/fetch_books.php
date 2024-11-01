@@ -34,21 +34,36 @@ if (!isset($_SESSION['csrf_token']) || $csrf_token !== $_SESSION['csrf_token']) 
 $response = array();
 
 try {
-    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books";
+    // Check if best seller sorting is requested
+    $sortByBestSeller = isset($_GET['sortByBestSeller']) && $_GET['sortByBestSeller'] === 'true';
+
+    // Query to fetch book data
+    if ($sortByBestSeller) {
+        // Fetch books sorted by total books sold and rating
+        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books ORDER BY total_books_sold DESC, rating DESC";
+    } else {
+        // Default fetch without sorting
+        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books";
+    }
+
     $stmt = $conn->prepare($query);
+
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);
     }
-    $stmt->execute();
 
+    $stmt->execute();
     $result = $stmt->get_result();
+
     $books = [];
     while ($row = $result->fetch_assoc()) {
         $books[] = $row;
     }
 
+    // Structure response
     $response['success'] = true;
     $response['books'] = $books;
+
     $stmt->close();
 } catch (Exception $e) {
     $response['success'] = false;
@@ -57,5 +72,6 @@ try {
 
 $conn->close();
 
+// Send the response as JSON
 echo json_encode($response);
 ?>
