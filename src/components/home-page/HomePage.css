@@ -240,3 +240,11 @@ hr.divider-line {
     margin: 10px auto; 
     border-radius: 5px; 
 }
+
+/* Footer Styles */
+.site-footer {
+    background-color: #292B5C;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+}
