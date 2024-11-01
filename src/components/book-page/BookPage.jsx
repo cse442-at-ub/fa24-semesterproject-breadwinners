@@ -3,13 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import './BookPage.css';
 
 export default function BookPage() {
-    const { id } = useParams(); // Get the book ID from the URL
+    const { id } = useParams();
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // For navigation
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookById = async () => {
@@ -25,8 +27,40 @@ export default function BookPage() {
                 setError('An error occurred while fetching book details.');
             }
         };
+
+        const checkWishlist = async () => {
+            try {
+                const response = await fetch(`../backend/CheckWishlist.php?id=${id}`);
+                const data = await response.json();
+                setIsBookmarked(data.isBookmarked);
+            } catch (error) {
+                console.error('Error checking wishlist:', error);
+            }
+        };
+
         fetchBookById();
+        checkWishlist();
     }, [id]);
+
+    const handleBookmarkToggle = async () => {
+        try {
+            const response = await fetch('../backend/AddToWishlist.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id }), // Using 'id' as clarified
+            });
+            const data = await response.json();
+            if (data.success) {
+                setIsBookmarked((prev) => !prev); // Toggle bookmark state
+            } else {
+                console.error("Failed to toggle wishlist:", data.message);
+            }
+        } catch (error) {
+            console.error("Error toggling wishlist:", error);
+        }
+    };
 
     if (error) {
         return <div className="error">{error}</div>;
@@ -36,7 +70,6 @@ export default function BookPage() {
         return <div>Loading...</div>;
     }
 
-    // Adjust image URL
     const imageUrl = `../${book.image_url}`;
 
     return (
@@ -48,8 +81,8 @@ export default function BookPage() {
                 <div className="book-details">
                     <div className="image-bookmark">
                         <img src={imageUrl} alt={book.title} className="book-cover" />
-                        <IconButton color="primary" aria-label="bookmark this book" className="bookmark-icon">
-                            <BookmarkIcon />
+                        <IconButton color="primary" aria-label="bookmark this book" className="bookmark-icon" onClick={handleBookmarkToggle}>
+                            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                         </IconButton>
                     </div>
                     <div className="info-section">
