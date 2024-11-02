@@ -7,13 +7,13 @@ import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import CheckoutPage from './components/checkout-page/checkoutPage';
 import RegisterPage from './components/Register/RegisterPage';
+import WishlistPage from './components/wishlist/WishlistPage'; // Import WishlistPage
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
-
 
 
 function App() {
@@ -25,17 +25,19 @@ function App() {
   };
 
   return (
-    <Router basename = {getBaseName()}> {/* Add basename to handle the base URL */}
+    <Router basename={getBaseName()}>
       <div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/Homepage" element={<HomePage />} />
           <Route path="/recent-purchase" element={<RecentPurchase />} />
           <Route path="/shopping-cart" element={<ShoppingCart />} />
+          <Route path="/wishlist" element={<WishlistPage />} /> {/* New Route for WishlistPage */}
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/book/:id" element={<BookPage />} /> {/* Route for BookPage */}
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
           <Route path="/checkout-page" element={<CheckoutPage />} />
