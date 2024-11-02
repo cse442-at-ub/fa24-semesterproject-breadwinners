@@ -19,10 +19,10 @@ try {
     // Query to fetch book data
     if ($sortByBestSeller) {
         // Fetch books sorted by total books sold and rating
-        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books ORDER BY total_books_sold DESC, rating DESC";
+        $query = "SELECT id, title, author, genre, image_url, rating, stock, price, total_books_sold FROM books ORDER BY total_books_sold DESC, rating DESC";
     } else {
         // Default fetch without sorting
-        $query = "SELECT id, title, author, genre, image_url, sellerImage, rating, stock, price, total_books_sold FROM books";
+        $query = "SELECT id, title, author, genre, image_url, rating, stock, price, total_books_sold FROM books";
     }
 
     $stmt = $conn->prepare($query);

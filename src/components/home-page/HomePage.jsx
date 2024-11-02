@@ -71,6 +71,7 @@ export default function HomePage() {
                             <span>Shopping Cart</span>
                             <span>Seller Dashboard</span>
                             <span>Settings</span>
+                            <span>Wishlist</span>
                         </div>
                     )}
                 </div>
@@ -78,7 +79,7 @@ export default function HomePage() {
             </nav>
 
             {/* Desktop Top Navbar */}
-            <nav className="top-navbar">
+            <nav className="top-navbar">    
                 <div className="nav-items">
                     <img src={Image9} alt="User Profile" className="profile-image" />
                     <span><Link to="/Homepage">Homepage</Link></span>
@@ -87,6 +88,8 @@ export default function HomePage() {
                     <span><Link to="/shopping-cart">Shopping Cart</Link></span>
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
                     <span><Link to="/settings">Settings</Link></span>
+                    <span><Link to="/dataGridPage">Sorting Page</Link></span>
+                    <span><Link to="/wishlist">Wishlist</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
