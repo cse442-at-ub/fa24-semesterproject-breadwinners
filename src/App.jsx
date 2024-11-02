@@ -14,6 +14,7 @@ import RegisterPage from './components/Register/RegisterPage';
 import WishlistPage from './components/wishlist/WishlistPage'; // Import WishlistPage
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
+import BookPage from './components/book-page/BookPage'; // Adjust path as needed
 
 
 function App() {
