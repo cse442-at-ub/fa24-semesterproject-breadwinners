@@ -89,11 +89,29 @@ if (password_verify($hashed_input_password, $stored_hashed_password)) {
     $_SESSION['email'] = $email;
     $_SESSION['auth_token'] = $auth_token;
 
-    // Send success response
+    // --- CSRF Token Generation Starts Here ---
+    $csrf_token = bin2hex(random_bytes(32)); // Generate a CSRF token
+
+    // Store CSRF token in session
+    $_SESSION['csrf_token'] = $csrf_token;
+
+    // Set CSRF token in a cookie (not HttpOnly, since we want to read it from JS)
+    setcookie('csrf_token', $csrf_token, [
+        'expires' => time() + 3600, // Expires in 1 hour
+        'path' => '/',
+        'domain' => '', // Specify your domain
+        'secure' => true, // Use true if using HTTPS
+        'httponly' => false, // We want to access this cookie in JavaScript
+        'samesite' => 'Strict' // Prevent CSRF
+    ]);
+
+    // Send the CSRF token in the response along with the auth token
     echo json_encode([
         'success' => true,
-        'message' => 'Login successful'
+        'message' => 'Login successful',
+        'csrf_token' => $csrf_token // Include CSRF token in response
     ]);
+    // --- CSRF Token Generation Ends Here ---
 
 } else {
     // Send error response for invalid password

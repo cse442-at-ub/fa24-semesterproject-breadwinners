@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react'; 
+// HomePage.jsx
+import React, { useState, useEffect } from 'react';
 import './HomePage.css';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify'; // Import DOMPurify for sanitization
-import search from '../../assets/search-removebg-preview.png';
-import Image9 from '../../assets/BreadWinnersPicture.png';
 
-export default function HomePage() {
-    const [rowData, setRowData] = useState([]); 
+function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [sortByBestSeller, setSortByBestSeller] = useState(false);
-    const navigate = useNavigate();
+    const [books, setBooks] = useState([]);
 
-    // Fetch books data from the backend
     useEffect(() => {
+        // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
-                const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`);
+                const response = await fetch('./backend/fetch_books.php', {
+                    method: 'GET',
+                    credentials: 'include', // Include credentials (cookies)
+                });
                 const data = await response.json();
                 if (data.success) {
-                    setRowData(data.books);
+                    setBooks(data.books);
                 } else {
                     console.error('Failed to fetch books:', data.message);
                 }
@@ -29,19 +29,25 @@ export default function HomePage() {
             }
         };
         fetchBooks();
-    }, [sortByBestSeller]);
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Include credentials (cookies)
             });
+
             const data = await response.json();
+
             if (data.success) {
                 navigate('/login');
             } else {
@@ -60,10 +66,12 @@ export default function HomePage() {
     
     return (
         <div className="homepage">
-            {/* Mobile Navbar */}
+            {/* Navbar for mobile view */}
             <nav className="navbar">
                 <div className="nav-left">
-                    <button className="menu-button" onClick={toggleMenu}>Menu</button>
+                    <button className="menu-button" onClick={toggleMenu}>
+                        Menu
+                    </button>
                     {menuOpen && (
                         <div className="menu-items">
                             <span>Homepage</span>
@@ -81,7 +89,6 @@ export default function HomePage() {
             {/* Desktop Top Navbar */}
             <nav className="top-navbar">    
                 <div className="nav-items">
-                    <img src={Image9} alt="User Profile" className="profile-image" />
                     <span><Link to="/Homepage">Homepage</Link></span>
                     <span><Link to="/dataGridPage">Sortpage</Link></span>
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
@@ -94,10 +101,10 @@ export default function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Secondary Navbar */}
+            {/* Secondary navigation bar for larger screens */}
             <nav className="secondary-navbar">
-                <span onClick={handleBestSellerSort} className="best-seller-link">Best Seller</span> 
                 <span>Hardcover</span>
+                <span>Paperback</span>
                 <span>E-books</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
@@ -117,3 +124,5 @@ export default function HomePage() {
         </div>
     );
 }
+
+export default HomePage;

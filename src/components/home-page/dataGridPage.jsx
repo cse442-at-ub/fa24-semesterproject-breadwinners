@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; 
-import './HomePage.css';
+import React, { useState, useEffect } from 'react';
+import './DataGridPage.css';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -13,11 +13,26 @@ export default function DataGridPage() {
     const [sortByBestSeller, setSortByBestSeller] = useState(false);
     const navigate = useNavigate();
 
+    // Fetch CSRF token from cookies
+    const getCsrfToken = () => {
+        const csrfCookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrf_token='));
+        return csrfCookie ? csrfCookie.split('=')[1] : null;
+    };
+
     // Fetch books data from the backend
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`);
+                const response = await fetch('./backend/fetch_books.php', {
+                    method: 'GET',
+                    credentials: 'include', // This allows sending cookies
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': getCsrfToken(), // Include CSRF token in the headers
+                    }
+                });
                 const data = await response.json();
                 if (data.success) {
                     setRowData(data.books);
@@ -39,7 +54,11 @@ export default function DataGridPage() {
         try {
             const response = await fetch('./backend/logout_backend.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': getCsrfToken(), // Include CSRF token in the headers
+                },
+                credentials: 'include', // Include cookies
             });
             const data = await response.json();
             if (data.success) {

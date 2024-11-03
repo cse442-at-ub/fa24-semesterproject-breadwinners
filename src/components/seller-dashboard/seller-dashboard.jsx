@@ -14,9 +14,10 @@ export default function SellerDashboard() {
       try {
         const response = await fetch("./backend/seller_fetch_books.php", {
           method: 'GET',
-          credentials: 'include',
+          credentials: 'include', // This allows sending cookies
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': getCsrfToken() // Include CSRF token in the headers
           }
         });
         const data = await response.json();
@@ -35,6 +36,10 @@ export default function SellerDashboard() {
 
   const handleAddBook = () => {
     navigate("/add-book"); // Navigate to the AddBook page
+  };
+
+  const getCsrfToken = () => {
+    return document.cookie.split('; ').find(row => row.startsWith('csrf_token=')).split('=')[1];
   };
 
   const columns = [

@@ -14,6 +14,9 @@ export default function AddBook() {
 
   const [coverFile, setCoverFile] = useState(null);
   const [message, setMessage] = useState("");
+  const getCsrfToken = () => {
+    return document.cookie.split('; ').find(row => row.startsWith('csrf_token=')).split('=')[1];
+  };
 
   const handleSaveBook = async () => {
     try {
@@ -36,6 +39,10 @@ export default function AddBook() {
 
       const response = await fetch("./backend/add_book.php", {
         method: "POST",
+        credentials: "include",
+        headers: {
+          "X-CSRF-Token": getCsrfToken(), // Include CSRF token in headers
+        },
         body: formData,
       });
 
