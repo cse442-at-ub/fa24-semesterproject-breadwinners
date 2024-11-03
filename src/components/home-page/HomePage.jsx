@@ -57,12 +57,6 @@ function HomePage() {
             console.error('An error occurred while logging out:', error);
         }
     };
-
-    // Handle Best Seller sort
-    const handleBestSellerSort = () => {
-        setSortByBestSeller((prev) => !prev); 
-    };
-
     
     return (
         <div className="homepage">
@@ -112,7 +106,7 @@ function HomePage() {
 
             {/* Book List Section */}
             <div className="book-container">
-                {rowData.map((book, index) => (
+                {books.map((book, index) => (
                     <div className="book" key={index}>
                         <img src={book.image_url} alt={`Book ${index + 1}`} />
                         <h2 className="book-title">{DOMPurify.sanitize(book.title)}</h2>
