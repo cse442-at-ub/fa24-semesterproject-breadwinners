@@ -47,13 +47,13 @@ html, body {
     background-color: #D9D9D9;
     padding: 10px;
     color: white;
-    width: 100%; 
+    width: 100%;
     position: fixed;
-    top: 0; 
-    left: 0; 
-    z-index: 1000; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
     box-sizing: border-box;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    flex-wrap: wrap;
 }
 
 .secondary-navbar {
@@ -62,12 +62,13 @@ html, body {
     background-color: #292B5C;
     padding: 10px;
     color: white;
-    width: 100%; 
+    width: 100%;
     box-sizing: border-box;
     position: fixed;
-    top: 60px;
-    left: 0; 
-    z-index: 999; 
+    top: 50px; /* Adjusted from 60px to create overlap */
+    left: 0;
+    z-index: 999;
+    margin-top: -10px; /* Negative margin to create the overlap */
 }
 
 .logout-button {
