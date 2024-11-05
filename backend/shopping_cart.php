@@ -43,16 +43,31 @@ if ($action === 'update') {
     $bookTitle = $input['bookTitle'];
     $quantity = $input['quantity'];
 
-    $query = "UPDATE shopping_cart SET quantity = ? WHERE email = ? AND book_title = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("iss", $quantity, $email, $bookTitle);
+    // Check the available stock for the specified book
+    $stockQuery = "SELECT stock FROM books WHERE title = ?";
+    $stockStmt = $conn->prepare($stockQuery);
+    $stockStmt->bind_param("s", $bookTitle);
+    $stockStmt->execute();
+    $stockResult = $stockStmt->get_result();
+    $bookData = $stockResult->fetch_assoc();
 
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Quantity updated']);
+    if ($bookData && $quantity <= $bookData['stock']) {
+        // Proceed with the quantity update in the cart
+        $updateQuery = "UPDATE shopping_cart SET quantity = ? WHERE email = ? AND book_title = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param("iss", $quantity, $email, $bookTitle);
+
+        if ($updateStmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Quantity updated']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update quantity']);
+        }
+        $updateStmt->close();
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to update quantity']);
+        // If the requested quantity exceeds the stock, return an error message
+        echo json_encode(['success' => false, 'message' => 'Requested quantity exceeds available stock']);
     }
-    $stmt->close();
+    $stockStmt->close();
     exit;
 }
 
