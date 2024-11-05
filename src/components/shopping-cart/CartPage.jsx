@@ -183,7 +183,7 @@ function CartPage() {
             </div>
             <div className="shopping-cart-total">
                 <p>Total Cost: ${totalCost.toFixed(2)}</p>
-                <button onClick={handleCheckout} className="checkout-button">Checkout</button>
+                <button onClick={handleCheckout} className="checkout-button" disabled={cartItems.length === 0}>Checkout</button>
             </div>
         </div>
     );
