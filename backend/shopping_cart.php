@@ -1,10 +1,10 @@
 <?php
 session_start();
-include 'db_connection.php'; // Include your DB connection file
+include 'db_connection.php';
 
 header('Content-Type: application/json');
 
-// Make sure the session contains the user's email
+// Ensure the user is logged in by checking the session
 if (!isset($_SESSION['email'])) {
     echo json_encode(['success' => false, 'message' => 'User not logged in']);
     exit;
@@ -12,16 +12,16 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-// Decode the input JSON if provided
+// Decode the input JSON, if provided
 $input = json_decode(file_get_contents('php://input'), true);
 $action = $input['action'] ?? null;
 
 // Fetch cart items
 if ($action === null) {
-    $query = "SELECT c.book_title, c.quantity, b.price, b.image_url, b.author 
-              FROM cart c 
-              JOIN books b ON c.book_title = b.title 
-              WHERE c.email = ?";
+    $query = "SELECT sc.book_title, sc.quantity, b.price, b.image_url, b.author 
+              FROM shopping_cart sc 
+              JOIN books b ON sc.book_id = b.id 
+              WHERE sc.email = ?";
               
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
@@ -43,7 +43,7 @@ if ($action === 'update') {
     $bookTitle = $input['bookTitle'];
     $quantity = $input['quantity'];
 
-    $query = "UPDATE cart SET quantity = ? WHERE email = ? AND book_title = ?";
+    $query = "UPDATE shopping_cart SET quantity = ? WHERE email = ? AND book_title = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("iss", $quantity, $email, $bookTitle);
 
@@ -60,7 +60,7 @@ if ($action === 'update') {
 if ($action === 'remove') {
     $bookTitle = $input['bookTitle'];
 
-    $query = "DELETE FROM cart WHERE email = ? AND book_title = ?";
+    $query = "DELETE FROM shopping_cart WHERE email = ? AND book_title = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ss", $email, $bookTitle);
 
@@ -75,18 +75,18 @@ if ($action === 'remove') {
 
 // Handle checkout action
 if ($action === 'checkout') {
-    $totalPrice = $input['totalPrice']; // Get total price from the request
+    $totalPrice = $input['totalPrice'];
 
-    // Check if an order summary already exists for the user
+    // Check if an order summary already exists for this user
     $query = "SELECT * FROM order_summary WHERE email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
-    // If an order exists, update it; otherwise, insert a new record
     if ($stmt->num_rows > 0) {
-        $updateQuery = "UPDATE order_summary SET total_price = ? WHERE email = ?";
+        // Update existing order
+        $updateQuery = "UPDATE order_summary SET total_price = ?, created_at = NOW() WHERE email = ?";
         $updateStmt = $conn->prepare($updateQuery);
         $updateStmt->bind_param("ds", $totalPrice, $email);
 
@@ -97,16 +97,17 @@ if ($action === 'checkout') {
         }
         $updateStmt->close();
     } else {
-        // Insert a new order summary if no previous order exists
-        $query = "INSERT INTO order_summary (email, total_price) VALUES (?, ?)";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("sd", $email, $totalPrice);
+        // Insert a new order
+        $insertQuery = "INSERT INTO order_summary (email, total_price, created_at) VALUES (?, ?, NOW())";
+        $insertStmt = $conn->prepare($insertQuery);
+        $insertStmt->bind_param("sd", $email, $totalPrice);
 
-        if ($stmt->execute()) {
+        if ($insertStmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Checkout successful']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to complete checkout']);
         }
+        $insertStmt->close();
     }
     $stmt->close();
     exit;

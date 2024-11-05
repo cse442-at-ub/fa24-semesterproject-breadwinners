@@ -2,17 +2,7 @@
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 
-$servername = "localhost:3306";
-$username = "chonheic";
-$password = "50413052";
-$db_name = "chonheic_db";
-
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
-    exit();
-}
+include 'db_connection.php';
 
 if (!isset($_COOKIE['auth_token'])) {
     echo json_encode(['success' => false, 'message' => 'Missing authorization token']);

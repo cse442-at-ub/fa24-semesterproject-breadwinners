@@ -7,17 +7,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$servername = "localhost:3306";
-$username = "chonheic";
-$password = "50413052";
-$db_name = "chonheic_db";
+include 'db_connection.php';
 
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
-    exit();
-}
 
 $response = array();
 

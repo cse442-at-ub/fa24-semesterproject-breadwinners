@@ -9,7 +9,7 @@ if (isset($_SESSION['email'])) {
 
     // Fetch order summary
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Fetch existing order summary for the user
+        // Fetch the most recent order summary for the user
         $query = "SELECT total_price FROM order_summary WHERE email = ? ORDER BY created_at DESC LIMIT 1";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("s", $email);
@@ -28,7 +28,14 @@ if (isset($_SESSION['email'])) {
 
     // Handle checkout action (POST request)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $totalPrice = $_POST['totalPrice']; // Expect totalPrice in POST request
+        // Get the raw POST data
+        $input = json_decode(file_get_contents('php://input'), true);
+        $totalPrice = $input['totalPrice'] ?? null; // Expect totalPrice in JSON request
+
+        if ($totalPrice === null) {
+            echo json_encode(['success' => false, 'message' => 'Total price is required.']);
+            exit;
+        }
 
         $query = "INSERT INTO order_summary (email, total_price) VALUES (?, ?)";
         $stmt = $conn->prepare($query);
