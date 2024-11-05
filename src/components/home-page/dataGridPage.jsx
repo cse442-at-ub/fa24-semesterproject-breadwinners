@@ -155,9 +155,10 @@ export default function DataGridPage() {
                     <img src={Image9} alt="User Profile" className="profile-image" />
                     <span><Link to="/Homepage">Homepage</Link></span>
                     <span><Link to="/dataGridPage">Sortpage</Link></span>
+                    <span><Link to="/wishlist">Wishlist</Link></span>
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
-                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
+                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
                     <span><Link to="/settings">Settings</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
@@ -165,9 +166,8 @@ export default function DataGridPage() {
 
             {/* Secondary Navbar */}
             <nav className="secondary-navbar">
-                <span onClick={handleBestSellerSort} className="best-seller-link">Best Seller</span> 
+                <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
                 <span>Hardcover</span>
-                <span>E-books</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
             </nav>

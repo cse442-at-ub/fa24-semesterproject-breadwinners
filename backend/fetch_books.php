@@ -9,7 +9,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Start the session
+
 session_start();
+
 
 // CSRF Token Verification
 $csrf_token = $_COOKIE['csrf_token'] ?? '';

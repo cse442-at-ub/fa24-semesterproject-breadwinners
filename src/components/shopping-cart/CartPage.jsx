@@ -96,7 +96,16 @@ function CartPage() {
     };
 
     const handleCheckout = async () => {
-        // Handle checkout logic here (e.g., clear cart, process payment, etc.)
+        // Check if any item in the cart has a quantity exceeding the stock
+        for (const item of cartItems) {
+            const stock = await fetchStock(item.book_title);
+            if (item.quantity > stock) {
+                alert(`Cannot checkout. The quantity of "${item.book_title}" exceeds available stock.`);
+                return; // Exit the function if there's an issue
+            }
+        }
+    
+        // Handle checkout logic if all quantities are valid
         console.log('Checkout clicked. Total cost:', totalCost);
         
         // Send checkout details to the backend
@@ -121,6 +130,25 @@ function CartPage() {
             }
         } catch (error) {
             console.error('Error during checkout:', error);
+        }
+    };
+    
+    // Function to fetch the stock for a specific book title
+    const fetchStock = async (bookTitle) => {
+        try {
+            const response = await fetch('./backend/check_stock.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ bookTitle }),
+            });
+            
+            const data = await response.json();
+            return data.stock; // Expecting the response to have a 'stock' field
+        } catch (error) {
+            console.error('Error fetching stock:', error);
+            return 0; // Default to 0 if there was an error
         }
     };
 

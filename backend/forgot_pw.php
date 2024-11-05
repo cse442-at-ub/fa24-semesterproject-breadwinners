@@ -8,10 +8,8 @@ header("Content-Type: application/json");
 //error_reporting(E_ALL);
 
 // Database connection
-$servername = "localhost:3306";
-$username = "sahmed35"; //ubit
-$password = "50398839"; //person number
-$db_name = "sahmed35_db"; //cattle: cse442_2024_fall_team_y_db
+include 'db_connection.php';
+
 function generateCsrfToken()
 {
     // Generate a CSRF token

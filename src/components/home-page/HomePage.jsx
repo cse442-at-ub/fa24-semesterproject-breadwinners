@@ -9,6 +9,7 @@ import DOMPurify from 'dompurify'; // Import DOMPurify for sanitization
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [books, setBooks] = useState([]);
+    const [sortByBestSeller, setSortByBestSeller] = useState(false);
 
     useEffect(() => {
         // Fetch books data from the backend
@@ -29,7 +30,7 @@ function HomePage() {
             }
         };
         fetchBooks();
-    }, []);
+    }, [sortByBestSeller]);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -56,6 +57,9 @@ function HomePage() {
         } catch (error) {
             console.error('An error occurred while logging out:', error);
         }
+    };
+    const handleBestSellerSort = () => {
+        setSortByBestSeller((prev) => !prev); 
     };
     
     return (
@@ -85,20 +89,19 @@ function HomePage() {
                 <div className="nav-items">
                     <span><Link to="/Homepage">Homepage</Link></span>
                     <span><Link to="/dataGridPage">Sortpage</Link></span>
-                    <span><Link to="/recent-purchase">Recent Purchase</Link></span>
-                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
-                    <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
-                    <span><Link to="/settings">Settings</Link></span>
-                    <span><Link to="/dataGridPage">Sorting Page</Link></span>
                     <span><Link to="/wishlist">Wishlist</Link></span>
+                    <span><Link to="/recent-purchase">Recent Purchase</Link></span>
+                    <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
+                    <span><Link to="/shopping-cart">Shopping Cart</Link></span>
+                    <span><Link to="/settings">Settings</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
             {/* Secondary navigation bar for larger screens */}
             <nav className="secondary-navbar">
+            <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
                 <span>Hardcover</span>
-                <span>Paperback</span>
                 <span>E-books</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>

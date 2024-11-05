@@ -26,16 +26,7 @@ if (!isset($_SESSION['csrf_token']) || $csrf_token !== $_SESSION['csrf_token']) 
 }
 
 
-$servername = "localhost:3306";
-$username = "sahmed35";
-$password = "50398839";
-$db_name = "sahmed35_db";
-
-$conn = new mysqli($servername, $username, $password, $db_name);
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
-    exit();
-}
+include 'db_connection.php';
 
 $response = array();
 

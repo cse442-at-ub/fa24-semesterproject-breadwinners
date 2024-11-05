@@ -3,8 +3,10 @@ import './checkoutPage.css';
 import MasterCard from '../../assets/mc.png'; 
 import Visa from '../../assets/visa.png'; 
 import Amex from '../../assets/amex.png'; 
+import { useNavigate } from 'react-router-dom'; 
 
 function CheckoutPage() {
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [orderSummary, setOrderSummary] = useState({
         subtotal: 0,
@@ -47,16 +49,17 @@ function CheckoutPage() {
             const response = await fetch('./backend/order_summary.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json', // Use application/json
                 },
-                body: new URLSearchParams({
-                    totalPrice: orderSummary.total,
+                body: JSON.stringify({
+                    totalPrice: orderSummary.total, // Stringify the object
                 }),
             });
-
+    
             const data = await response.json();
             if (data.success) {
                 alert(data.message);
+                navigate('/dataGridPage');
             } else {
                 console.error('Failed to complete purchase:', data.message);
             }
@@ -64,7 +67,6 @@ function CheckoutPage() {
             console.error('Error during purchase:', error);
         }
     };
-
     return (
         <div className="checkout-container">
             <div className="card-details">
