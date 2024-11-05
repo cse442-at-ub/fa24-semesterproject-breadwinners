@@ -15,7 +15,7 @@ function HomePage() {
         // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
-                const response = await fetch('./backend/fetch_books.php', {
+                const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`, {
                     method: 'GET',
                     credentials: 'include', // Include credentials (cookies)
                 });

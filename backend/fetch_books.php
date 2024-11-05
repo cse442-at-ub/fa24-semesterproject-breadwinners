@@ -39,7 +39,6 @@ try {
         // Default fetch without sorting
         $query = "SELECT id, title, author, genre, seller_email, image_url, rating, stock, price, total_books_sold FROM books";
     }
-
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);

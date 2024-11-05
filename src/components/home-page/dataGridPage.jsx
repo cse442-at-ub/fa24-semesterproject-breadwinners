@@ -25,7 +25,10 @@ export default function DataGridPage() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('./backend/fetch_books.php', {
+                // Construct the URL with the sortByBestSeller parameter
+                const url = `./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`;
+    
+                const response = await fetch(url, {
                     method: 'GET',
                     credentials: 'include', // This allows sending cookies
                     headers: {
