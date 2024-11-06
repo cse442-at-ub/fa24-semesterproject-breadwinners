@@ -17,7 +17,7 @@ export default function BookPage() {
     useEffect(() => {
         const fetchBookById = async () => {
             try {
-                const response = await fetch(`../backend/FetchBookById.php?id=${id}`);
+                const response = await fetch(`./backend/FetchBookById.php?id=${id}`);
                 const data = await response.json();
                 if (data.success) {
                     setBook(data.book);
@@ -31,7 +31,7 @@ export default function BookPage() {
 
         const checkWishlist = async () => {
             try {
-                const response = await fetch(`../backend/CheckWishlist.php?id=${id}`);
+                const response = await fetch(`./backend/CheckWishlist.php?id=${id}`);
                 const data = await response.json();
                 setIsBookmarked(data.isBookmarked);
             } catch (error) {
@@ -45,7 +45,7 @@ export default function BookPage() {
 
     const handleBookmarkToggle = async () => {
         try {
-            const response = await fetch('../backend/AddToWishlist.php', {
+            const response = await fetch('./backend/AddToWishlist.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
