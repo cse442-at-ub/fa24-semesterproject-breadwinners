@@ -7,7 +7,7 @@ import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import CheckoutPage from './components/checkout-page/checkoutPage';
 import RegisterPage from './components/Register/RegisterPage';
@@ -18,15 +18,8 @@ import BookPage from './components/book-page/BookPage'; // Adjust path as needed
 
 
 function App() {
-  const [count, setCount] = useState(0);
-  const getBaseName = () => {
-    const fullPath = window.location.pathname;
-    const lastSlashIndex = fullPath.lastIndexOf('/');
-    return fullPath.slice(0, lastSlashIndex + 1); 
-  };
-
   return (
-    <Router basename={getBaseName()}>
+    <Router>
       <div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -45,7 +38,7 @@ function App() {
         </Routes>
       </div>
     </Router>
-  );
+  )
 }
 
 export default App;
