@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import DOMPurify from 'dompurify'; // Import DOMPurify
+import DOMPurify from 'dompurify';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import ShareIcon from '@mui/icons-material/Share'; // Import share icon
 import './BookPage.css';
 
 export default function BookPage() {
@@ -12,6 +13,7 @@ export default function BookPage() {
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [shareLink, setShareLink] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,17 +52,24 @@ export default function BookPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id }), // Using 'id' as clarified
+                body: JSON.stringify({ id }),
             });
             const data = await response.json();
             if (data.success) {
-                setIsBookmarked((prev) => !prev); // Toggle bookmark state
+                setIsBookmarked((prev) => !prev);
             } else {
                 console.error("Failed to toggle wishlist:", data.message);
             }
         } catch (error) {
             console.error("Error toggling wishlist:", error);
         }
+    };
+
+    const handleShare = () => {
+        const baseLink = `${window.location.origin}${window.location.pathname}`;
+        const link = `${baseLink}#/guest_book/${id}`;
+        setShareLink(link);
+        navigator.clipboard.writeText(link).then(() => alert('Link copied to clipboard!'));
     };
 
     if (error) {
@@ -72,8 +81,6 @@ export default function BookPage() {
     }
 
     const imageUrl = `../${book.image_url}`;
-
-    // Sanitize data
     const sanitizedTitle = DOMPurify.sanitize(book.title);
     const sanitizedAuthor = DOMPurify.sanitize(book.author);
     const sanitizedGenre = DOMPurify.sanitize(book.genre);
@@ -108,7 +115,11 @@ export default function BookPage() {
                 <IconButton color="primary" aria-label="add to shopping cart" className="cart-icon">
                     <ShoppingCartIcon />
                 </IconButton>
+                <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
+                    <ShareIcon />
+                </IconButton>
             </div>
+            {shareLink && <p className="share-link">Share Link: {shareLink}</p>}
         </div>
     );
 }

@@ -15,6 +15,7 @@ import WishlistPage from './components/wishlist/WishlistPage'; // Import Wishlis
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
 import BookPage from './components/book-page/BookPage'; // Adjust path as needed
+import GuestBookPage from './components/book-page/guest_BookPage';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/book/:id" element={<BookPage />} /> {/* Route for BookPage */}
+          <Route path="/guest_book/:id" element={<GuestBookPage />} />
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
           <Route path="/checkout-page" element={<CheckoutPage />} />
