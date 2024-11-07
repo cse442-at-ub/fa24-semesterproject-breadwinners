@@ -1,20 +1,6 @@
 <?php
 
-// Database connection
-$servername = "localhost:3306"; 
-$username = "hassan4"; // Database username
-$password = "50396311"; // Database password
-$db_name = "cse442_2024_fall_team_y_db"; // Database name
-
-// Create connection to MySQL database
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
-    exit();
-}
-
+include 'db_connection.php';
 // Get the raw POST data and decode it
 $data = json_decode(file_get_contents('php://input'), true);
 if ($data === null) {
@@ -31,6 +17,16 @@ $password_input = trim($data['password']);
 // Input validation
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+    exit();
+}
+
+if (!preg_match("/^[a-zA-Z\s]+$/", $firstName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid first name']);
+    exit();
+}
+
+if (!preg_match("/^[a-zA-Z\s]+$/", $lastName)) { // Allow only letters and spaces
+    echo json_encode(['success' => false, 'message' => 'Invalid last name']);
     exit();
 }
 

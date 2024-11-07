@@ -9,9 +9,12 @@ function ForgotPassword({ onGoBack }) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [step, setStep] = useState(1); // Step 1: Enter email, Step 2: Enter OTP, Step 3: Reset password
 
+    const getCsrfToken = () => {
+        return document.cookie.split('; ').find(row => row.startsWith('csrf_token=')).split('=')[1];
+    };
     const handleSendOtp = (e) => {
         e.preventDefault();
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,10 +33,12 @@ function ForgotPassword({ onGoBack }) {
 
     const handleVerifyOtp = (e) => {
         e.preventDefault();
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
+            credentials: "include",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': getCsrfToken()
             },
             body: JSON.stringify({ action: 'verify_otp', email, otp })
         })
@@ -58,10 +63,12 @@ function ForgotPassword({ onGoBack }) {
             return;
         }
     
-        fetch('./forgot_pw.php', {
+        fetch('./backend/forgot_pw.php', {
             method: 'POST',
+            credentials: "include",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': getCsrfToken()
             },
             body: JSON.stringify({ action: 'reset_password', email, password })
         })
