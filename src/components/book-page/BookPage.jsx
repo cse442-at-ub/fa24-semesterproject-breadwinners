@@ -18,7 +18,7 @@ export default function BookPage() {
     const [shareLink, setShareLink] = useState('');
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
-    const [message, setMessage] = useState(''); // Add message state
+    const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -89,7 +89,9 @@ export default function BookPage() {
 
     const handleSendEmail = async () => {
         if (!validateEmail(email)) {
-            setEmailError('Please enter a valid email address.');
+            setEmailError('Invalid email address. Please enter a valid one.');
+            setMessage(''); // Clear the success message if email is invalid
+            setEmail(''); // Clear the email field
             return;
         }
 
@@ -106,7 +108,7 @@ export default function BookPage() {
             const data = await response.json();
             if (data.success) {
                 setMessage(DOMPurify.sanitize("Recommendation sent!"));
-                setEmail(''); // Clear the email field
+                setEmail(''); // Clear the email field after sending
             } else {
                 setMessage(DOMPurify.sanitize(`Failed to send recommendation: ${data.message}`));
             }
