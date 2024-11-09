@@ -5,7 +5,9 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import DOMPurify from 'dompurify';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import ShareIcon from '@mui/icons-material/Share'; // Import share icon
+import ShareIcon from '@mui/icons-material/Share';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import './BookPage.css';
 
 export default function BookPage() {
@@ -14,6 +16,9 @@ export default function BookPage() {
     const [error, setError] = useState(null);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [shareLink, setShareLink] = useState('');
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [message, setMessage] = useState(''); // Add message state
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,7 +74,46 @@ export default function BookPage() {
         const baseLink = `${window.location.origin}${window.location.pathname}`;
         const link = `${baseLink}#/guest_book/${id}`;
         setShareLink(link);
-        navigator.clipboard.writeText(link).then(() => alert('Link copied to clipboard!'));
+    };
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(shareLink).then(() => {
+            setMessage(DOMPurify.sanitize('Link copied to clipboard!'));
+        });
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const handleSendEmail = async () => {
+        if (!validateEmail(email)) {
+            setEmailError('Please enter a valid email address.');
+            return;
+        }
+
+        setEmailError(''); // Clear any previous error message
+
+        try {
+            const response = await fetch('./backend/SendRecommendationEmail.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, link: shareLink }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                setMessage(DOMPurify.sanitize("Recommendation sent!"));
+                setEmail(''); // Clear the email field
+            } else {
+                setMessage(DOMPurify.sanitize(`Failed to send recommendation: ${data.message}`));
+            }
+        } catch (error) {
+            console.error("Error sending email:", error);
+            setMessage(DOMPurify.sanitize("An error occurred while sending the email."));
+        }
     };
 
     if (error) {
@@ -115,11 +159,33 @@ export default function BookPage() {
                 <IconButton color="primary" aria-label="add to shopping cart" className="cart-icon">
                     <ShoppingCartIcon />
                 </IconButton>
+                
                 <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
                     <ShareIcon />
                 </IconButton>
+
+                {/* Share Options Displayed Inline */}
+                {shareLink && (
+                    <div className="share-options">
+                        <p className="share-link">Share Link: {shareLink}</p> {/* Display the share link */}
+                        <Button variant="contained" color="primary" onClick={handleCopyLink} style={{ marginBottom: '10px' }}>Copy Link</Button>
+                        <TextField
+                            label="Enter email to send recommendation"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            fullWidth
+                            size="small"
+                            style={{ marginBottom: '10px' }}
+                            error={!!emailError}
+                            helperText={emailError}
+                        />
+                        <Button variant="contained" color="secondary" onClick={handleSendEmail}>Send Email</Button>
+                    </div>
+                )}
+                
+                {/* Display Message */}
+                {message && <p className="message">{message}</p>}
             </div>
-            {shareLink && <p className="share-link">Share Link: {shareLink}</p>}
         </div>
     );
 }
