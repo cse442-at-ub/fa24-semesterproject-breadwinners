@@ -80,7 +80,7 @@ export default function BookPage() {
         return <div>Loading...</div>;
     }
 
-    const imageUrl = `../${book.image_url}`;
+    const imageUrl = `./${book.image_url}`;
     const sanitizedTitle = DOMPurify.sanitize(book.title);
     const sanitizedAuthor = DOMPurify.sanitize(book.author);
     const sanitizedGenre = DOMPurify.sanitize(book.genre);
