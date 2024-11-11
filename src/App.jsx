@@ -7,7 +7,7 @@ import RecentPurchase from './components/recent-purchase/recent-purchase';
 import SellerDashboard from './components/seller-dashboard/seller-dashboard';
 import Settings from './components/settings/settings';
 import ShoppingCart from './components/shopping-cart/CartPage';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './components/Login/LoginPage';
 import CheckoutPage from './components/checkout-page/checkoutPage';
 import RegisterPage from './components/Register/RegisterPage';
@@ -15,18 +15,12 @@ import WishlistPage from './components/wishlist/WishlistPage'; // Import Wishlis
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
 import BookPage from './components/book-page/BookPage'; // Adjust path as needed
+import GuestBookPage from './components/book-page/guest_BookPage';
 
 
 function App() {
-  const [count, setCount] = useState(0);
-  const getBaseName = () => {
-    const fullPath = window.location.pathname;
-    const lastSlashIndex = fullPath.lastIndexOf('/');
-    return fullPath.slice(0, lastSlashIndex + 1); 
-  };
-
   return (
-    <Router basename={getBaseName()}>
+    <Router>
       <div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -39,13 +33,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/book/:id" element={<BookPage />} /> {/* Route for BookPage */}
+          <Route path="/guest_book/:id" element={<GuestBookPage />} />
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
           <Route path="/checkout-page" element={<CheckoutPage />} />
         </Routes>
       </div>
     </Router>
-  );
+  )
 }
 
 export default App;

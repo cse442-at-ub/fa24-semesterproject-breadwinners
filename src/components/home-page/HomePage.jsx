@@ -4,7 +4,7 @@ import './HomePage.css';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
-import DOMPurify from 'dompurify'; // Import DOMPurify for sanitization
+import DOMPurify from 'dompurify';
 
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -12,12 +12,11 @@ function HomePage() {
     const [sortByBestSeller, setSortByBestSeller] = useState(false);
 
     useEffect(() => {
-        // Fetch books data from the backend
         const fetchBooks = async () => {
             try {
                 const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`, {
                     method: 'GET',
-                    credentials: 'include', // Include credentials (cookies)
+                    credentials: 'include',
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -44,7 +43,7 @@ function HomePage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', // Include credentials (cookies)
+                credentials: 'include',
             });
 
             const data = await response.json();
@@ -64,7 +63,6 @@ function HomePage() {
     
     return (
         <div className="homepage">
-            {/* Navbar for mobile view */}
             <nav className="navbar">
                 <div className="nav-left">
                     <button className="menu-button" onClick={toggleMenu}>
@@ -84,7 +82,6 @@ function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Desktop Top Navbar */}
             <nav className="top-navbar">    
                 <div className="nav-items">
                     <span><Link to="/Homepage">Homepage</Link></span>
@@ -98,20 +95,20 @@ function HomePage() {
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
             </nav>
 
-            {/* Secondary navigation bar for larger screens */}
             <nav className="secondary-navbar">
-            <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
+                <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
                 <span>Hardcover</span>
                 <span>E-books</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
             </nav>
 
-            {/* Book List Section */}
             <div className="book-container">
                 {books.map((book, index) => (
                     <div className="book" key={index}>
-                        <img src={book.image_url} alt={`Book ${index + 1}`} />
+                        <Link to={`/book/${book.id}`}>
+                            <img src={book.image_url} alt={`Book ${index + 1}`} />
+                        </Link>
                         <h2 className="book-title">{DOMPurify.sanitize(book.title)}</h2>
                         <h3 className="author">{DOMPurify.sanitize(book.author)}</h3>
                         <h3 className="price">${book.price}</h3>
