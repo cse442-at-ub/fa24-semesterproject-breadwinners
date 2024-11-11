@@ -82,17 +82,17 @@ export default function DataGridPage() {
     // Column definitions for the book grid
     const columns = [
         { headerName: 'Image', field: 'image_url', cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />, minWidth: 120, filter: false },
-        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200 },
-        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150 },
-        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150 },
-        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200 },
-        { headerName: 'Rating', field: 'rating', cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>, minWidth: 120 },
-        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100 },
-        { headerName: 'Price ($)', field: 'price', minWidth: 120 },
-        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150 },
+        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200, sortable: true },
+        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true },
+        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true },
+        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true },
+        { headerName: 'Rating', field: 'rating', cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>, minWidth: 120, sortable: true },
+        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100, sortable: true },
+        { headerName: 'Price ($)', field: 'price', minWidth: 120, sortable: true },
+        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150, sortable: true },
         {
             headerName: 'Actions',
-            field: 'id', // Use book ID for navigation and actions
+            field: 'id',
             cellRenderer: (params) => (
                 <div>
                     <button onClick={() => handleAddToCart(params.value, params.data.title)} className="buy-book-button">
@@ -104,6 +104,7 @@ export default function DataGridPage() {
                 </div>
             ),
             minWidth: 200,
+            sortable: false
         },
     ];
 
