@@ -10,6 +10,7 @@ import Image7 from '../../assets/7.png';
 import Image8 from '../../assets/8.png';
 import search from '../../assets/search-removebg-preview.png';
 import { Link } from 'react-router-dom';
+import Footer from '../footer/Footer';
 
 function LandingPage() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -98,6 +99,7 @@ function LandingPage() {
                     <p className="author">Author 8</p>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }
