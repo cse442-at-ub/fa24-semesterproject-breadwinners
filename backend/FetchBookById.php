@@ -15,7 +15,7 @@ $response = array();
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     try {
-        $query = "SELECT id, title, author, description, image_url, price, genre, rating, stock FROM books WHERE id = ?";
+        $query = "SELECT id, title, author, description, image_url, price, genre, rating, stock, ratings_count FROM books WHERE id = ?";
         $stmt = $conn->prepare($query);
         if (!$stmt) {
             throw new Exception("Failed to prepare statement: " . $conn->error);

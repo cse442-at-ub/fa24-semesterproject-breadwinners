@@ -3,11 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import DOMPurify from 'dompurify';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
+import DOMPurify from 'dompurify';
+import Box from '@mui/material/Box';
+import StarIcon from '@mui/icons-material/Star';
 import './BookPage.css';
 
 export default function BookPage() {
@@ -19,6 +23,7 @@ export default function BookPage() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [message, setMessage] = useState('');
+    const [userRating, setUserRating] = useState(0); // User's rating input
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -82,39 +87,28 @@ export default function BookPage() {
         });
     };
 
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const handleSendEmail = async () => {
-        if (!validateEmail(email)) {
-            setEmailError('Invalid email address. Please enter a valid one.');
-            setMessage(''); // Clear the success message if email is invalid
-            setEmail(''); // Clear the email field
-            return;
-        }
-
-        setEmailError(''); // Clear any previous error message
-
+    const handleRatingSubmit = async () => {
         try {
-            const response = await fetch('./backend/SendRecommendationEmail.php', {
+            const response = await fetch('./backend/UpdateBookRating.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, link: shareLink }),
+                body: JSON.stringify({ id, rating: userRating }),
             });
             const data = await response.json();
             if (data.success) {
-                setMessage(DOMPurify.sanitize("Recommendation sent!"));
-                setEmail(''); // Clear the email field after sending
+                setBook((prevBook) => ({
+                    ...prevBook,
+                    rating: data.newRating,
+                    ratings_count: data.newRatingsCount,
+                }));
+                setUserRating(0); // Reset user's rating input
             } else {
-                setMessage(DOMPurify.sanitize(`Failed to send recommendation: ${data.message}`));
+                console.error("Failed to update rating:", data.message);
             }
         } catch (error) {
-            console.error("Error sending email:", error);
-            setMessage(DOMPurify.sanitize("An error occurred while sending the email."));
+            console.error("Error updating rating:", error);
         }
     };
 
@@ -147,9 +141,31 @@ export default function BookPage() {
                     </div>
                     <div className="info-section">
                         <h2 className="title-author">{`${sanitizedTitle} by ${sanitizedAuthor}`}</h2>
-                        <div className="rating">
-                            <span className="rating-label">Rating:</span>
-                            <span className="stars">{'⭐'.repeat(Math.floor(book.rating))}</span>
+                        <div className="average-rating">
+                            <Typography component="legend">Average Rating:</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Rating
+                                    name="text-feedback"
+                                    value={book.rating || 0}
+                                    readOnly
+                                    precision={0.5}
+                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                />
+                                <Box sx={{ ml: 1 }}>
+                                    {book.rating || '0.0'} ({book.ratings_count || 0} ratings)
+                                </Box>
+                            </Box>
+                        </div>
+                        <div className="user-rating">
+                            <Typography component="legend">Rate this Book:</Typography>
+                            <Rating
+                                name="user-controlled"
+                                value={userRating}
+                                onChange={(event, newValue) => setUserRating(newValue)}
+                            />
+                            <Button variant="contained" color="primary" onClick={handleRatingSubmit}>
+                                Submit Rating
+                            </Button>
                         </div>
                         <div className="genre">
                             <span>Genre:</span> {sanitizedGenre}
@@ -166,10 +182,9 @@ export default function BookPage() {
                     <ShareIcon />
                 </IconButton>
 
-                {/* Share Options Displayed Inline */}
                 {shareLink && (
                     <div className="share-options">
-                        <p className="share-link">Share Link: {shareLink}</p> {/* Display the share link */}
+                        <p className="share-link">Share Link: {shareLink}</p>
                         <Button variant="contained" color="primary" onClick={handleCopyLink} style={{ marginBottom: '10px' }}>Copy Link</Button>
                         <TextField
                             label="Enter email to send recommendation"
@@ -184,8 +199,7 @@ export default function BookPage() {
                         <Button variant="contained" color="secondary" onClick={handleSendEmail}>Send Email</Button>
                     </div>
                 )}
-                
-                {/* Display Message */}
+
                 {message && <p className="message">{message}</p>}
             </div>
         </div>
