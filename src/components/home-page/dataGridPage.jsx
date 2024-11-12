@@ -6,6 +6,9 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
 import search from '../../assets/search-removebg-preview.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
+import { Rating } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import Box from '@mui/material/Box';
 
 export default function DataGridPage() {
     const [rowData, setRowData] = useState([]); 
@@ -86,7 +89,26 @@ export default function DataGridPage() {
         { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true },
         { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true },
         { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true },
-        { headerName: 'Rating', field: 'rating', cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>, minWidth: 120, sortable: true },
+        {
+            headerName: 'Rating',
+            field: 'rating',
+            cellRenderer: (params) => {
+                return (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Rating
+                            name="text-feedback"
+                            value={params.value || 0}
+                            readOnly
+                            precision={0.5}
+                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                        />
+                        <Box sx={{ ml: 2 }}>{params.value || 0}</Box>
+                    </Box>
+                );
+            },
+            minWidth: 120,
+            sortable: true
+        },
         { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100, sortable: true },
         { headerName: 'Price ($)', field: 'price', minWidth: 120, sortable: true },
         { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150, sortable: true },
