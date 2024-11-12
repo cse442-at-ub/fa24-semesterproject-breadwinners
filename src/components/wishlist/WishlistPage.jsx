@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './WishlistPage.css';
+import Footer from '../footer/Footer';
 
 function WishlistPage() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -76,6 +77,7 @@ function WishlistPage() {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }
