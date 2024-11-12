@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "./seller-dashboard.css";
+import Footer from '../footer/Footer';
 
 export default function SellerDashboard() {
   const [rowData, setRowData] = useState([]);
@@ -118,6 +119,7 @@ export default function SellerDashboard() {
           getRowHeight={() => 60}
         />
       </div>
+      <Footer />
     </div>
   );
 }
