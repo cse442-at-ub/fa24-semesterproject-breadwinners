@@ -1,125 +1,107 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "./seller-dashboard.css";
+import React, { useState } from 'react';
+import './landPage.css';
+import Image1 from '../../assets/1.png';
+import Image2 from '../../assets/2.png';
+import Image3 from '../../assets/3.png';
+import Image4 from '../../assets/4.png';
+import Image5 from '../../assets/5.png';
+import Image6 from '../../assets/6.png';
+import Image7 from '../../assets/7.png';
+import Image8 from '../../assets/8.png';
+import search from '../../assets/search-removebg-preview.png';
+import { Link } from 'react-router-dom';
 import Footer from '../footer/Footer';
 
-export default function SellerDashboard() {
-  const [rowData, setRowData] = useState([]);
-  const navigate = useNavigate();
+function LandingPage() {
+    const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await fetch("./backend/seller_fetch_books.php", {
-          method: 'GET',
-          credentials: 'include', // This allows sending cookies
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': getCsrfToken() // Include CSRF token in the headers
-          }
-        });
-        const data = await response.json();
-        if (data.success) {
-          setRowData(data.books);
-        } else {
-          console.error("Failed to fetch books: ", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching books: ", error);
-      }
-    };
 
-    fetchBooks();
-  }, []);
 
-  const handleAddBook = () => {
-    navigate("/add-book"); // Navigate to the AddBook page
-  };
+    return (
+        <div className="homepage">
+            {/* Navbar for mobile view */}
+            <nav className="navbar">
+                <div className="nav-left">
+                    
+                </div>
+                <Link to="/login"><button className="logout-button">Log In</button></Link>
+            </nav>
 
-  const getCsrfToken = () => {
-    return document.cookie.split('; ').find(row => row.startsWith('csrf_token=')).split('=')[1];
-  };
+            {/* Title for Breadwinners */}
+            <h2 className="title">Breadwinners</h2>
 
-  const columns = [
-    {
-      headerName: "Image",
-      field: "image_url",
-      cellRenderer: (params) => (
-        <img src={params.value} alt={"Book"} width="50" />
-      ),
-      minWidth: 100,
-      filter: false,
-    },
-    {
-      headerName: "Book Name",
-      field: "title",
-      filter: "agTextColumnFilter",
-      floatingFilter: true,
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      headerName: "Author",
-      field: "author",
-      filter: "agTextColumnFilter",
-      floatingFilter: true,
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      headerName: "Genre",
-      field: "genre",
-      filter: "agTextColumnFilter",
-      floatingFilter: true,
-      flex: 1,
-      minWidth: 120,
-    },
-    {
-      headerName: "Price ($)",
-      field: "price",
-      filter: "agNumberColumnFilter",
-      floatingFilter: true,
-      flex: 1,
-      minWidth: 100,
-    },
-    {
-      headerName: "Stock",
-      field: "stock",
-      filter: "agNumberColumnFilter",
-      floatingFilter: true,
-      flex: 1,
-      minWidth: 100,
-    },
-  ];
+            {/* Title for Best Sellers */}
+            <h3 className="best-sellers-title">Explore Our Best Sellers</h3>
+            {/* Blue Divider Line */}
+            <hr className="divider-line" />
+            {/* Search bar section */}
+            <div className="search-bar">
+                <img src={search} alt="Search Icon" className="search-icon" />
+                <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search for books..."
+                />
+            </div>
+          
 
-  return (
-    <div className="seller-dashboard-container">
-      <div className="header">
-        <h2>Seller Dashboard</h2>
-        <button className="add-book-btn" onClick={handleAddBook}>Add Book</button>
-      </div>
-      <div
-        style={{ height: 400, width: "100%", overflowX: "auto" }}
-        className="ag-theme-alpine data-grid"
-      >
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columns}
-          defaultColDef={{
-            sortable: true,
-            filter: true,
-            flex: 1,
-            minWidth: 100,
-          }}
-          pagination={true}
-          paginationPageSize={10}
-          getRowHeight={() => 60}
-        />
-      </div>
-      <Footer />
-    </div>
-  );
+           
+
+            {/* Top navigation bar for larger screens */}
+            <nav className="top-navbar">
+                <div className="nav-items">
+                </div>
+                <Link to="/login"><button className="logout-button">Log In</button></Link>
+            </nav>
+
+     
+
+            {/* Book List Section */}
+            <div className="book-container">
+                <div className="book">
+                    <img src={Image1} alt="Book 1" />
+                    <h3>Book Title 1</h3>
+                    <p className="author">Author 1</p>
+                </div>
+                <div className="book">
+                    <img src={Image2} alt="Book 2" />
+                    <h3>Book Title 2</h3>
+                    <p className="author">Author 2</p>
+                </div>
+                <div className="book">
+                    <img src={Image3} alt="Book 3" />
+                    <h3>Book Title 3</h3>
+                    <p className="author">Author 3</p>
+                </div>
+                <div className="book">
+                    <img src={Image4} alt="Book 4" />
+                    <h3>Book Title 4</h3>
+                    <p className="author">Author 4</p>
+                </div>
+                <div className="book">
+                    <img src={Image5} alt="Book 5" />
+                    <h3>Book Title 5</h3>
+                    <p className="author">Author 5</p>
+                </div>
+                <div className="book">
+                    <img src={Image6}alt="Book 6" />
+                    <h3>Book Title 6</h3>
+                    <p className="author">Author 6</p>
+                </div>
+                <div className="book">
+                    <img src={Image7} alt="Book 7" />
+                    <h3>Book Title 7</h3>
+                    <p className="author">Author 7</p>
+                </div>
+                <div className="book">
+                    <img src={Image8} alt="Book 8" />
+                    <h3>Book Title 8</h3>
+                    <p className="author">Author 8</p>
+                </div>
+            </div>
+            <Footer />
+        </div>
+    );
 }
+
+export default LandingPage;
