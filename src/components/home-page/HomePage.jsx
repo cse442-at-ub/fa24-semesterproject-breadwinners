@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import Footer from '../footer/Footer';
 
 function HomePage() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -115,6 +116,7 @@ function HomePage() {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }
