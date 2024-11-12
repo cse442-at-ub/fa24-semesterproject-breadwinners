@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CartPage.css';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../footer/Footer';
 
 function CartPage() {
     const navigate = useNavigate();
@@ -185,6 +186,7 @@ function CartPage() {
                 <p>Total Cost: ${totalCost.toFixed(2)}</p>
                 <button onClick={handleCheckout} className="checkout-button" disabled={cartItems.length === 0}>Checkout</button>
             </div>
+            <Footer />
         </div>
     );
 }
