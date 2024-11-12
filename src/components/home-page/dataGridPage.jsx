@@ -88,7 +88,7 @@ export default function DataGridPage() {
         { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
         { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
         { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
-        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true },
+        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true, filter: false },
         {
             headerName: 'Rating',
             field: 'rating',
@@ -126,10 +126,10 @@ export default function DataGridPage() {
                 </div>
             ),
             minWidth: 200,
-            sortable: false
+            sortable: false,
+            filter: false
         },
     ];
-
     const handleAddToCart = async (bookId, bookTitle) => {
         try {
             // Sending a default quantity of 1 when adding the book
