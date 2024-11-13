@@ -87,6 +87,33 @@ export default function BookPage() {
         });
     };
 
+
+    const handleAddToCart = async (bookId, bookTitle) => {
+        try {
+            const response = await fetch('./backend/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    bookId,
+                    bookTitle,
+                    quantity: 1, // Always send quantity as 1
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                console.log('Book added to cart');
+            } else {
+                console.error('Failed to add book to cart:', data.message);
+            }
+        } catch (error) {
+            console.error('Error adding book to cart:', error);
+        }
+    };
+
+
     const handleRatingSubmit = async () => {
         try {
             const response = await fetch('./backend/UpdateBookRating.php', {
@@ -174,8 +201,13 @@ export default function BookPage() {
                         <p className="description">{sanitizedDescription}</p>
                     </div>
                 </div>
-                <IconButton color="primary" aria-label="add to shopping cart" className="cart-icon">
-                    <ShoppingCartIcon />
+                <IconButton 
+                            onClick={() => handleAddToCart(book.id, book.title)} 
+                            color="primary" 
+                            aria-label="add to shopping cart" 
+                            className="cart-icon"
+                        >
+                            <ShoppingCartIcon />
                 </IconButton>
                 
                 <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
