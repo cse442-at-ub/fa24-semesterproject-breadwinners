@@ -35,48 +35,10 @@ function WishlistPage() {
 
     // Function to remove a book from the wishlist
     const removeBookFromWishlist = async (bookId) => {
-        try {
-            const response = await fetch('./backend/update_wishlist.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: 'remove_book', bookId }),
-            });
-            const data = await response.json();
-            if (data.success) {
-                setWishlistItems(wishlistItems.filter((item) => item.id !== bookId));
-            } else {
-                console.error('Failed to remove book:', data.message);
-            }
-        } catch (error) {
-            console.error('Error removing book:', error);
-        }
+   
     };
 
     const handleAddToCart = async (bookId, bookTitle) => {
-        try {
-            const response = await fetch('./backend/add_to_cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    bookId,
-                    bookTitle,
-                    quantity: 1, // Always send quantity as 1
-                }),
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                console.log('Book added to cart');
-            } else {
-                console.error('Failed to add book to cart:', data.message);
-            }
-        } catch (error) {
-            console.error('Error adding book to cart:', error);
-        }
     };
 
 
