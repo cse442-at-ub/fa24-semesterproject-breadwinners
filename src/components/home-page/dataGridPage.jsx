@@ -85,33 +85,33 @@ export default function DataGridPage() {
     // Column definitions for the book grid
     const columns = [
         { headerName: 'Image', field: 'image_url', cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />, minWidth: 120, filter: false },
-        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200, sortable: true },
-        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true },
-        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true },
-        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true },
+        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true, filter: false },
         {
             headerName: 'Rating',
             field: 'rating',
-            cellRenderer: (params) => {
-                return (
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Rating
-                            name="text-feedback"
-                            value={params.value || 0}
-                            readOnly
-                            precision={0.5}
-                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                        />
-                        <Box sx={{ ml: 2 }}>{params.value || 0}</Box>
-                    </Box>
-                );
-            },
+            cellRenderer: (params) => (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Rating
+                        name="text-feedback"
+                        value={params.value || 0}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                    />
+                    <Box sx={{ ml: 2 }}>{params.value || 0}</Box>
+                </Box>
+            ),
             minWidth: 120,
-            sortable: true
+            sortable: true,
+            filter: "agNumberColumnFilter",
+            floatingFilter: true
         },
-        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100, sortable: true },
-        { headerName: 'Price ($)', field: 'price', minWidth: 120, sortable: true },
-        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150, sortable: true },
+        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
+        { headerName: 'Price ($)', field: 'price', minWidth: 120, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
+        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
         {
             headerName: 'Actions',
             field: 'id',
@@ -126,10 +126,10 @@ export default function DataGridPage() {
                 </div>
             ),
             minWidth: 200,
-            sortable: false
+            sortable: false,
+            filter: false
         },
     ];
-
     const handleAddToCart = async (bookId, bookTitle) => {
         try {
             // Sending a default quantity of 1 when adding the book
@@ -208,11 +208,18 @@ export default function DataGridPage() {
             {/* Book Grid Section */}
             <div style={{ height: 500, width: '100%' }} className="ag-theme-alpine book-grid">
                 <AgGridReact
-                    rowData={rowData}
-                    columnDefs={columns}
-                    pagination={false}
-                    domLayout="autoHeight"
-                    getRowHeight={() => 155}
+                       rowData={rowData}
+                       columnDefs={columns}
+                       defaultColDef={{
+                           sortable: true,
+                           filter: true,
+                           floatingFilter: true,
+                           flex: 1,
+                           minWidth: 100,
+                       }}
+                       pagination={false}
+                       domLayout="autoHeight"
+                       getRowHeight={() => 155}
                 />
             </div>
         </div>
