@@ -86,6 +86,10 @@ if (isset($_SESSION['email'])) {
             $clearCartStmt->execute();
             $clearCartStmt->close();
 
+            // Cleanup any null or incomplete records in order_summary
+            $cleanupQuery = "DELETE FROM order_summary WHERE email IS NULL OR total_price IS NULL";
+            $conn->query($cleanupQuery);
+
             echo json_encode(['success' => true, 'message' => 'Checkout successful']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to complete checkout']);
