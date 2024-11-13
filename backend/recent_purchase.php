@@ -27,7 +27,7 @@ if (!$user) {
 $email = $user['email'];
 
 // Fetch recent purchase details from the order_summary table for the retrieved email
-$query = "SELECT total_price, created_at, books_purchased FROM order_summary WHERE email = ?";
+$query = "SELECT total_price, created_at, books_purchased FROM order_summary WHERE email = ? AND books_purchased IS NOT NULL";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $email);
 $stmt->execute();
