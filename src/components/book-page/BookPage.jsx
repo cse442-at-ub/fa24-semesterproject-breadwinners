@@ -187,86 +187,133 @@ export default function BookPage() {
     const sanitizedDescription = DOMPurify.sanitize(book.description);
 
     return (
-        <div className="book-page">
+        <main className="book-page">
             <header className="header-bar">
-                <h1 className="logo">BREADWINNERS</h1>
+            <h1 className="logo">BREADWINNERS</h1>
             </header>
-            <div className="book-details-container">
-                <div className="book-details">
-                    <div className="image-bookmark">
-                        <img src={imageUrl} alt={sanitizedTitle} className="book-cover" />
-                        <IconButton color="primary" aria-label="bookmark this book" className="bookmark-icon" onClick={handleBookmarkToggle}>
-                            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                        </IconButton>
-                    </div>
-                    <div className="info-section">
-                        <h2 className="title-author">{`${sanitizedTitle} by ${sanitizedAuthor}`}</h2>
-                        <div className="average-rating">
-                            <Typography component="legend">Average Rating:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Rating
-                                    name="text-feedback"
-                                    value={book.rating || 0}
-                                    readOnly
-                                    precision={0.5}
-                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                                />
-                                <Box sx={{ ml: 1 }}>
-                                    {book.rating || '0.0'} ({book.ratings_count || 0} ratings)
-                                </Box>
-                            </Box>
-                        </div>
-                        <div className="user-rating">
-                            <Typography component="legend">Rate this Book:</Typography>
-                            <Rating
-                                name="user-controlled"
-                                value={userRating}
-                                onChange={(event, newValue) => setUserRating(newValue)}
-                            />
-                            <Button variant="contained" color="primary" onClick={handleRatingSubmit}>
-                                Submit Rating
-                            </Button>
-                        </div>
-                        <div className="genre">
-                            <span>Genre:</span> {sanitizedGenre}
-                        </div>
-                        <p className="description-label">Description:</p>
-                        <p className="description">{sanitizedDescription}</p>
-                    </div>
+            <div className="book-content">
+            {/* Left Side: Image and Wishlist */}
+            <div className="left-side">
+                <img src={imageUrl} alt={sanitizedTitle} className="book-cover" />
+                <div className="bookmark-section">
+                <IconButton
+                    color="primary"
+                    aria-label="bookmark this book"
+                    className="bookmark-icon"
+                    onClick={handleBookmarkToggle}
+                >
+                    {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                </IconButton>
+                <span>Add to Wishlist</span>
                 </div>
-                <IconButton 
-                            onClick={() => handleAddToCart(book.id, book.title)} 
-                            color="primary" 
-                            aria-label="add to shopping cart" 
-                            className="cart-icon"
-                        >
-                            <ShoppingCartIcon />
-                </IconButton>
-                
+            </div>
+
+            {/* Right Side: Book Details */}
+            <div className="right-side">
+                <h1 className="book-title">{sanitizedTitle}</h1>
+                <div className="author">by {sanitizedAuthor}</div>
+
+                {/* Genre and Description */}
+                <div className="genre-description">
+                <div className="genre">
+                    <span>Genre:</span> {sanitizedGenre}
+                </div>
+                <p className="description-label">Description:</p>
+                <p className="description">{sanitizedDescription}</p>
+                </div>
+
+                {/* Average Rating */}
+                <div className="average-rating">
+                <Typography component="legend">Average Rating:</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Rating
+                    name="read-only"
+                    value={book.rating || 0}
+                    readOnly
+                    precision={0.5}
+                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                    />
+                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: 8 }}>
+                    {book.rating || '0.0'} ({book.ratings_count || 0} ratings)
+                    </Typography>
+                </Box>
+                </div>
+
+                {/* Price */}
+                <div className="price">${book.price}</div>
+
+                {/* Cart Section */}
+                <div className="cart-section">
+                <div className="cart-info">
+                    <p>SHIP THIS ITEM</p>
+                    <span>Ships in 1-2 days</span>
+                </div>
+                <Button
+                    className="cart-button"
+                    variant="contained"
+                    onClick={() => handleAddToCart(book.id, book.title)}
+                >
+                    Add to Cart
+                </Button>
+                </div>
+
+                {/* User Rating Section */}
+                <div className="rating-section">
+                <Typography variant="body1" color="textSecondary">
+                    Rate This Book
+                </Typography>
+                <Rating
+                    name="user-controlled"
+                    value={userRating}
+                    onChange={(event, newValue) => setUserRating(newValue)}
+                    precision={1}
+                />
+                <Button
+                    className="submit-rating-button"
+                    variant="contained"
+                    onClick={handleRatingSubmit}
+                >
+                    Submit Rating
+                </Button>
+                </div>
+
+                {/* Share Section */}
                 <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
-                    <ShareIcon />
+                <ShareIcon />
                 </IconButton>
-
                 {shareLink && (
-                    <div className="share-options">
-                        <p className="share-link">Share Link: {shareLink}</p>
-                        <Button variant="contained" color="primary" onClick={handleCopyLink} style={{ marginBottom: '10px' }}>Copy Link</Button>
-                        <TextField
-                            label="Enter email to send recommendation"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            fullWidth
-                            size="small"
-                            style={{ marginBottom: '10px' }}
-                            error={!!emailError}
-                            helperText={emailError}
-                        />
-                        <Button variant="contained" color="secondary" onClick={handleSendEmail}>Send Email</Button>
-                    </div>
+                <div className="share-options">
+                    <p className="share-link">Share Link: {shareLink}</p>
+                    <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCopyLink}
+                    style={{ marginBottom: '10px' }}
+                    >
+                    Copy Link
+                    </Button>
+                    <TextField
+                    label="Enter email to send recommendation"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    fullWidth
+                    size="small"
+                    style={{ marginBottom: '10px' }}
+                    error={!!emailError}
+                    helperText={emailError}
+                    />
+                    <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleSendEmail}
+                    >
+                    Send Email
+                    </Button>
+                </div>
                 )}
-
                 {message && <p className="message">{message}</p>}
             </div>
-        </div>
+            </div>
+        </main>
     );
 }
