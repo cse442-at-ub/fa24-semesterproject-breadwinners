@@ -245,8 +245,8 @@ export default function BookPage() {
                 {/* Cart Section */}
                 <div className="cart-section">
                 <div className="cart-info">
-                    <p>SHIP THIS ITEM</p>
-                    <span>Ships in 1-2 days</span>
+                    <p>Purchase this book for ${book.price}</p>
+                    <span>Fast Delivery</span>
                 </div>
                 <Button
                     className="cart-button"
