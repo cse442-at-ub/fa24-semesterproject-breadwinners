@@ -149,7 +149,12 @@
     .book-content {
         flex-direction: column;
     }
-    .left-side,
+
+    .left-side {
+        padding: 0;
+        width: 100%;
+    }
+
     .right-side {
         width: 100%;
     }
