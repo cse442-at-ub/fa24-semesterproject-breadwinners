@@ -23,7 +23,9 @@ export default function BookPage() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [message, setMessage] = useState('');
-    const [userRating, setUserRating] = useState(0); // User's rating input
+    const [userRating, setUserRating] = useState(0);
+    const [review, setReview] = useState('');
+    const [reviewMessage, setReviewMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -87,31 +89,7 @@ export default function BookPage() {
         });
     };
 
-
-    const handleAddToCart = async (bookId, bookTitle) => {
-        try {
-            const response = await fetch('./backend/add_to_cart.php', {
-    
-                body: JSON.stringify({
-                    bookId,
-                    bookTitle,
-                    quantity: 1, // Always send quantity as 1
-                }),
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                console.log('Book added to cart');
-            } else {
-                console.error('Failed to add book to cart:', data.message);
-            }
-        } catch (error) {
-            console.error('Error adding book to cart:', error);
-        }
-    };
-    
-    
-                const validateEmail = (email) => {
+    const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
@@ -147,6 +125,31 @@ export default function BookPage() {
         }
     };
 
+    const handleAddToCart = async (bookId, bookTitle) => {
+        try {
+            const response = await fetch('./backend/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    bookId,
+                    bookTitle,
+                    quantity: 1, // Always send quantity as 1
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                console.log('Book added to cart');
+            } else {
+                console.error('Failed to add book to cart:', data.message);
+            }
+        } catch (error) {
+            console.error('Error adding book to cart:', error);
+        }
+    };
+
     const handleRatingSubmit = async () => {
         try {
             const response = await fetch('./backend/UpdateBookRating.php', {
@@ -172,6 +175,33 @@ export default function BookPage() {
         }
     };
 
+    const handleReviewSubmit = async () => {
+        if (!review.trim()) {
+            setReviewMessage("Review cannot be empty.");
+            return;
+        }
+
+        try {
+            const response = await fetch('./backend/AddReview.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ bookId: id, review }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                setReviewMessage("Review submitted successfully!");
+                setReview(''); // Clear the input
+            } else {
+                setReviewMessage(`Failed to submit review: ${data.message}`);
+            }
+        } catch (error) {
+            console.error("Error submitting review:", error);
+            setReviewMessage("An error occurred while submitting the review.");
+        }
+    };
+
     if (error) {
         return <div className="error">{error}</div>;
     }
@@ -189,130 +219,135 @@ export default function BookPage() {
     return (
         <main className="book-page">
             <header className="header-bar">
-            <h1 className="logo">BREADWINNERS</h1>
+                <h1 className="logo">BREADWINNERS</h1>
             </header>
             <div className="book-content">
-            {/* Left Side: Image and Wishlist */}
-            <div className="left-side">
-                <img src={imageUrl} alt={sanitizedTitle} className="book-cover" />
-                <div className="bookmark-section">
-                <IconButton
-                    color="primary"
-                    aria-label="bookmark this book"
-                    className="bookmark-icon"
-                    onClick={handleBookmarkToggle}
-                >
-                    {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                </IconButton>
-                <span>Add to Wishlist</span>
-                </div>
-            </div>
-
-            {/* Right Side: Book Details */}
-            <div className="right-side">
-                <h1 className="book-title">{sanitizedTitle}</h1>
-                <div className="author">by {sanitizedAuthor}</div>
-
-                {/* Genre and Description */}
-                <div className="genre-description">
-                <div className="genre">
-                    <span>Genre:</span> {sanitizedGenre}
-                </div>
-                <p className="description-label">Description:</p>
-                <p className="description">{sanitizedDescription}</p>
+                <div className="left-side">
+                    <img src={imageUrl} alt={sanitizedTitle} className="book-cover" />
+                    <div className="bookmark-section">
+                        <IconButton
+                            color="primary"
+                            aria-label="bookmark this book"
+                            className="bookmark-icon"
+                            onClick={handleBookmarkToggle}
+                        >
+                            {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                        </IconButton>
+                        <span>Add to Wishlist</span>
+                    </div>
                 </div>
 
-                {/* Average Rating */}
-                <div className="average-rating">
-                <Typography component="legend">Average Rating:</Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Rating
-                    name="read-only"
-                    value={book.rating || 0}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                    />
-                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: 8 }}>
-                    {book.rating || '0.0'} ({book.ratings_count || 0} ratings)
-                    </Typography>
-                </Box>
+                <div className="right-side">
+                    <h1 className="book-title">{sanitizedTitle}</h1>
+                    <div className="author">by {sanitizedAuthor}</div>
+                    <div className="genre-description">
+                        <div className="genre">
+                            <span>Genre:</span> {sanitizedGenre}
+                        </div>
+                        <p className="description-label">Description:</p>
+                        <p className="description">{sanitizedDescription}</p>
+                    </div>
+                    <div className="average-rating">
+                        <Typography component="legend">Average Rating:</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Rating
+                                name="read-only"
+                                value={book.rating || 0}
+                                readOnly
+                                precision={0.5}
+                                emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                            />
+                            <Typography variant="body2" color="textSecondary" style={{ marginLeft: 8 }}>
+                                {book.rating || '0.0'} ({book.ratings_count || 0} ratings)
+                            </Typography>
+                        </Box>
+                    </div>
+                    <div className="price">${book.price}</div>
+                    <div className="cart-section">
+                        <div className="cart-info">
+                            <p>Purchase this book for ${book.price}</p>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <Button
+                            className="cart-button"
+                            variant="contained"
+                            onClick={() => handleAddToCart(book.id, book.title)}
+                        >
+                            Add to Cart
+                        </Button>
+                    </div>
+                    <div className="rating-section">
+                        <Typography variant="body1" color="textSecondary">
+                            Rate This Book
+                        </Typography>
+                        <Rating
+                            name="user-controlled"
+                            value={userRating}
+                            onChange={(event, newValue) => setUserRating(newValue)}
+                            precision={1}
+                        />
+                        <Button
+                            className="submit-rating-button"
+                            variant="contained"
+                            onClick={handleRatingSubmit}
+                        >
+                            Submit Rating
+                        </Button>
+                    </div>
+                    <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
+                        <ShareIcon />
+                    </IconButton>
+                    {shareLink && (
+                        <div className="share-options">
+                            <p className="share-link">Share Link: {shareLink}</p>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleCopyLink}
+                                style={{ marginBottom: '10px' }}
+                            >
+                                Copy Link
+                            </Button>
+                            <TextField
+                                label="Enter email to send recommendation"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                fullWidth
+                                size="small"
+                                style={{ marginBottom: '10px' }}
+                                error={!!emailError}
+                                helperText={emailError}
+                            />
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleSendEmail}
+                            >
+                                Send Email
+                            </Button>
+                        </div>
+                    )}
+                    {message && <p className="message">{message}</p>}
+                    <div className="review-section">
+                        <TextField
+                            label="Write your review"
+                            value={review}
+                            onChange={(e) => setReview(e.target.value)}
+                            fullWidth
+                            multiline
+                            rows={4}
+                            style={{ marginBottom: '10px' }}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleReviewSubmit}
+                        >
+                            Submit Review
+                        </Button>
+                        {reviewMessage && <p className="review-message">{reviewMessage}</p>}
+                    </div>
                 </div>
-
-                {/* Price */}
-                <div className="price">${book.price}</div>
-
-                {/* Cart Section */}
-                <div className="cart-section">
-                <div className="cart-info">
-                    <p>Purchase this book for ${book.price}</p>
-                    <span>Fast Delivery</span>
-                </div>
-                <Button
-                    className="cart-button"
-                    variant="contained"
-                    onClick={() => handleAddToCart(book.id, book.title)}
-                >
-                    Add to Cart
-                </Button>
-                </div>
-
-                {/* User Rating Section */}
-                <div className="rating-section">
-                <Typography variant="body1" color="textSecondary">
-                    Rate This Book
-                </Typography>
-                <Rating
-                    name="user-controlled"
-                    value={userRating}
-                    onChange={(event, newValue) => setUserRating(newValue)}
-                    precision={1}
-                />
-                <Button
-                    className="submit-rating-button"
-                    variant="contained"
-                    onClick={handleRatingSubmit}
-                >
-                    Submit Rating
-                </Button>
-                </div>
-
-                {/* Share Section */}
-                <IconButton color="primary" aria-label="share this book" onClick={handleShare}>
-                <ShareIcon />
-                </IconButton>
-                {shareLink && (
-                <div className="share-options">
-                    <p className="share-link">Share Link: {shareLink}</p>
-                    <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleCopyLink}
-                    style={{ marginBottom: '10px' }}
-                    >
-                    Copy Link
-                    </Button>
-                    <TextField
-                    label="Enter email to send recommendation"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    fullWidth
-                    size="small"
-                    style={{ marginBottom: '10px' }}
-                    error={!!emailError}
-                    helperText={emailError}
-                    />
-                    <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleSendEmail}
-                    >
-                    Send Email
-                    </Button>
-                </div>
-                )}
-                {message && <p className="message">{message}</p>}
-            </div>
             </div>
         </main>
     );
