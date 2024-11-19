@@ -1,0 +1,23 @@
+.terms-of-service-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+.terms-of-service-content {
+    flex: 1;
+    padding: 40px;
+    text-align: center;
+}
+
+.terms-of-service-content h1 {
+    font-size: 2.5rem;
+    color: #292B5C;
+}
+
+.terms-of-service-content .terms-of-service-text {
+    font-size: 1.2rem;
+    color: #333333;
+    margin-top: 20px;
+}
