@@ -12,6 +12,10 @@ import Typography from '@mui/material/Typography';
 import DOMPurify from 'dompurify';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import './BookPage.css';
 
 export default function BookPage() {
@@ -26,6 +30,7 @@ export default function BookPage() {
     const [userRating, setUserRating] = useState(0);
     const [review, setReview] = useState('');
     const [reviewMessage, setReviewMessage] = useState('');
+    const [reviews, setReviews] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -175,12 +180,30 @@ export default function BookPage() {
         }
     };
 
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await fetch(`./backend/FetchReviews.php?id=${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    setReviews(data.reviews);
+                } else {
+                    console.error("Failed to fetch reviews:", data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching reviews:", error);
+            }
+        };
+    
+        fetchReviews();
+    }, [id]);
+
     const handleReviewSubmit = async () => {
         if (!review.trim()) {
             setReviewMessage("Review cannot be empty.");
             return;
         }
-
+    
         try {
             const response = await fetch('./backend/AddReview.php', {
                 method: 'POST',
@@ -193,6 +216,12 @@ export default function BookPage() {
             if (data.success) {
                 setReviewMessage("Review submitted successfully!");
                 setReview(''); // Clear the input
+                // Refresh reviews
+                const updatedReviewsResponse = await fetch(`./backend/FetchReviews.php?id=${id}`);
+                const updatedReviewsData = await updatedReviewsResponse.json();
+                if (updatedReviewsData.success) {
+                    setReviews(updatedReviewsData.reviews);
+                }
             } else {
                 setReviewMessage(`Failed to submit review: ${data.message}`);
             }
@@ -346,6 +375,31 @@ export default function BookPage() {
                             Submit Review
                         </Button>
                         {reviewMessage && <p className="review-message">{reviewMessage}</p>}
+                    </div>
+                    {/* Add the reviews list here */}
+                    <div className="reviews-list">
+                        <Typography variant="h6" style={{ marginTop: '20px' }}>
+                            Reviews
+                        </Typography>
+                        {reviews.length > 0 ? (
+                            <List>
+                                {reviews.map((rev, index) => (
+                                    <React.Fragment key={index}>
+                                        <ListItem alignItems="flex-start">
+                                            <ListItemText
+                                                primary={DOMPurify.sanitize(rev.user)}
+                                                secondary={DOMPurify.sanitize(rev.review)}
+                                            />
+                                        </ListItem>
+                                        {index < reviews.length - 1 && <Divider component="li" />}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        ) : (
+                            <Typography variant="body2" color="textSecondary">
+                                No reviews yet. Be the first to review this book!
+                            </Typography>
+                        )}
                     </div>
                 </div>
             </div>
