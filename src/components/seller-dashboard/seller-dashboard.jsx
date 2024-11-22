@@ -92,6 +92,14 @@ export default function SellerDashboard() {
       flex: 1,
       minWidth: 100,
     },
+    {
+      headerName: "Profit",
+      field: "profit",
+      filter: "agNumberColumnFilter",
+      floatingFilter: true,
+      flex: 1,
+      minWidth: 100,
+    },
   ];
 
   return (

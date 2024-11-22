@@ -56,7 +56,7 @@ try {
     $stmt->close();
 
     // Fetch books for the specific seller
-    $query = "SELECT id, title, author, image_url, price, genre, rating, stock FROM books WHERE seller_email = ?";
+    $query = "SELECT id, title, author, image_url, price, genre, rating, stock,  total_books_sold  FROM books WHERE seller_email = ?";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         throw new Exception("Failed to prepare statement: " . $conn->error);
@@ -67,6 +67,7 @@ try {
     $result = $stmt->get_result();
     $books = [];
     while ($row = $result->fetch_assoc()) {
+        $row['profit'] = $row['total_books_sold'] * $row['price'];
         $books[] = $row;
     }
 
