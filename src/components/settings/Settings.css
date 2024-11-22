@@ -1,0 +1,85 @@
+.settings-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .settings-page h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .settings-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  
+  .settings-section h3 {
+    margin-bottom: 10px;
+  }
+  
+  .settings-section p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .settings-input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .settings-input.locked {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+  
+  .settings-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .settings-button.save {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .settings-button.cancel {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .settings-button.delete {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .success-message {
+    color: green;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+  }
+  
