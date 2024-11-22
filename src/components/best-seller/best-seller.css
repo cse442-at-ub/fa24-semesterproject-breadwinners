@@ -1,0 +1,71 @@
+/* Scoped CSS for Best Sellers Page */
+.best-sellers-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.best-sellers-page .header {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.best-sellers-page .book-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.best-sellers-page .book {
+    width: calc(20% - 20px); /* Five books per row on larger screens */
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.best-sellers-page .book img {
+    width: 150px;
+    height: 220px;
+    border-radius: 8px;
+}
+
+.best-sellers-page .book-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    margin: 10px 0 5px 0;
+}
+
+.best-sellers-page .author {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.best-sellers-page .price {
+    font-size: 16px;
+    color: #000066;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .best-sellers-page .book {
+        width: calc(40% - 20px); /* Two books per row on smaller screens */
+    }
+}
+
+@media (min-width: 769px) {
+    .best-sellers-page .book {
+        width: calc(25% - 20px); /* Four books per row on medium screens */
+    }
+}

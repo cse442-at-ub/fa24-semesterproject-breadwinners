@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 export default function DataGridPage() {
     const [rowData, setRowData] = useState([]); 
     const [menuOpen, setMenuOpen] = useState(false);
-    const [sortByBestSeller, setSortByBestSeller] = useState(false);
+
     const navigate = useNavigate();
 
     // Fetch CSRF token from cookies
@@ -29,7 +29,7 @@ export default function DataGridPage() {
         const fetchBooks = async () => {
             try {
                 // Construct the URL with the sortByBestSeller parameter
-                const url = `./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`;
+                const url = './backend/fetch_books.php';
     
                 const response = await fetch(url, {
                     method: 'GET',
@@ -50,7 +50,7 @@ export default function DataGridPage() {
             }
         };
         fetchBooks();
-    }, [sortByBestSeller]);
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -77,10 +77,7 @@ export default function DataGridPage() {
         }
     };
 
-    // Handle Best Seller sort
-    const handleBestSellerSort = () => {
-        setSortByBestSeller((prev) => !prev); 
-    };
+   
 
     // Column definitions for the book grid
     const columns = [
@@ -192,7 +189,16 @@ export default function DataGridPage() {
 
             {/* Secondary Navbar */}
             <nav className="secondary-navbar">
-                <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
+            <span
+                onClick={() => navigate('/best-seller')}
+                className="best-seller-link"
+                style={{
+                    color: 'white',
+                    cursor: 'pointer',
+                }}
+            >
+                Best Seller
+            </span>
                 <span>Hardcover</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
