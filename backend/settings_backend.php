@@ -1,114 +1,118 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-CSRF-Token");
-header("Content-Type: application/json");
-
-include 'db_connection.php';
-
-$response = array();
-
 session_start();
+include 'db_connection.php'; // Include your database connection
 
-// Function to verify CSRF token
-function verifyCsrfToken()
-{
-    if (!isset($_COOKIE['csrf_token']) || $_COOKIE['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
-        exit();
-    }
-}
+header('Content-Type: application/json');
 
-// Decode JSON payload
-$data = json_decode(file_get_contents('php://input'), true);
-$action = $data['action'] ?? '';
+// Ensure the user is logged in
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
 
-// Get user email from session
-$email = $_SESSION['email'] ?? '';
+    // Fetch current name
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $action = $input['action'] ?? '';
 
-if (!$email) {
-    echo json_encode(['success' => false, 'message' => 'User not authenticated']);
-    exit();
-}
+        // Fetch the current first and last name
+        if ($action === 'fetch_name') {
+            $query = "SELECT first_name, last_name FROM users WHERE email = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-// Database connection
-$conn = new mysqli($servername, $username, $password, $db_name);
+            if ($result->num_rows > 0) {
+                $user = $result->fetch_assoc();
+                echo json_encode([
+                    'success' => true,
+                    'first_name' => $user['first_name'],
+                    'last_name' => $user['last_name']
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'User not found']);
+            }
 
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
-    exit();
-}
-
-if ($action === 'fetch_name') {
-    // Fetch first_name and last_name
-    $stmt = $conn->prepare("SELECT first_name, last_name FROM user WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($firstName, $lastName);
-    if ($stmt->fetch()) {
-        echo json_encode(['success' => true, 'first_name' => $firstName, 'last_name' => $lastName]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to fetch name']);
-    }
-    $stmt->close();
-} elseif ($action === 'update_name') {
-    // Update first_name and last_name
-    verifyCsrfToken();
-    $newFirstName = $data['newFirstName'] ?? '';
-    $newLastName = $data['newLastName'] ?? '';
-
-    if (empty($newFirstName) || empty($newLastName)) {
-        echo json_encode(['success' => false, 'message' => 'Name fields cannot be empty']);
-        exit();
-    }
-
-    $stmt = $conn->prepare("UPDATE user SET first_name = ?, last_name = ? WHERE email = ?");
-    $stmt->bind_param("sss", $newFirstName, $newLastName, $email);
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Name updated successfully']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to update name']);
-    }
-    $stmt->close();
-} elseif ($action === 'update_password') {
-    // Update password
-    verifyCsrfToken();
-    $currentPassword = $data['currentPassword'] ?? '';
-    $newPassword = $data['newPassword'] ?? '';
-
-    if (empty($currentPassword) || empty($newPassword)) {
-        echo json_encode(['success' => false, 'message' => 'Password fields cannot be empty']);
-        exit();
-    }
-
-    // Fetch current password hash and salt
-    $stmt = $conn->prepare("SELECT password, salt FROM user WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($storedPassword, $salt);
-    if ($stmt->fetch()) {
-        // Verify current password
-        if (!password_verify($salt . $currentPassword, $storedPassword)) {
-            echo json_encode(['success' => false, 'message' => 'Incorrect current password']);
-            exit();
+            $stmt->close();
+            exit;
         }
 
-        // Hash the new password with a new salt
-        $newSalt = bin2hex(random_bytes(8));
-        $hashedNewPassword = password_hash($newSalt . $newPassword, PASSWORD_DEFAULT);
+        // Update name
+        if ($action === 'update_name') {
+            $newFirstName = $input['newFirstName'] ?? '';
+            $newLastName = $input['newLastName'] ?? '';
 
-        // Update the password in the database
-        $stmt->close();
-        $stmt = $conn->prepare("UPDATE user SET password = ?, salt = ? WHERE email = ?");
-        $stmt->bind_param("sss", $hashedNewPassword, $newSalt, $email);
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Password updated successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update password']);
+            // Validate the input
+            if (empty($newFirstName) || empty($newLastName)) {
+                echo json_encode(['success' => false, 'message' => 'Name fields cannot be empty']);
+                exit;
+            }
+
+            $query = "UPDATE users SET first_name = ?, last_name = ? WHERE email = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sss", $newFirstName, $newLastName, $email);
+
+            if ($stmt->execute()) {
+                echo json_encode(['success' => true, 'message' => 'Name updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update name']);
+            }
+
+            $stmt->close();
+            exit;
         }
+
+        // Update password
+        if ($action === 'update_password') {
+            $currentPassword = $input['currentPassword'] ?? '';
+            $newPassword = $input['newPassword'] ?? '';
+
+            // Validate the input
+            if (empty($currentPassword) || empty($newPassword)) {
+                echo json_encode(['success' => false, 'message' => 'Both current and new passwords are required']);
+                exit;
+            }
+
+            // Fetch the current hashed password and salt
+            $query = "SELECT password, salt FROM users WHERE email = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $user = $result->fetch_assoc();
+                // Check if current password is correct
+                if (password_verify($user['salt'] . $currentPassword, $user['password'])) {
+                    // Hash the new password with the user's salt
+                    $newHashedPassword = password_hash($user['salt'] . $newPassword, PASSWORD_DEFAULT);
+
+                    // Update the password
+                    $updateQuery = "UPDATE users SET password = ? WHERE email = ?";
+                    $updateStmt = $conn->prepare($updateQuery);
+                    $updateStmt->bind_param("ss", $newHashedPassword, $email);
+
+                    if ($updateStmt->execute()) {
+                        echo json_encode(['success' => true, 'message' => 'Password updated successfully']);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Failed to update password']);
+                    }
+                    $updateStmt->close();
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Current password is incorrect']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'User not found']);
+            }
+
+            $stmt->close();
+            exit;
+        }
+
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to fetch user data']);
+        echo json_encode(['success' => false, 'message' => 'Invalid request method']);
     }
-    $stmt->close();
+} else {
+    echo json_encode(['success' => false, 'message' => 'User not logged in']);
 }
 
 $conn->close();
