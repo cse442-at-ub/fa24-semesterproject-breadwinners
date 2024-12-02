@@ -15,6 +15,7 @@ import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
 import BookPage from './components/book-page/BookPage';
 import GuestBookPage from './components/book-page/guest_BookPage';
+import BestSellers from './components/best-seller/best-seller';
 import UserReviewHistory from './components/user-review-history/UserReviewHistory'; // Import UserReviewHistory
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/dataGridPage" element={<DataGridPage />} />
           <Route path="/checkout-page" element={<CheckoutPage />} />
+          <Route path="/best-seller" element={<BestSellers />} />
           <Route path="/user-review-history" element={<UserReviewHistory />} /> {/* Route for UserReviewHistory */}
         </Routes>
       </div>

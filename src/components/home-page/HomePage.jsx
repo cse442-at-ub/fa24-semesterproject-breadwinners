@@ -12,12 +12,11 @@ function HomePage() {
     const [books, setBooks] = useState([]);
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortByBestSeller, setSortByBestSeller] = useState(false);
 
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch(`./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`, {
+                const response = await fetch('./backend/fetch_books.php', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -33,7 +32,7 @@ function HomePage() {
             }
         };
         fetchBooks();
-    }, [sortByBestSeller]);
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -63,9 +62,7 @@ function HomePage() {
         }
     };
 
-    const handleBestSellerSort = () => {
-        setSortByBestSeller((prev) => !prev); 
-    };
+ 
 
     const handleSearch = () => {
         const query = searchQuery.toLowerCase();
@@ -122,7 +119,16 @@ function HomePage() {
             </nav>
 
             <nav className="secondary-navbar">
-                <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
+            <span
+                onClick={() => navigate('/best-seller')}
+                className="best-seller-link"
+                style={{
+                    color: 'white',
+                    cursor: 'pointer',
+                }}
+            >
+                Best Seller
+            </span>
                 <span>Hardcover</span>
                 <span>E-books</span>
                 <span>Audiobooks</span>
