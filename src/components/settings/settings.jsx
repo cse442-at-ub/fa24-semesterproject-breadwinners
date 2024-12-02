@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import './Settings.css';
 
 function Settings() {
+  const navigate = useNavigate(); 
   const [currentName, setCurrentName] = useState('John Doe'); // Default current name
   const [newName, setNewName] = useState(''); // Editable name field
   const [isNameLocked, setIsNameLocked] = useState(true); // Tracks if the name field is locked
@@ -49,14 +51,37 @@ function Settings() {
     setConfirmPassword('');
   };
 
+
   const handleDeleteAccount = () => {
-    if (deletePassword !== 'user_password') { // Replace with backend password validation
-      showSnackbar('Incorrect password!', 'error');
+    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       return;
     }
-    showSnackbar('Account deleted successfully!', 'success');
-  };
 
+    fetch('./backend/delete_account.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        password: deletePassword,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          showSnackbar(data.message, 'success');
+          setTimeout(() => {
+            navigate('/login'); // Navigate to login page on success
+          }, 2000);
+        } else {
+          showSnackbar(data.message, 'error');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        showSnackbar('Failed to delete account. Please try again later.', 'error');
+      });
+  };
   return (
     <div className="settings-page">
       <h1>Settings</h1>
