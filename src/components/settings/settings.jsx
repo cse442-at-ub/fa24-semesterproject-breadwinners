@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import './Settings.css';
 
 function Settings() {
-  const [currentName, setCurrentName] = useState('John Doe'); // Default current name
-  const [newName, setNewName] = useState(''); // Editable name field
-  const [isNameLocked, setIsNameLocked] = useState(true); // Tracks if the name field is locked
+  const [currentFirstName, setCurrentFirstName] = useState('');
+  const [currentLastName, setCurrentLastName] = useState('');
+  const [newFirstName, setNewFirstName] = useState('');
+  const [newLastName, setNewLastName] = useState('');
+  const [isNameLocked, setIsNameLocked] = useState(true); // Track if name fields are locked
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -15,7 +17,29 @@ function Settings() {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'error', 'info', 'warning'
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  useEffect(() => {
+    fetchCurrentName();
+  }, []);
+
+  const fetchCurrentName = async () => {
+    const response = await fetch('./backend/settings_backend.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'fetch_name' }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setCurrentFirstName(data.first_name);
+      setCurrentLastName(data.last_name);
+    } else {
+      alert(data.message);
+      showSnackbar(data.message, 'error');
+    }
+  };
 
   const showSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -28,48 +52,92 @@ function Settings() {
   };
 
   const handleNameChangeUnlock = () => {
-    setNewName(currentName);
+    setNewFirstName(currentFirstName);
+    setNewLastName(currentLastName);
     setIsNameLocked(false);
   };
 
-  const handleNameSave = () => {
-    setCurrentName(newName);
-    setIsNameLocked(true);
-    showSnackbar('Name updated successfully!', 'success');
+  const handleNameSave = async () => {
+    const response = await fetch('./backend/settings_backend.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'update_name', newFirstName, newLastName }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setCurrentFirstName(newFirstName);
+      setCurrentLastName(newLastName);
+      setIsNameLocked(true);
+      showSnackbar('Name updated successfully!', 'success');
+    } else {
+      showSnackbar(data.message, 'error');
+    }
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
       showSnackbar('Passwords do not match!', 'error');
       return;
     }
-    showSnackbar('Password updated successfully!', 'success');
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
+
+    const response = await fetch('./backend/settings_backend.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'update_password', currentPassword, newPassword }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      showSnackbar('Password updated successfully!', 'success');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } else {
+      showSnackbar(data.message, 'error');
+    }
   };
 
-  const handleDeleteAccount = () => {
-    if (deletePassword !== 'user_password') { // Replace with backend password validation
-      showSnackbar('Incorrect password!', 'error');
-      return;
+  const handleDeleteAccount = async () => {
+    const response = await fetch('./backend/settings_backend.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: 'delete_account', deletePassword }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      showSnackbar('Account deleted successfully!', 'success');
+    } else {
+      showSnackbar(data.message, 'error');
     }
-    showSnackbar('Account deleted successfully!', 'success');
   };
 
   return (
     <div className="settings-page">
       <h1>Settings</h1>
       <div className="settings-container">
-
         {/* Name Change Section */}
         <div className="settings-section">
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="first-name">First Name:</label>
           <input
             type="text"
-            id="name"
-            value={isNameLocked ? currentName : newName}
-            onChange={(e) => setNewName(e.target.value)}
+            id="first-name"
+            value={isNameLocked ? currentFirstName : newFirstName}
+            onChange={(e) => setNewFirstName(e.target.value)}
+            disabled={isNameLocked}
+            className={`settings-input ${isNameLocked ? 'locked' : ''}`}
+          />
+          <br />
+          <label htmlFor="last-name">Last Name:</label>
+          <input
+            type="text"
+            id="last-name"
+            value={isNameLocked ? currentLastName : newLastName}
+            onChange={(e) => setNewLastName(e.target.value)}
             disabled={isNameLocked}
             className={`settings-input ${isNameLocked ? 'locked' : ''}`}
           />
