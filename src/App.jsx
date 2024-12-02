@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import './App.css';
 import HomePage from './components/home-page/HomePage';
@@ -14,10 +13,10 @@ import RegisterPage from './components/Register/RegisterPage';
 import WishlistPage from './components/wishlist/WishlistPage'; // Import WishlistPage
 import AddBook from './components/seller-dashboard/add_book';
 import DataGridPage from './components/home-page/dataGridPage';
-import BookPage from './components/book-page/BookPage'; // Adjust path as needed
+import BookPage from './components/book-page/BookPage';
 import GuestBookPage from './components/book-page/guest_BookPage';
 import BestSellers from './components/best-seller/best-seller';
-
+import UserReviewHistory from './components/user-review-history/UserReviewHistory'; // Import UserReviewHistory
 
 function App() {
   return (
@@ -39,6 +38,7 @@ function App() {
           <Route path="/dataGridPage" element={<DataGridPage />} />
           <Route path="/checkout-page" element={<CheckoutPage />} />
           <Route path="/best-seller" element={<BestSellers />} />
+          <Route path="/user-review-history" element={<UserReviewHistory />} /> {/* Route for UserReviewHistory */}
         </Routes>
       </div>
     </Router>

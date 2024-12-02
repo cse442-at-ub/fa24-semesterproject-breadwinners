@@ -112,6 +112,7 @@ function HomePage() {
                     <span><Link to="/recent-purchase">Recent Purchase</Link></span>
                     <span><Link to="/seller-dashboard">Seller Dashboard</Link></span>
                     <span><Link to="/shopping-cart">Shopping Cart</Link></span>
+                    <span><Link to="/user-review-history">Review History</Link></span>
                     <span><Link to="/settings">Settings</Link></span>
                 </div>
                 <button onClick={handleLogout} className="logout-button">Log Out</button>
