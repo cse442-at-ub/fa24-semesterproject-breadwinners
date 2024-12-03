@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import './recent-purchase.css';
+import './user-review-history.css';
 
-function RecentPurchase() {
-  const [purchases, setPurchases] = useState([]);
+function UserReviewHistory() {
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('./backend/recent_purchase.php', {
+    fetch('./backend/UserReviewHistory.php', {
       credentials: 'include', // Include cookies in the request
     })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          setPurchases(data.purchases);
+          setReviews(data.reviews);
         } else {
-          setError(data.message || 'Failed to fetch purchase data');
+          setError(data.message || 'Failed to fetch review history');
         }
         setLoading(false);
       })
@@ -30,31 +30,31 @@ function RecentPurchase() {
 
   return (
     <div>
-      <h1>Recent Purchase</h1>
-      {purchases.length > 0 ? (
+      <h1>Your Review History</h1>
+      {reviews.length > 0 ? (
         <table>
           <thead>
             <tr>
-              <th>Total Price</th>
-              <th>Purchase Date</th>
-              <th>Books Purchased</th>
+              <th>Book Title</th>
+              <th>Review</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            {purchases.map((purchase, index) => (
+            {reviews.map((review, index) => (
               <tr key={index}>
-                <td>{purchase.total_price}</td>
-                <td>{new Date(purchase.created_at).toLocaleDateString()}</td>
-                <td>{purchase.books_purchased}</td>
+                <td>{review.book_title}</td>
+                <td>{review.review}</td>
+                <td>{new Date(review.created_at).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        <p>No recent purchases found.</p>
+        <p>You haven't posted any reviews yet.</p>
       )}
     </div>
   );
 }
 
-export default RecentPurchase;
+export default UserReviewHistory;

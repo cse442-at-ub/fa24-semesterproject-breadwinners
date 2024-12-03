@@ -6,11 +6,14 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Link, useNavigate } from 'react-router-dom';
 import search from '../../assets/search-removebg-preview.png';
 import Image9 from '../../assets/BreadWinnersPicture.png';
+import { Rating } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import Box from '@mui/material/Box';
 
 export default function DataGridPage() {
     const [rowData, setRowData] = useState([]); 
     const [menuOpen, setMenuOpen] = useState(false);
-    const [sortByBestSeller, setSortByBestSeller] = useState(false);
+
     const navigate = useNavigate();
 
     // Fetch CSRF token from cookies
@@ -26,7 +29,7 @@ export default function DataGridPage() {
         const fetchBooks = async () => {
             try {
                 // Construct the URL with the sortByBestSeller parameter
-                const url = `./backend/fetch_books.php?sortByBestSeller=${sortByBestSeller}`;
+                const url = './backend/fetch_books.php';
     
                 const response = await fetch(url, {
                     method: 'GET',
@@ -47,7 +50,7 @@ export default function DataGridPage() {
             }
         };
         fetchBooks();
-    }, [sortByBestSeller]);
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -74,25 +77,41 @@ export default function DataGridPage() {
         }
     };
 
-    // Handle Best Seller sort
-    const handleBestSellerSort = () => {
-        setSortByBestSeller((prev) => !prev); 
-    };
+   
 
     // Column definitions for the book grid
     const columns = [
         { headerName: 'Image', field: 'image_url', cellRenderer: (params) => <img src={params.value} alt="Book" width="100" />, minWidth: 120, filter: false },
-        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200 },
-        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150 },
-        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150 },
-        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200 },
-        { headerName: 'Rating', field: 'rating', cellRenderer: (params) => <span>{'⭐'.repeat(Math.floor(params.value))} ({params.value})</span>, minWidth: 120 },
-        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100 },
-        { headerName: 'Price ($)', field: 'price', minWidth: 120 },
-        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150 },
+        { headerName: 'Book Title', field: 'title', flex: 1, minWidth: 200, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Author', field: 'author', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Genre', field: 'genre', flex: 1, minWidth: 150, sortable: true, filter: "agTextColumnFilter", floatingFilter: true },
+        { headerName: 'Seller Email', field: 'seller_email', flex: 1, minWidth: 200, sortable: true, filter: false },
+        {
+            headerName: 'Rating',
+            field: 'rating',
+            cellRenderer: (params) => (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Rating
+                        name="text-feedback"
+                        value={params.value || 0}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                    />
+                    <Box sx={{ ml: 2 }}>{params.value || 0}</Box>
+                </Box>
+            ),
+            minWidth: 120,
+            sortable: true,
+            filter: "agNumberColumnFilter",
+            floatingFilter: true
+        },
+        { headerName: 'Stock', field: 'stock', flex: 1, minWidth: 100, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
+        { headerName: 'Price ($)', field: 'price', minWidth: 120, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
+        { headerName: 'Purchase Count', field: 'total_books_sold', minWidth: 150, sortable: true, filter: "agNumberColumnFilter", floatingFilter: true },
         {
             headerName: 'Actions',
-            field: 'id', // Use book ID for navigation and actions
+            field: 'id',
             cellRenderer: (params) => (
                 <div>
                     <button onClick={() => handleAddToCart(params.value, params.data.title)} className="buy-book-button">
@@ -104,9 +123,10 @@ export default function DataGridPage() {
                 </div>
             ),
             minWidth: 200,
+            sortable: false,
+            filter: false
         },
     ];
-
     const handleAddToCart = async (bookId, bookTitle) => {
         try {
             // Sending a default quantity of 1 when adding the book
@@ -169,7 +189,16 @@ export default function DataGridPage() {
 
             {/* Secondary Navbar */}
             <nav className="secondary-navbar">
-                <span onClick={handleBestSellerSort} className="best-seller-link" style={{ color: sortByBestSeller ? 'lightcoral' : 'white' }}>Best Seller</span> 
+            <span
+                onClick={() => navigate('/best-seller')}
+                className="best-seller-link"
+                style={{
+                    color: 'white',
+                    cursor: 'pointer',
+                }}
+            >
+                Best Seller
+            </span>
                 <span>Hardcover</span>
                 <span>Audiobooks</span>
                 <span>Textbooks</span>
@@ -185,11 +214,18 @@ export default function DataGridPage() {
             {/* Book Grid Section */}
             <div style={{ height: 500, width: '100%' }} className="ag-theme-alpine book-grid">
                 <AgGridReact
-                    rowData={rowData}
-                    columnDefs={columns}
-                    pagination={false}
-                    domLayout="autoHeight"
-                    getRowHeight={() => 155}
+                       rowData={rowData}
+                       columnDefs={columns}
+                       defaultColDef={{
+                           sortable: true,
+                           filter: true,
+                           floatingFilter: true,
+                           flex: 1,
+                           minWidth: 100,
+                       }}
+                       pagination={false}
+                       domLayout="autoHeight"
+                       getRowHeight={() => 155}
                 />
             </div>
         </div>

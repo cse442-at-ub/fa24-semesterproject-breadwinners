@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './WishlistPage.css';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import IconButton from '@mui/material/IconButton';
 
 function WishlistPage() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -52,6 +54,32 @@ function WishlistPage() {
         }
     };
 
+    const handleAddToCart = async (bookId, bookTitle) => {
+        try {
+            const response = await fetch('./backend/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    bookId,
+                    bookTitle,
+                    quantity: 1, // Always send quantity as 1
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                console.log('Book added to cart');
+            } else {
+                console.error('Failed to add book to cart:', data.message);
+            }
+        } catch (error) {
+            console.error('Error adding book to cart:', error);
+        }
+    };
+
+
     return (
         <div className="wishlist-page">
             <h1 className="wishlist-header">Your Wishlist</h1>
@@ -73,6 +101,14 @@ function WishlistPage() {
                         <button onClick={() => removeBookFromWishlist(item.id)} className="remove-button">
                             🗑️
                         </button>
+                        <IconButton 
+                            onClick={() => handleAddToCart(item.id, item.title)} 
+                            color="primary" 
+                            aria-label="add to shopping cart" 
+                            className="cart-icon"
+                        >
+                            <ShoppingCartIcon />
+                        </IconButton>
                     </div>
                 ))}
             </div>

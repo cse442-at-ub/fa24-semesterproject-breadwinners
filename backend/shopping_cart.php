@@ -64,7 +64,6 @@ if ($action === 'update') {
         }
         $updateStmt->close();
     } else {
-        // If the requested quantity exceeds the stock, return an error message
         echo json_encode(['success' => false, 'message' => 'Requested quantity exceeds available stock']);
     }
     $stockStmt->close();
@@ -92,39 +91,17 @@ if ($action === 'remove') {
 if ($action === 'checkout') {
     $totalPrice = $input['totalPrice'];
 
-    // Check if an order summary already exists for this user
-    $query = "SELECT * FROM order_summary WHERE email = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
+    // Insert a new order without updating or modifying previous records
+    $insertQuery = "INSERT INTO order_summary (email, total_price, created_at) VALUES (?, ?, NOW())";
+    $insertStmt = $conn->prepare($insertQuery);
+    $insertStmt->bind_param("sd", $email, $totalPrice);
 
-    if ($stmt->num_rows > 0) {
-        // Update existing order
-        $updateQuery = "UPDATE order_summary SET total_price = ?, created_at = NOW() WHERE email = ?";
-        $updateStmt = $conn->prepare($updateQuery);
-        $updateStmt->bind_param("ds", $totalPrice, $email);
-
-        if ($updateStmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Checkout successful, order updated']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update order summary']);
-        }
-        $updateStmt->close();
+    if ($insertStmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Checkout successful']);
     } else {
-        // Insert a new order
-        $insertQuery = "INSERT INTO order_summary (email, total_price, created_at) VALUES (?, ?, NOW())";
-        $insertStmt = $conn->prepare($insertQuery);
-        $insertStmt->bind_param("sd", $email, $totalPrice);
-
-        if ($insertStmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Checkout successful']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to complete checkout']);
-        }
-        $insertStmt->close();
+        echo json_encode(['success' => false, 'message' => 'Failed to complete checkout']);
     }
-    $stmt->close();
+    $insertStmt->close();
     exit;
 }
 
